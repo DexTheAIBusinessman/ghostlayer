@@ -12,10 +12,13 @@ export default function Dashboard() {
   const [analysis, setAnalysis] = useState("No scan has been run yet.");
   const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState("");
+  const [feedback, setFeedback] = useState("");
+  const [feedbackMessage, setFeedbackMessage] = useState("");
 
   async function runScan() {
     setLoading(true);
     setSaveMessage("");
+    setFeedbackMessage("");
     setAnalysis("Running AI scan...");
 
     setTimeout(() => {
@@ -124,6 +127,16 @@ CONFIDENCE SCORE
     document.body.removeChild(link);
 
     URL.revokeObjectURL(url);
+  }
+
+  function submitFeedback() {
+    if (!feedback.trim()) {
+      setFeedbackMessage("Please enter feedback before submitting.");
+      return;
+    }
+
+    setFeedbackMessage("Feedback submitted. Thank you.");
+    setFeedback("");
   }
 
   return (
@@ -343,11 +356,45 @@ CONFIDENCE SCORE
         </div>
 
         <div className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-6">
-          <h3 className="text-xl font-semibold text-cyan-300">AI Analysis</h3>
+          <div className="flex items-center justify-between gap-4">
+            <h3 className="text-xl font-semibold text-cyan-300">AI Analysis</h3>
+            <span className="text-xs uppercase tracking-[0.2em] text-gray-500">
+              Beta Estimate
+            </span>
+          </div>
+
+          <p className="mt-2 text-sm text-gray-500">
+            These results are directional estimates and are improving over time.
+          </p>
 
           <pre className="mt-4 whitespace-pre-wrap text-sm leading-7 text-gray-300">
             {analysis}
           </pre>
+        </div>
+
+        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h3 className="text-xl font-semibold">Help us improve GHOSTLAYER</h3>
+          <p className="mt-2 text-sm text-gray-400">
+            What would make this 10x more useful for your business?
+          </p>
+
+          <textarea
+            value={feedback}
+            onChange={(e) => setFeedback(e.target.value)}
+            placeholder="Tell us what would make this more useful..."
+            className="mt-6 min-h-[140px] w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
+          />
+
+          <button
+            onClick={submitFeedback}
+            className="mt-4 rounded-2xl bg-white px-5 py-3 font-semibold text-black transition hover:opacity-85"
+          >
+            Submit Feedback
+          </button>
+
+          {feedbackMessage && (
+            <p className="mt-4 text-sm text-cyan-300">{feedbackMessage}</p>
+          )}
         </div>
       </div>
     </main>

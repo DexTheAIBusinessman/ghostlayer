@@ -99,7 +99,7 @@ export default function Home() {
               href="/dashboard"
               className="inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3 font-semibold text-black transition hover:opacity-85"
             >
-              Start Free Scan
+              Start Free Scan (Beta)
             </Link>
 
             <a
@@ -109,6 +109,10 @@ export default function Home() {
               View Demo
             </a>
           </div>
+
+          <p className="mt-3 text-sm text-gray-500">
+            Currently in early access — results are improving daily.
+          </p>
 
           <div className="mt-14 grid w-full max-w-4xl grid-cols-1 gap-4 md:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
