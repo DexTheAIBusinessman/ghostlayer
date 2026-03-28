@@ -15,6 +15,7 @@ export default function Dashboard() {
   const [saveMessage, setSaveMessage] = useState("");
   const [feedback, setFeedback] = useState("");
   const [feedbackMessage, setFeedbackMessage] = useState("");
+  const [feedbackLoading, setFeedbackLoading] = useState(false);
 
   async function runScan() {
     setLoading(true);
@@ -83,6 +84,36 @@ GHOSTLAYER Confidence Score: 87%`
     }
   }
 
+  async function submitFeedback() {
+    if (!feedback.trim()) {
+      setFeedbackMessage("Please enter feedback before submitting.");
+      return;
+    }
+
+    try {
+      setFeedbackLoading(true);
+      setFeedbackMessage("Saving feedback...");
+
+      const { error } = await supabase.from("feedback").insert([
+        {
+          message: feedback,
+        },
+      ]);
+
+      if (error) {
+        setFeedbackMessage(`Failed to save feedback: ${error.message}`);
+        return;
+      }
+
+      setFeedbackMessage("Feedback submitted. Thank you.");
+      setFeedback("");
+    } catch {
+      setFeedbackMessage("Failed to save feedback.");
+    } finally {
+      setFeedbackLoading(false);
+    }
+  }
+
   function downloadReport() {
     const report = `GHOSTLAYER WORKFLOW REPORT
 
@@ -122,16 +153,6 @@ CONFIDENCE SCORE
     document.body.removeChild(link);
 
     URL.revokeObjectURL(url);
-  }
-
-  function submitFeedback() {
-    if (!feedback.trim()) {
-      setFeedbackMessage("Please enter feedback before submitting.");
-      return;
-    }
-
-    setFeedbackMessage("Feedback submitted. Thank you.");
-    setFeedback("");
   }
 
   return (
@@ -382,9 +403,10 @@ CONFIDENCE SCORE
 
           <button
             onClick={submitFeedback}
-            className="mt-4 rounded-2xl bg-white px-5 py-3 font-semibold text-black transition hover:opacity-85"
+            disabled={feedbackLoading}
+            className="mt-4 rounded-2xl bg-white px-5 py-3 font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
           >
-            Submit Feedback
+            {feedbackLoading ? "Submitting..." : "Submit Feedback"}
           </button>
 
           {feedbackMessage && (
