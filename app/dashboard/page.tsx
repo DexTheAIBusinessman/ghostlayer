@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Dashboard() {
   const [companyName, setCompanyName] = useState("");
@@ -61,29 +62,23 @@ GHOSTLAYER Confidence Score: 87%`
     try {
       setSaveMessage("Saving scan...");
 
-      const response = await fetch("/api/scans", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          companyName,
-          teamSize,
-          bottleneck,
-          saasSpend,
+      const { error } = await supabase.from("scans").insert([
+        {
+          company_name: companyName || "Unknown Company",
+          team_size: teamSize || "Not provided",
+          bottleneck: bottleneck || "Not provided",
+          saas_spend: saasSpend || "0",
           analysis,
-        }),
-      });
+        },
+      ]);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setSaveMessage(data.error || "Failed to save scan.");
+      if (error) {
+        setSaveMessage(`Failed to save scan: ${error.message}`);
         return;
       }
 
       setSaveMessage("Scan saved successfully.");
-    } catch (error) {
+    } catch {
       setSaveMessage("Failed to save scan.");
     }
   }

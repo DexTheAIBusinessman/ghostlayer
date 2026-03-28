@@ -1,31 +1,42 @@
-async function getLeads() {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
+"use client";
 
-  try {
-    const response = await fetch(`${baseUrl}/api/leads`, {
-      cache: "no-store",
-    });
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/supabase";
 
-    if (!response.ok) {
-      return [];
+type Lead = {
+  id: number;
+  name: string;
+  email: string;
+  created_at: string;
+};
+
+export default function LeadsPage() {
+  const [leads, setLeads] = useState<Lead[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function loadLeads() {
+      const { data, error } = await supabase
+        .from("leads")
+        .select("*")
+        .order("created_at", { ascending: false });
+
+      if (!error && data) {
+        setLeads(data);
+      }
+
+      setLoading(false);
     }
 
-    const data = await response.json();
-    return data.leads || [];
-  } catch (error) {
-    return [];
-  }
-}
-
-export default async function LeadsPage() {
-  const leads = await getLeads();
+    loadLeads();
+  }, []);
 
   return (
     <main className="min-h-screen bg-black px-6 py-10 text-white">
       <div className="mx-auto max-w-5xl">
         <h1 className="text-3xl font-bold glow">Saved Leads</h1>
         <p className="mt-2 text-gray-400">
-          Local lead submissions captured from the homepage.
+          Early access submissions stored in Supabase.
         </p>
 
         <div className="mt-8 overflow-hidden rounded-3xl border border-white/10 bg-white/5">
@@ -35,17 +46,19 @@ export default async function LeadsPage() {
             <p>Created</p>
           </div>
 
-          {leads.length === 0 ? (
+          {loading ? (
+            <div className="px-6 py-8 text-gray-400">Loading leads...</div>
+          ) : leads.length === 0 ? (
             <div className="px-6 py-8 text-gray-400">No leads saved yet.</div>
           ) : (
-            leads.map((lead: { name: string; email: string; createdAt: string }, index: number) => (
+            leads.map((lead) => (
               <div
-                key={`${lead.email}-${index}`}
+                key={lead.id}
                 className="grid grid-cols-3 border-b border-white/10 px-6 py-4 text-sm text-gray-300 last:border-b-0"
               >
                 <p>{lead.name}</p>
                 <p>{lead.email}</p>
-                <p>{new Date(lead.createdAt).toLocaleString()}</p>
+                <p>{new Date(lead.created_at).toLocaleString()}</p>
               </div>
             ))
           )}

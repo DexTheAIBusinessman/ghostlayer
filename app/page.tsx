@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { supabase } from "@/lib/supabase";
 
 export default function Home() {
   const year = new Date().getFullYear();
@@ -23,28 +24,22 @@ export default function Home() {
       setLoading(true);
       setMessage("Saving your access request...");
 
-      const response = await fetch("/api/leads", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+      const { error } = await supabase.from("leads").insert([
+        {
           name,
           email,
-        }),
-      });
+        },
+      ]);
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        setMessage(data.error || "Something went wrong.");
+      if (error) {
+        setMessage(`Failed to submit access request: ${error.message}`);
         return;
       }
 
       setMessage("Access request submitted. You’re on the list.");
       setName("");
       setEmail("");
-    } catch (error) {
+    } catch {
       setMessage("Failed to submit access request.");
     } finally {
       setLoading(false);
