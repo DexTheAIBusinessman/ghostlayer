@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { PopupButton } from "react-calendly";
 
 export default function Home() {
   const year = new Date().getFullYear();
@@ -97,31 +98,19 @@ export default function Home() {
               Start Free Scan (Beta)
             </Link>
 
-<div className="mt-10 flex justify-center">
-  <div className="bg-white text-black rounded-xl p-6 max-w-md text-center shadow-lg">
-    <h3 className="text-lg font-semibold mb-2">
-      Book a Workflow Review
-    </h3>
-    <p className="text-sm mb-4">
-      Get a personalized breakdown of where your operations are leaking money.
-    </p>
-    <a
-  href="https://calendly.com/dexterstevens630/30min"
-  target="_blank"
-  rel="noopener noreferrer"
-  className="bg-black text-white px-6 py-3 rounded-lg inline-block"
->
-  Book Free Call
-</a>
-   </div>
-</div>
-
             <a
               href="#features"
               className="inline-flex items-center justify-center rounded-2xl border border-white/20 px-6 py-3 font-semibold text-white transition hover:bg-white hover:text-black"
             >
               View Demo
             </a>
+
+            <PopupButton
+              url="https://calendly.com/dexterstevens630/30min"
+              rootElement={document.body}
+              text="Book Free Call"
+              className="inline-flex items-center justify-center rounded-2xl border border-cyan-400/30 px-6 py-3 font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+            />
           </div>
 
           <p className="mt-3 text-sm text-gray-500">

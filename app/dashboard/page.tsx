@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { supabase } from "@/lib/supabase";
+import { PopupButton } from "react-calendly";
 
 export default function Dashboard() {
   const [companyName, setCompanyName] = useState("");
@@ -25,7 +26,7 @@ export default function Dashboard() {
 
     setTimeout(() => {
       setAnalysis(
-`🔍 WORKFLOW SCAN COMPLETE
+        `🔍 WORKFLOW SCAN COMPLETE
 
 Company:
 ${companyName || "Unknown Company"}
@@ -209,14 +210,12 @@ CONFIDENCE SCORE
               Download Report
             </button>
 
-            <a
-              href="https://calendly.com/dexterstevens630/30min"
-              target="_blank"
-              rel="noopener noreferrer"
+            <PopupButton
+              url="https://calendly.com/dexterstevens630/30min"
+              rootElement={document.body}
+              text="Book Free Call"
               className="rounded-2xl border border-cyan-400/30 px-5 py-3 text-center font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-            >
-              Book Free Call
-            </a>
+            />
           </div>
         </div>
 
