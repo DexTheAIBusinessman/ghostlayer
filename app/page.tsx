@@ -1,17 +1,22 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { PopupButton } from "react-calendly";
 
 export default function Home() {
   const year = new Date().getFullYear();
+  const [isMounted, setIsMounted] = useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   async function handleEmailCapture(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -105,12 +110,14 @@ export default function Home() {
               View Demo
             </a>
 
-            <PopupButton
-              url="https://calendly.com/dexterstevens630/30min"
-              rootElement={document.body}
-              text="Book Free Call"
-              className="inline-flex items-center justify-center rounded-2xl border border-cyan-400/30 px-6 py-3 font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-            />
+            {isMounted && (
+              <PopupButton
+                url="https://calendly.com/dexterstevens630/30min"
+                rootElement={document.body}
+                text="Book Free Call"
+                className="inline-flex items-center justify-center rounded-2xl border border-cyan-400/30 px-6 py-3 font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+              />
+            )}
           </div>
 
           <p className="mt-3 text-sm text-gray-500">
