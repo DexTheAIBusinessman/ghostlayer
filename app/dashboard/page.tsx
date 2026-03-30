@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { PopupButton } from "react-calendly";
 
 export default function Dashboard() {
+  const [isMounted, setIsMounted] = useState(false);
+
   const [companyName, setCompanyName] = useState("");
   const [teamSize, setTeamSize] = useState("");
   const [bottleneck, setBottleneck] = useState("");
@@ -18,6 +20,10 @@ export default function Dashboard() {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackLoading, setFeedbackLoading] = useState(false);
 
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   async function runScan() {
     setLoading(true);
     setSaveMessage("");
@@ -25,8 +31,7 @@ export default function Dashboard() {
     setAnalysis("Running AI scan...");
 
     setTimeout(() => {
-      setAnalysis(
-        `🔍 WORKFLOW SCAN COMPLETE
+      setAnalysis(`🔍 WORKFLOW SCAN COMPLETE
 
 Company:
 ${companyName || "Unknown Company"}
@@ -53,9 +58,7 @@ Priority Fixes:
 2. Remove duplicated steps across teams
 3. Add visibility at handoff points to prevent delays
 
-GHOSTLAYER Confidence Score: 87%`
-      );
-
+GHOSTLAYER Confidence Score: 87%`);
       setLoading(false);
     }, 2000);
   }
@@ -210,12 +213,14 @@ CONFIDENCE SCORE
               Download Report
             </button>
 
-            <PopupButton
-              url="https://calendly.com/dexterstevens630/30min"
-              rootElement={document.body}
-              text="Book Free Call"
-              className="rounded-2xl border border-cyan-400/30 px-5 py-3 text-center font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-            />
+            {isMounted && (
+              <PopupButton
+                url="https://calendly.com/dexterstevens630/30min"
+                rootElement={document.body}
+                text="Book Free Call"
+                className="rounded-2xl border border-cyan-400/30 px-5 py-3 text-center font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+              />
+            )}
           </div>
         </div>
 
@@ -425,3 +430,4 @@ CONFIDENCE SCORE
     </main>
   );
 }
+
