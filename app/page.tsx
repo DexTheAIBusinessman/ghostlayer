@@ -2,12 +2,15 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { PopupModal } from "react-calendly";
 import { supabase } from "@/lib/supabase";
-import { PopupButton } from "react-calendly";
+import { trackCtaClick } from "@/lib/trackCtaClick";
 
 export default function Home() {
   const year = new Date().getFullYear();
+
   const [isMounted, setIsMounted] = useState(false);
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -56,7 +59,9 @@ export default function Home() {
     <main className="min-h-screen bg-black text-white">
       <nav className="sticky top-0 z-50 border-b border-white/10 bg-black/80 backdrop-blur">
         <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
-          <div className="text-xl font-bold tracking-[0.2em] glow">GHOSTLAYER</div>
+          <div className="text-xl font-bold tracking-[0.2em] glow">
+            GHOSTLAYER
+          </div>
 
           <div className="hidden gap-6 text-sm text-gray-300 md:flex">
             <a href="#features" className="hover:text-white">
@@ -92,7 +97,8 @@ export default function Home() {
           </h1>
 
           <p className="mt-6 max-w-3xl text-lg text-gray-400 md:text-xl">
-            GHOSTLAYER detects delays, duplicated work, and broken handoffs across your workflows so teams can move faster with less waste.
+            GHOSTLAYER detects delays, duplicated work, and broken handoffs
+            across your workflows so teams can move faster with less waste.
           </p>
 
           <div className="mt-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-center">
@@ -110,15 +116,25 @@ export default function Home() {
               View Demo
             </a>
 
-            {isMounted && (
-              <PopupButton
-                url="https://calendly.com/dexterstevens630/30min"
-                rootElement={document.body}
-                text="Book Free Call"
-                className="inline-flex items-center justify-center rounded-2xl border border-cyan-400/30 px-6 py-3 font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-              />
-            )}
+            <button
+              onClick={async () => {
+                await trackCtaClick("homepage");
+                setIsCalendlyOpen(true);
+              }}
+              className="inline-flex items-center justify-center rounded-2xl border border-cyan-400/30 px-6 py-3 font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+            >
+              Book Free Call
+            </button>
           </div>
+
+          {isMounted && (
+            <PopupModal
+              url="https://calendly.com/dexterstevens630/30min"
+              onModalClose={() => setIsCalendlyOpen(false)}
+              open={isCalendlyOpen}
+              rootElement={document.body}
+            />
+          )}
 
           <p className="mt-3 text-sm text-gray-500">
             Currently in early access — results are improving daily.
@@ -127,17 +143,23 @@ export default function Home() {
           <div className="mt-14 grid w-full max-w-4xl grid-cols-1 gap-4 md:grid-cols-3">
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
               <p className="text-3xl font-bold">$48K</p>
-              <p className="mt-2 text-sm text-gray-400">Workflow waste detected monthly</p>
+              <p className="mt-2 text-sm text-gray-400">
+                Workflow waste detected monthly
+              </p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
               <p className="text-3xl font-bold">17</p>
-              <p className="mt-2 text-sm text-gray-400">Workflow issues flagged automatically</p>
+              <p className="mt-2 text-sm text-gray-400">
+                Workflow issues flagged automatically
+              </p>
             </div>
 
             <div className="rounded-2xl border border-white/10 bg-white/5 p-5 text-left">
               <p className="text-3xl font-bold">24/7</p>
-              <p className="mt-2 text-sm text-gray-400">Continuous workflow monitoring</p>
+              <p className="mt-2 text-sm text-gray-400">
+                Continuous workflow monitoring
+              </p>
             </div>
           </div>
         </div>
@@ -145,15 +167,21 @@ export default function Home() {
 
       <section className="mx-auto max-w-4xl px-6 py-10">
         <div className="rounded-3xl border border-cyan-400/20 bg-white/5 p-8 shadow-[0_0_40px_rgba(0,240,255,0.05)]">
-          <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">Early Access</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">
+            Early Access
+          </p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">
             Join the GHOSTLAYER access list
           </h2>
           <p className="mt-3 text-gray-400">
-            Get early access to workflow scans, product updates, and launch invites.
+            Get early access to workflow scans, product updates, and launch
+            invites.
           </p>
 
-          <form onSubmit={handleEmailCapture} className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3">
+          <form
+            onSubmit={handleEmailCapture}
+            className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-3"
+          >
             <input
               type="text"
               placeholder="Your name"
@@ -185,7 +213,9 @@ export default function Home() {
 
       <section id="features" className="mx-auto max-w-7xl px-6 py-20">
         <div className="mb-10">
-          <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">Features</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">
+            Features
+          </p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">
             Built to expose hidden workflow inefficiencies
           </h2>
@@ -217,7 +247,9 @@ export default function Home() {
 
       <section id="pricing" className="mx-auto max-w-7xl px-6 py-20">
         <div className="mb-10">
-          <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">Pricing</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">
+            Pricing
+          </p>
           <h2 className="mt-3 text-3xl font-bold md:text-4xl">
             Start simple. Scale when the value is obvious.
           </h2>
@@ -262,11 +294,17 @@ export default function Home() {
 
       <section id="about" className="mx-auto max-w-7xl px-6 py-20">
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8">
-          <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">About</p>
-          <h2 className="mt-3 text-3xl font-bold md:text-4xl">Why GHOSTLAYER exists</h2>
+          <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">
+            About
+          </p>
+          <h2 className="mt-3 text-3xl font-bold md:text-4xl">
+            Why GHOSTLAYER exists
+          </h2>
           <p className="mt-4 max-w-3xl text-gray-400">
-            Most businesses don’t realize how much time and money they lose through broken workflows.
-            GHOSTLAYER exists to uncover delays, duplicated work, and missed handoffs before they become expensive problems.
+            Most businesses don’t realize how much time and money they lose
+            through broken workflows. GHOSTLAYER exists to uncover delays,
+            duplicated work, and missed handoffs before they become expensive
+            problems.
           </p>
         </div>
       </section>
