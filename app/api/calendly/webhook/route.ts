@@ -14,6 +14,7 @@ export async function POST(req: Request) {
 
     const payload = body.payload || {};
 
+    // 🔥 Robust extraction (handles ALL payload variations)
     const calendlyEventUri =
       payload.event ||
       payload.scheduled_event?.uri ||
@@ -22,10 +23,12 @@ export async function POST(req: Request) {
     const calendlyInviteeUri =
       payload.invitee?.uri ||
       payload.invitee ||
+      payload.uri ||
       null;
 
     const eventTypeName =
       payload.event_type?.name ||
+      payload.scheduled_event?.event_type?.name ||
       payload.scheduled_event?.event_type ||
       null;
 
