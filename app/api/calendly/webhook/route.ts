@@ -1,46 +1,37 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { Resend } from "resend";
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
+const resend = new Resend(process.env.RESEND_API_KEY);
+
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-
-    console.log("Calendly webhook received:", JSON.stringify(body, null, 2));
+    console.log("Webhook received:", JSON.stringify(body, null, 2));
 
     const payload = body.payload || {};
 
-    // 🔥 Robust extraction (handles ALL payload variations)
     const calendlyEventUri =
-      payload.event ||
-      payload.scheduled_event?.uri ||
-      null;
+      payload.event || payload.scheduled_event?.uri || null;
 
     const calendlyInviteeUri =
-      payload.invitee?.uri ||
-      payload.invitee ||
-      payload.uri ||
-      null;
+      payload.invitee?.uri || payload.invitee || null;
 
     const eventTypeName =
       payload.event_type?.name ||
-      payload.scheduled_event?.event_type?.name ||
       payload.scheduled_event?.event_type ||
       null;
 
     const inviteeName =
-      payload.name ||
-      payload.invitee?.name ||
-      null;
+      payload.name || payload.invitee?.name || null;
 
     const inviteeEmail =
-      payload.email ||
-      payload.invitee?.email ||
-      null;
+      payload.email || payload.invitee?.email || null;
 
     const scheduledAt =
       payload.scheduled_event?.start_time ||
@@ -74,6 +65,24 @@ export async function POST(req: Request) {
       );
     }
 
+    try {
+      await resend.emails.send({
+        from: "onboarding@resend.dev",
+        to: ["dexterstevens630@gmail.com"],
+        subject: "New Calendly booking received",
+        html: `
+          <h2>New booking received</h2>
+          <p><strong>Name:</strong> ${inviteeName ?? "Not provided"}</p>
+          <p><strong>Email:</strong> ${inviteeEmail ?? "Not provided"}</p>
+          <p><strong>Event type:</strong> ${eventTypeName ?? "Not provided"}</p>
+          <p><strong>Scheduled at:</strong> ${scheduledAt ?? "Not provided"}</p>
+          <p><strong>Source:</strong> ${source ?? "Not provided"}</p>
+        `,
+      });
+    } catch (emailError: any) {
+      console.error("Resend email error:", emailError);
+    }
+
     return NextResponse.json({ success: true });
   } catch (error: any) {
     console.error("Webhook route error:", error);
@@ -83,3 +92,4 @@ export async function POST(req: Request) {
     );
   }
 }
+
