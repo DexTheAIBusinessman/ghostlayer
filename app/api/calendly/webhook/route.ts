@@ -17,10 +17,17 @@ export async function POST(req: Request) {
     const scheduledAt = payload?.scheduled_event?.start_time || "N/A";
 
     const result = await resend.emails.send({
+      // ✅ FIXED LINE (THIS WAS YOUR ISSUE)
       from: "onboarding@resend.dev",
+
+      // send to yourself
       to: "stevensdexter17@gmail.com",
+
+      // reply-to (optional, but fine)
       replyTo: "dexterstevens801@gmail.com",
+
       subject: "New Calendly Booking 🚀",
+
       html: `
         <h2>New Booking</h2>
         <p><strong>Name:</strong> ${inviteeName}</p>
