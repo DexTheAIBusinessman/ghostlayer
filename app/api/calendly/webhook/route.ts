@@ -19,6 +19,7 @@ export async function POST(req: Request) {
     const result = await resend.emails.send({
       // ✅ FIXED LINE (THIS WAS YOUR ISSUE)
       from: "onboarding@resend.dev",
+// redeploy fix
 
       // send to yourself
       to: "stevensdexter17@gmail.com",
