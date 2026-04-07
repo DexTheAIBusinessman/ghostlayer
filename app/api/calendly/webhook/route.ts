@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     const result = await resend.emails.send({
       from: "onboarding@resend.dev",
       to: "stevensdexter17@gmail.com",
-      replyTo: "stevensdexter17@gmail.com",
+      replyTo: "dexterstevens801@gmail.com",
       subject: "New Calendly Booking 🚀",
       html: `
         <h2>New Booking</h2>
