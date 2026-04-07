@@ -1,10 +1,20 @@
-"use client";
-
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PopupModal } from "react-calendly";
 import { supabase } from "@/lib/supabase";
 import { trackCtaClick } from "@/lib/trackCtaClick";
+
+type BookingRow = {
+  id: number;
+  calendly_event_uri: string | null;
+  calendly_invitee_uri: string | null;
+  event_type_name: string | null;
+  invitee_name: string | null;
+  invitee_email: string | null;
+  scheduled_at: string | null;
+  source: string | null;
+  created_at?: string | null;
+};
 
 export default function Dashboard() {
   const [isMounted, setIsMounted] = useState(false);
@@ -22,9 +32,39 @@ export default function Dashboard() {
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const [feedbackLoading, setFeedbackLoading] = useState(false);
 
+  const [bookings, setBookings] = useState<BookingRow[]>([]);
+  const [bookingsLoading, setBookingsLoading] = useState(true);
+  const [bookingsMessage, setBookingsMessage] = useState("");
+
   useEffect(() => {
     setIsMounted(true);
+    loadBookings();
   }, []);
+
+  async function loadBookings() {
+    try {
+      setBookingsLoading(true);
+      setBookingsMessage("");
+
+      const { data, error } = await supabase
+        .from("bookings")
+        .select("*")
+        .order("id", { ascending: false });
+
+      if (error) {
+        setBookingsMessage(`Failed to load bookings: ${error.message}`);
+        setBookings([]);
+        return;
+      }
+
+      setBookings((data as BookingRow[]) || []);
+    } catch {
+      setBookingsMessage("Failed to load bookings.");
+      setBookings([]);
+    } finally {
+      setBookingsLoading(false);
+    }
+  }
 
   async function runScan() {
     setLoading(true);
@@ -161,6 +201,13 @@ CONFIDENCE SCORE
     URL.revokeObjectURL(url);
   }
 
+  function formatDateTime(value: string | null) {
+    if (!value) return "Not scheduled";
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) return value;
+    return date.toLocaleString();
+  }
+
   return (
     <main className="min-h-screen bg-black text-white flex">
       <div className="hidden w-64 border-r border-white/10 p-6 md:block">
@@ -173,6 +220,7 @@ CONFIDENCE SCORE
           <p className="cursor-pointer hover:text-white">Delay Hotspots</p>
           <p className="cursor-pointer hover:text-white">Broken Handoffs</p>
           <p className="cursor-pointer hover:text-white">Duplicate Work</p>
+          <p className="cursor-pointer hover:text-white">Bookings</p>
           <p className="cursor-pointer hover:text-white">Settings</p>
         </nav>
       </div>
@@ -280,6 +328,74 @@ CONFIDENCE SCORE
               Potential gain if high-friction issues are corrected.
             </p>
           </div>
+        </div>
+
+        <div className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-6">
+          <div className="flex items-center justify-between gap-4">
+            <div>
+              <h3 className="text-xl font-semibold text-cyan-300">
+                Recent Bookings
+              </h3>
+              <p className="mt-2 text-sm text-gray-400">
+                Real bookings saved from your Calendly workflow.
+              </p>
+            </div>
+
+            <button
+              onClick={loadBookings}
+              className="rounded-2xl border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
+            >
+              Refresh
+            </button>
+          </div>
+
+          {bookingsLoading ? (
+            <p className="mt-6 text-sm text-gray-400">Loading bookings...</p>
+          ) : bookingsMessage ? (
+            <p className="mt-6 text-sm text-red-400">{bookingsMessage}</p>
+          ) : bookings.length === 0 ? (
+            <p className="mt-6 text-sm text-gray-400">
+              No bookings found yet. Book a test call to populate this section.
+            </p>
+          ) : (
+            <div className="mt-6 overflow-x-auto">
+              <table className="min-w-full border-collapse text-left text-sm">
+                <thead>
+                  <tr className="border-b border-white/10 text-gray-400">
+                    <th className="px-3 py-3 font-medium">Name</th>
+                    <th className="px-3 py-3 font-medium">Email</th>
+                    <th className="px-3 py-3 font-medium">Event Type</th>
+                    <th className="px-3 py-3 font-medium">Scheduled At</th>
+                    <th className="px-3 py-3 font-medium">Source</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {bookings.map((booking) => (
+                    <tr
+                      key={booking.id}
+                      className="border-b border-white/5 text-gray-200"
+                    >
+                      <td className="px-3 py-3">
+                        {booking.invitee_name || "Unknown"}
+                      </td>
+                      <td className="px-3 py-3">
+                        {booking.invitee_email || "No email"}
+                      </td>
+                      <td className="px-3 py-3">
+                        {booking.event_type_name || "Unknown event"}
+                      </td>
+                      <td className="px-3 py-3">
+                        {formatDateTime(booking.scheduled_at)}
+                      </td>
+                      <td className="px-3 py-3">
+                        {booking.source || "Not tracked"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
 
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
