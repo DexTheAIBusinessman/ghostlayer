@@ -1,95 +1,109 @@
-mport { NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 import { Resend } from "resend";
 
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
+ process.env.NEXT_PUBLIC_SUPABASE_URL!,
+ process.env.SUPABASE_SERVICE_ROLE_KEY!
 );
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: Request) {
-  try {
-    const body = await req.json();
-    console.log("Webhook received:", JSON.stringify(body, null, 2));
+ try {
+   const body = await req.json();
+   console.log("Webhook received:", JSON.stringify(body, null, 2));
 
-    const payload = body.payload || {};
+   const payload = body.payload || {};
 
-    const calendlyEventUri =
-      payload.event || payload.scheduled_event?.uri || null;
+   const calendlyEventUri =
+     payload.event || payload.scheduled_event?.uri || null;
 
-    const calendlyInviteeUri =
-      payload.invitee?.uri || payload.invitee || null;
+   const calendlyInviteeUri =
+     payload.invitee?.uri || payload.invitee || null;
 
-    const eventTypeName =
-      payload.event_type?.name ||
-      payload.scheduled_event?.event_type ||
-      null;
+   const rawEventType =
+     payload.event_type?.name ||
+     payload.scheduled_event?.event_type ||
+     null;
 
-    const inviteeName =
-      payload.name || payload.invitee?.name || null;
+   const eventTypeName =
+     typeof rawEventType === "string"
+       ? rawEventType.includes("/event_types/")
+         ? "30 Minute Meeting"
+         : rawEventType
+       : "30 Minute Meeting";
 
-    const inviteeEmail =
-      payload.email || payload.invitee?.email || null;
+   const inviteeName =
+     payload.name || payload.invitee?.name || "Not provided";
 
-    const scheduledAt =
-      payload.scheduled_event?.start_time ||
-      payload.start_time ||
-      null;
+   const inviteeEmail =
+     payload.email || payload.invitee?.email || "Not provided";
 
-    const source =
-      payload.tracking?.utm_source ||
-      payload.questions_and_answers?.find(
-        (q: any) => q.question === "source"
-      )?.answer ||
-      null;
+   const scheduledAt =
+     payload.scheduled_event?.start_time ||
+     payload.start_time ||
+     null;
 
-    const { error } = await supabase.from("bookings").insert([
-      {
-        calendly_event_uri: calendlyEventUri,
-        calendly_invitee_uri: calendlyInviteeUri,
-        event_type_name: eventTypeName,
-        invitee_name: inviteeName,
-        invitee_email: inviteeEmail,
-        scheduled_at: scheduledAt,
-        source: source,
-      },
-    ]);
+   const source =
+     payload.tracking?.utm_source ||
+     payload.questions_and_answers?.find(
+       (q: any) => q.question?.toLowerCase() === "source"
+     )?.answer ||
+     "calendly";
 
-    if (error) {
-      console.error("Supabase insert error:", error);
-      return NextResponse.json(
-        { error: error.message },
-        { status: 500 }
-      );
-    }
+   const { error } = await supabase.from("bookings").insert([
+     {
+       calendly_event_uri: calendlyEventUri,
+       calendly_invitee_uri: calendlyInviteeUri,
+       event_type_name: eventTypeName,
+       invitee_name: inviteeName,
+       invitee_email: inviteeEmail,
+       scheduled_at: scheduledAt,
+       source: source,
+     },
+   ]);
 
-    try {
-      await resend.emails.send({
-        from: "onboarding@resend.dev",
-        to: ["dexterstevens630@gmail.com"],
-        subject: "New Calendly booking received",
-        html: `
-          <h2>New booking received</h2>
-          <p><strong>Name:</strong> ${inviteeName ?? "Not provided"}</p>
-          <p><strong>Email:</strong> ${inviteeEmail ?? "Not provided"}</p>
-          <p><strong>Event type:</strong> ${eventTypeName ?? "Not provided"}</p>
-          <p><strong>Scheduled at:</strong> ${scheduledAt ?? "Not provided"}</p>
-          <p><strong>Source:</strong> ${source ?? "Not provided"}</p>
-        `,
-      });
-    } catch (emailError: any) {
-      console.error("Resend email error:", emailError);
-    }
+   if (error) {
+     console.error("Supabase insert error:", error);
+     return NextResponse.json(
+       { error: error.message },
+       { status: 500 }
+     );
+   }
 
-    return NextResponse.json({ success: true });
-  } catch (error: any) {
-    console.error("Webhook route error:", error);
-    return NextResponse.json(
-      { error: error.message || "Webhook failed" },
-      { status: 500 }
-    );
-  }
+   const resendApiKey = process.env.RESEND_API_KEY;
+
+   if (!resendApiKey) {
+     console.log("RESEND_API_KEY is missing. Skipping email send.");
+     return NextResponse.json({ success: true, emailSkipped: true });
+   }
+
+   try {
+     const resend = new Resend(resendApiKey);
+
+     await resend.emails.send({
+       from: "onboarding@resend.dev",
+       to: ["dexterstevens801@gmail.com"],
+       replyTo: "dexterstevens801@gmail.com",
+       subject: "New Calendly booking received",
+       html: `
+         <h2>New booking received</h2>
+         <p><strong>Name:</strong> ${inviteeName}</p>
+         <p><strong>Email:</strong> ${inviteeEmail}</p>
+         <p><strong>Event type:</strong> ${eventTypeName}</p>
+         <p><strong>Scheduled at:</strong> ${scheduledAt ?? "Not provided"}</p>
+         <p><strong>Source:</strong> ${source ?? "Not provided"}</p>
+       `,
+     });
+   } catch (emailError: any) {
+     console.error("Resend email error:", emailError);
+   }
+
+   return NextResponse.json({ success: true });
+ } catch (error: any) {
+   console.error("Webhook route error:", error);
+   return NextResponse.json(
+     { error: error.message || "Webhook failed" },
+     { status: 500 }
+   );
+ }
 }
-
