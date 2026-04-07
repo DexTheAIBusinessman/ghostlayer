@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -16,19 +14,20 @@ export async function POST(req: Request) {
     const eventTypeName = payload?.event_type?.name || "N/A";
     const scheduledAt = payload?.scheduled_event?.start_time || "N/A";
 
+    const resendApiKey = process.env.RESEND_API_KEY;
+
+    if (!resendApiKey) {
+      console.log("RESEND_API_KEY is missing. Skipping email send.");
+      return NextResponse.json({ success: true, emailSkipped: true });
+    }
+
+    const resend = new Resend(resendApiKey);
+
     const result = await resend.emails.send({
-      // ✅ FIXED LINE (THIS WAS YOUR ISSUE)
       from: "onboarding@resend.dev",
-// redeploy fix
-
-      // send to yourself
       to: "stevensdexter17@gmail.com",
-
-      // reply-to (optional, but fine)
       replyTo: "dexterstevens801@gmail.com",
-
-      subject: "New Calendly Booking 🚀",
-
+      subject: "New Calendly Booking",
       html: `
         <h2>New Booking</h2>
         <p><strong>Name:</strong> ${inviteeName}</p>

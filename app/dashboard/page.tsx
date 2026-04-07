@@ -1,3 +1,5 @@
+"use client";
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { PopupModal } from "react-calendly";
@@ -401,7 +403,8 @@ CONFIDENCE SCORE
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
           <h3 className="text-xl font-semibold">Workflow Input</h3>
           <p className="mt-2 text-sm text-gray-400">
-            Enter the core details below to generate a workflow inefficiency scan.
+            Enter the core details below to generate a workflow inefficiency
+            scan.
           </p>
 
           <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -445,7 +448,8 @@ CONFIDENCE SCORE
                   <span className="text-sm text-red-400">High delay</span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
-                  Approval steps are causing tasks to wait too long before moving forward.
+                  Approval steps are causing tasks to wait too long before moving
+                  forward.
                 </p>
               </div>
 
@@ -470,7 +474,8 @@ CONFIDENCE SCORE
                   <span className="text-sm text-red-400">Missing context</span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
-                  Key information is not consistently passed when deals move into delivery.
+                  Key information is not consistently passed when deals move into
+                  delivery.
                 </p>
               </div>
 
