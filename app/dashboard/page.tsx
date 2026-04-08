@@ -87,11 +87,9 @@ export default function Dashboard() {
     setTimeout(() => {
       setAnalysis(`🔎 BUSINESS WORKFLOW SCAN COMPLETE
 
-Company:
-${companyName || 'Unknown Company'}
+Company: ${companyName || 'Unknown Company'}
 
-Team Size:
-${teamSize || 'Not provided'}
+Team Size: ${teamSize || 'Not provided'}
 
 Biggest Workflow Bottleneck:
 ${bottleneck || 'Not provided'}
@@ -99,22 +97,21 @@ ${bottleneck || 'Not provided'}
 Monthly Operational Cost Impacted:
 $${saasSpend || '0'}
 
-Detected Workflow Risks:
+DETECTED RISKS
 - Task delays tied to ${bottleneck || 'unclear workflow stages'}
 - Duplicate effort across team responsibilities
 - Handoff friction causing work to stall between owners
 
-Estimated Impact:
+ESTIMATED IMPACT
 ~$3,200 - $5,000 in monthly productivity loss
 
-Recommended Actions:
+RECOMMENDED ACTIONS
 1. Clarify ownership at each workflow stage
 2. Remove duplicated steps across teams
 3. Add visibility at handoff points to prevent delays
 
-Ghostlayer Confidence Score:
+CONFIDENCE SCORE
 87%`);
-
       setLoading(false);
     }, 2000);
   }
@@ -180,10 +177,10 @@ Ghostlayer Confidence Score:
 Company: ${companyName || 'Unknown Company'}
 Team Size: ${teamSize || 'Not provided'}
 Biggest Workflow Bottleneck: ${bottleneck || 'Not provided'}
-Monthly Operational Cost Impact: $${saasSpend || '0'}
+Monthly Operational Cost Impacted: $${saasSpend || '0'}
 
 SUMMARY
-Ghostlayer detected signs of workflow inefficiency across the business.
+Ghostlayer detected signs of workflow inefficiency across this business.
 
 DETECTED RISKS
 - Task delays tied to ${bottleneck || 'unclear workflow stages'}
@@ -236,42 +233,42 @@ ${analysis}
           <button
             type="button"
             onClick={() => scrollToSection('overview')}
-            className="block cursor-pointer text-left transition hover:text-white"
+            className="block text-left transition hover:text-white"
           >
             Overview
           </button>
           <button
             type="button"
             onClick={() => scrollToSection('delay-hotspots')}
-            className="block cursor-pointer text-left transition hover:text-white"
+            className="block text-left transition hover:text-white"
           >
             Delay Hotspots
           </button>
           <button
             type="button"
             onClick={() => scrollToSection('broken-handoffs')}
-            className="block cursor-pointer text-left transition hover:text-white"
+            className="block text-left transition hover:text-white"
           >
             Broken Handoffs
           </button>
           <button
             type="button"
             onClick={() => scrollToSection('duplicate-work')}
-            className="block cursor-pointer text-left transition hover:text-white"
+            className="block text-left transition hover:text-white"
           >
             Duplicate Work
           </button>
           <button
             type="button"
             onClick={() => scrollToSection('bookings')}
-            className="block cursor-pointer text-left transition hover:text-white"
+            className="block text-left transition hover:text-white"
           >
             Bookings
           </button>
           <button
             type="button"
             onClick={() => scrollToSection('business-inputs')}
-            className="block cursor-pointer text-left transition hover:text-white"
+            className="block text-left transition hover:text-white"
           >
             Business Inputs
           </button>
@@ -279,7 +276,7 @@ ${analysis}
       </div>
 
       <div className="flex-1 p-6 md:p-10">
-        <div
+        <section
           id="overview"
           className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
         >
@@ -287,7 +284,7 @@ ${analysis}
             <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">
               Business Workflow Inefficiency Scanner
             </p>
-            <h1 className="mt-3 text-3xl font-bold md:text-4xl">
+            <h1 className="mt-3 text-3xl font-bold md:text-5xl">
               Find Workflow Inefficiencies Costing Your Business Time and
               Revenue
             </h1>
@@ -331,7 +328,7 @@ ${analysis}
               Book Business Consultation
             </button>
           </div>
-        </div>
+        </section>
 
         {isMounted && (
           <PopupModal
@@ -346,13 +343,13 @@ ${analysis}
           <p className="mt-4 text-sm text-cyan-300">{saveMessage}</p>
         )}
 
-        <div className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-4">
+        <section className="mt-10 grid grid-cols-1 gap-6 md:grid-cols-4">
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
             <h3 className="text-sm uppercase tracking-[0.2em] text-gray-400">
               Workflow Health
             </h3>
             <p className="mt-3 text-4xl font-bold">82%</p>
-            <p className="mt-2 text-sm text-gray-400">
+            <p className="mt-2 text-sm text-gray-300">
               Estimated visibility and operational consistency across core
               business workflows.
             </p>
@@ -390,9 +387,9 @@ ${analysis}
               are reduced.
             </p>
           </div>
-        </div>
+        </section>
 
-        <div
+        <section
           id="bookings"
           className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-6"
         >
@@ -448,7 +445,13 @@ ${analysis}
                         {booking.invitee_email || 'No email'}
                       </td>
                       <td className="px-3 py-3">
-                        {booking.event_type_name || 'Unknown event'}
+                        {booking.event_type_name
+                          ? booking.event_type_name.includes(
+                              'https://api.calendly.com/event_types/'
+                            )
+                            ? 'Business Consultation'
+                            : booking.event_type_name
+                          : 'Unknown event'}
                       </td>
                       <td className="px-3 py-3">
                         {formatDateTime(booking.scheduled_at)}
@@ -462,9 +465,9 @@ ${analysis}
               </table>
             </div>
           )}
-        </div>
+        </section>
 
-        <div
+        <section
           id="business-inputs"
           className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6"
         >
@@ -504,13 +507,13 @@ ${analysis}
               className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
             />
           </div>
-        </div>
+        </section>
 
-        <div className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-3">
-          <div
-            id="delay-hotspots"
-            className="rounded-3xl border border-white/10 bg-white/5 p-6"
-          >
+        <section
+          id="delay-hotspots"
+          className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-3"
+        >
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
             <h3 className="text-xl font-semibold">Delay Hotspots</h3>
             <div className="mt-5 space-y-4">
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
@@ -579,9 +582,7 @@ ${analysis}
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
                 <div className="flex items-center justify-between">
                   <p className="font-medium">Reporting Tasks</p>
-                  <span className="text-sm text-cyan-300">
-                    Duplicated weekly
-                  </span>
+                  <span className="text-sm text-cyan-300">Duplicated weekly</span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
                   Two teams are recreating similar reports in separate tools.
@@ -591,9 +592,7 @@ ${analysis}
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
                 <div className="flex items-center justify-between">
                   <p className="font-medium">Manual Status Updates</p>
-                  <span className="text-sm text-cyan-300">
-                    Repeated effort
-                  </span>
+                  <span className="text-sm text-cyan-300">Repeated effort</span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
                   Team members are updating the same progress in multiple
@@ -602,35 +601,31 @@ ${analysis}
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
-        <div className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-6">
+        <section className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-6">
           <div className="flex items-center justify-between gap-4">
             <h3 className="text-xl font-semibold text-cyan-300">
-              Business Workflow Analysis
+              AI Analysis
             </h3>
             <span className="text-xs uppercase tracking-[0.2em] text-gray-500">
-              Directional Estimate
+              Beta Estimate
             </span>
           </div>
 
           <p className="mt-2 text-sm text-gray-500">
-            These results are directional estimates designed to highlight
-            workflow inefficiencies, operational drag, and cost-saving
-            opportunities for your business.
+            These results are directional estimates and are improving over time.
           </p>
 
           <pre className="mt-4 whitespace-pre-wrap text-sm leading-7 text-gray-300">
             {analysis}
           </pre>
-        </div>
+        </section>
 
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-xl font-semibold">
-            Help us improve Ghostlayer for business teams
-          </h3>
+        <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
+          <h3 className="text-xl font-semibold">Help us improve Ghostlayer</h3>
           <p className="mt-2 text-sm text-gray-400">
-            What would make this workflow scanner more useful for your business?
+            What would make this 10x more useful for your business?
           </p>
 
           <textarea
@@ -651,12 +646,12 @@ ${analysis}
           {feedbackMessage && (
             <p className="mt-4 text-sm text-cyan-300">{feedbackMessage}</p>
           )}
-        </div>
+        </section>
 
         <footer className="mt-12 border-t border-white/10 pt-6 text-sm text-gray-500">
           © {new Date().getFullYear()} Ghostlayer. Built to help businesses
-          uncover workflow inefficiencies, reduce operational drag, and improve
-          execution.
+          uncover workflow inefficiencies, reduce drag, and recover execution
+          time.
         </footer>
       </div>
     </main>
