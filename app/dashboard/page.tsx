@@ -187,8 +187,7 @@ RECOMMENDED ACTIONS
 3. Add visibility at handoff points to prevent delays
 
 CONFIDENCE SCORE
-87%
-`;
+87%`;
 
     const blob = new Blob([report], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
@@ -208,6 +207,16 @@ CONFIDENCE SCORE
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return value;
     return date.toLocaleString();
+  }
+
+  function formatEventType(value: string | null) {
+    if (!value) return "Unknown event";
+
+    if (value.includes("30 Minute Meeting")) return "30 Minute Meeting";
+
+    if (value.includes("/event_types/")) return "30 Minute Meeting";
+
+    return value;
   }
 
   return (
@@ -384,7 +393,7 @@ CONFIDENCE SCORE
                         {booking.invitee_email || "No email"}
                       </td>
                       <td className="px-3 py-3">
-                        {booking.event_type_name || "Unknown event"}
+                        {formatEventType(booking.event_type_name)}
                       </td>
                       <td className="px-3 py-3">
                         {formatDateTime(booking.scheduled_at)}
@@ -448,18 +457,21 @@ CONFIDENCE SCORE
                   <span className="text-sm text-red-400">High delay</span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
-                  Approval steps are causing tasks to wait too long before moving
-                  forward.
+                  Approval steps are causing tasks to wait too long before
+                  moving forward.
                 </p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
                 <div className="flex items-center justify-between">
                   <p className="font-medium">Client Onboarding</p>
-                  <span className="text-sm text-yellow-400">Moderate delay</span>
+                  <span className="text-sm text-yellow-400">
+                    Moderate delay
+                  </span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
-                  Work stalls when information collection is incomplete at intake.
+                  Work stalls when information collection is incomplete at
+                  intake.
                 </p>
               </div>
             </div>
@@ -474,15 +486,17 @@ CONFIDENCE SCORE
                   <span className="text-sm text-red-400">Missing context</span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
-                  Key information is not consistently passed when deals move into
-                  delivery.
+                  Key information is not consistently passed when deals move
+                  into delivery.
                 </p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
                 <div className="flex items-center justify-between">
                   <p className="font-medium">Support → Product</p>
-                  <span className="text-sm text-yellow-400">Weak ownership</span>
+                  <span className="text-sm text-yellow-400">
+                    Weak ownership
+                  </span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
                   Escalated issues lack a clear owner after being transferred.
@@ -497,7 +511,9 @@ CONFIDENCE SCORE
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
                 <div className="flex items-center justify-between">
                   <p className="font-medium">Reporting Tasks</p>
-                  <span className="text-sm text-cyan-300">Duplicated weekly</span>
+                  <span className="text-sm text-cyan-300">
+                    Duplicated weekly
+                  </span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
                   Two teams are recreating similar reports in separate tools.
@@ -507,10 +523,13 @@ CONFIDENCE SCORE
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
                 <div className="flex items-center justify-between">
                   <p className="font-medium">Manual Status Updates</p>
-                  <span className="text-sm text-cyan-300">Repeated effort</span>
+                  <span className="text-sm text-cyan-300">
+                    Repeated effort
+                  </span>
                 </div>
                 <p className="mt-2 text-sm text-gray-400">
-                  Team members are updating the same progress in multiple places.
+                  Team members are updating the same progress in multiple
+                  places.
                 </p>
               </div>
             </div>
