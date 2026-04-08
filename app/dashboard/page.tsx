@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import Link from "next/link";
-import { useEffect, useState } from "react";
-import { PopupModal } from "react-calendly";
-import { supabase } from "@/lib/supabase";
-import { trackCtaClick } from "@/lib/trackCtaClick";
+import Link from 'next/link';
+import { useEffect, useState } from 'react';
+import { PopupModal } from 'react-calendly';
+import { supabase } from '@/lib/supabase';
+import { trackCtaClick } from '@/lib/trackCtaClick';
 
 type BookingRow = {
   id: number;
@@ -22,36 +22,46 @@ export default function Dashboard() {
   const [isMounted, setIsMounted] = useState(false);
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 
-  const [companyName, setCompanyName] = useState("");
-  const [teamSize, setTeamSize] = useState("");
-  const [bottleneck, setBottleneck] = useState("");
-  const [saasSpend, setSaasSpend] = useState("");
+  const [companyName, setCompanyName] = useState('');
+  const [teamSize, setTeamSize] = useState('');
+  const [bottleneck, setBottleneck] = useState('');
+  const [saasSpend, setSaasSpend] = useState('');
 
-  const [analysis, setAnalysis] = useState("No scan has been run yet.");
+  const [analysis, setAnalysis] = useState(
+    'No business workflow scan has been run yet.'
+  );
   const [loading, setLoading] = useState(false);
-  const [saveMessage, setSaveMessage] = useState("");
-  const [feedback, setFeedback] = useState("");
-  const [feedbackMessage, setFeedbackMessage] = useState("");
+
+  const [saveMessage, setSaveMessage] = useState('');
+  const [feedback, setFeedback] = useState('');
+  const [feedbackMessage, setFeedbackMessage] = useState('');
   const [feedbackLoading, setFeedbackLoading] = useState(false);
 
   const [bookings, setBookings] = useState<BookingRow[]>([]);
   const [bookingsLoading, setBookingsLoading] = useState(true);
-  const [bookingsMessage, setBookingsMessage] = useState("");
+  const [bookingsMessage, setBookingsMessage] = useState('');
 
   useEffect(() => {
     setIsMounted(true);
     loadBookings();
   }, []);
 
+  function scrollToSection(id: string) {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
   async function loadBookings() {
     try {
       setBookingsLoading(true);
-      setBookingsMessage("");
+      setBookingsMessage('');
 
       const { data, error } = await supabase
-        .from("bookings")
-        .select("*")
-        .order("id", { ascending: false });
+        .from('bookings')
+        .select('*')
+        .order('id', { ascending: false });
 
       if (error) {
         setBookingsMessage(`Failed to load bookings: ${error.message}`);
@@ -61,7 +71,7 @@ export default function Dashboard() {
 
       setBookings((data as BookingRow[]) || []);
     } catch {
-      setBookingsMessage("Failed to load bookings.");
+      setBookingsMessage('Failed to load bookings.');
       setBookings([]);
     } finally {
       setBookingsLoading(false);
@@ -70,53 +80,55 @@ export default function Dashboard() {
 
   async function runScan() {
     setLoading(true);
-    setSaveMessage("");
-    setFeedbackMessage("");
-    setAnalysis("Running AI scan...");
+    setSaveMessage('');
+    setFeedbackMessage('');
+    setAnalysis('Running business workflow scan...');
 
     setTimeout(() => {
-      setAnalysis(`🔍 WORKFLOW SCAN COMPLETE
+      setAnalysis(`🔎 BUSINESS WORKFLOW SCAN COMPLETE
 
 Company:
-${companyName || "Unknown Company"}
+${companyName || 'Unknown Company'}
 
 Team Size:
-${teamSize || "Not provided"}
+${teamSize || 'Not provided'}
 
 Biggest Workflow Bottleneck:
-${bottleneck || "Not provided"}
+${bottleneck || 'Not provided'}
 
-Monthly Operational Cost Impact:
-$${saasSpend || "0"}
+Monthly Operational Cost Impacted:
+$${saasSpend || '0'}
 
 Detected Workflow Risks:
-- Task delays tied to ${bottleneck || "unclear workflow stages"}
+- Task delays tied to ${bottleneck || 'unclear workflow stages'}
 - Duplicate effort across team responsibilities
 - Handoff friction causing work to stall between owners
 
 Estimated Impact:
 ~$3,200 - $5,000 in monthly productivity loss
 
-Priority Fixes:
+Recommended Actions:
 1. Clarify ownership at each workflow stage
 2. Remove duplicated steps across teams
 3. Add visibility at handoff points to prevent delays
 
-GHOSTLAYER Confidence Score: 87%`);
+Ghostlayer Confidence Score:
+87%`);
+
       setLoading(false);
     }, 2000);
   }
 
   async function saveScan() {
     try {
-      setSaveMessage("Saving scan...");
+      setSaveMessage('Saving scan...');
 
-      const { error } = await supabase.from("scans").insert([
+      const { error } = await supabase.from('scans').insert([
         {
-          company_name: companyName || "Unknown Company",
-          team_size: teamSize || "Not provided",
-          bottleneck: bottleneck || "Not provided",
-          saas_spend: saasSpend || "0",
+          company_name: companyName || 'Unknown Company',
+          team_size: teamSize || 'Not provided',
+          bottleneck: bottleneck || 'Not provided',
+          saas_spend: saasSpend || '0',
           analysis,
         },
       ]);
@@ -126,23 +138,23 @@ GHOSTLAYER Confidence Score: 87%`);
         return;
       }
 
-      setSaveMessage("Scan saved successfully.");
+      setSaveMessage('Scan saved successfully.');
     } catch {
-      setSaveMessage("Failed to save scan.");
+      setSaveMessage('Failed to save scan.');
     }
   }
 
   async function submitFeedback() {
     if (!feedback.trim()) {
-      setFeedbackMessage("Please enter feedback before submitting.");
+      setFeedbackMessage('Please enter feedback before submitting.');
       return;
     }
 
     try {
       setFeedbackLoading(true);
-      setFeedbackMessage("Saving feedback...");
+      setFeedbackMessage('Saving feedback...');
 
-      const { error } = await supabase.from("feedback").insert([
+      const { error } = await supabase.from('feedback').insert([
         {
           message: feedback,
         },
@@ -153,28 +165,28 @@ GHOSTLAYER Confidence Score: 87%`);
         return;
       }
 
-      setFeedbackMessage("Feedback submitted. Thank you.");
-      setFeedback("");
+      setFeedbackMessage('Feedback submitted. Thank you.');
+      setFeedback('');
     } catch {
-      setFeedbackMessage("Failed to save feedback.");
+      setFeedbackMessage('Failed to save feedback.');
     } finally {
       setFeedbackLoading(false);
     }
   }
 
   function downloadReport() {
-    const report = `GHOSTLAYER WORKFLOW REPORT
+    const report = `GHOSTLAYER BUSINESS WORKFLOW REPORT
 
-Company: ${companyName || "Unknown Company"}
-Team Size: ${teamSize || "Not provided"}
-Biggest Workflow Bottleneck: ${bottleneck || "Not provided"}
-Monthly Operational Cost Impact: $${saasSpend || "0"}
+Company: ${companyName || 'Unknown Company'}
+Team Size: ${teamSize || 'Not provided'}
+Biggest Workflow Bottleneck: ${bottleneck || 'Not provided'}
+Monthly Operational Cost Impact: $${saasSpend || '0'}
 
 SUMMARY
-GHOSTLAYER detected signs of workflow inefficiency across the business.
+Ghostlayer detected signs of workflow inefficiency across the business.
 
 DETECTED RISKS
-- Task delays tied to ${bottleneck || "unclear workflow stages"}
+- Task delays tied to ${bottleneck || 'unclear workflow stages'}
 - Duplicate effort across team responsibilities
 - Handoff friction causing work to stall between owners
 
@@ -187,14 +199,18 @@ RECOMMENDED ACTIONS
 3. Add visibility at handoff points to prevent delays
 
 CONFIDENCE SCORE
-87%`;
+87%
 
-    const blob = new Blob([report], { type: "text/plain" });
+ANALYSIS
+${analysis}
+`;
+
+    const blob = new Blob([report], { type: 'text/plain' });
     const url = URL.createObjectURL(blob);
 
-    const link = document.createElement("a");
+    const link = document.createElement('a');
     link.href = url;
-    link.download = `ghostlayer-report-${companyName || "company"}.txt`;
+    link.download = `ghostlayer-report-${companyName || 'company'}.txt`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -203,20 +219,10 @@ CONFIDENCE SCORE
   }
 
   function formatDateTime(value: string | null) {
-    if (!value) return "Not scheduled";
+    if (!value) return 'Not scheduled';
     const date = new Date(value);
     if (Number.isNaN(date.getTime())) return value;
     return date.toLocaleString();
-  }
-
-  function formatEventType(value: string | null) {
-    if (!value) return "Unknown event";
-
-    if (value.includes("30 Minute Meeting")) return "30 Minute Meeting";
-
-    if (value.includes("/event_types/")) return "30 Minute Meeting";
-
-    return value;
   }
 
   return (
@@ -227,27 +233,68 @@ CONFIDENCE SCORE
         </Link>
 
         <nav className="mt-10 space-y-4 text-gray-400">
-          <p className="cursor-pointer hover:text-white">Overview</p>
-          <p className="cursor-pointer hover:text-white">Delay Hotspots</p>
-          <p className="cursor-pointer hover:text-white">Broken Handoffs</p>
-          <p className="cursor-pointer hover:text-white">Duplicate Work</p>
-          <p className="cursor-pointer hover:text-white">Bookings</p>
-          <p className="cursor-pointer hover:text-white">Settings</p>
+          <button
+            type="button"
+            onClick={() => scrollToSection('overview')}
+            className="block cursor-pointer text-left transition hover:text-white"
+          >
+            Overview
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('delay-hotspots')}
+            className="block cursor-pointer text-left transition hover:text-white"
+          >
+            Delay Hotspots
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('broken-handoffs')}
+            className="block cursor-pointer text-left transition hover:text-white"
+          >
+            Broken Handoffs
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('duplicate-work')}
+            className="block cursor-pointer text-left transition hover:text-white"
+          >
+            Duplicate Work
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('bookings')}
+            className="block cursor-pointer text-left transition hover:text-white"
+          >
+            Bookings
+          </button>
+          <button
+            type="button"
+            onClick={() => scrollToSection('business-inputs')}
+            className="block cursor-pointer text-left transition hover:text-white"
+          >
+            Business Inputs
+          </button>
         </nav>
       </div>
 
       <div className="flex-1 p-6 md:p-10">
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div
+          id="overview"
+          className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"
+        >
           <div>
             <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">
-              Workflow Inefficiency Dashboard
+              Business Workflow Inefficiency Scanner
             </p>
-            <h2 className="mt-3 text-3xl font-bold md:text-4xl">
-              Run a Workflow Inefficiency Scan
-            </h2>
-            <p className="mt-2 max-w-2xl text-sm text-gray-400 md:text-base">
-              Enter workflow details and GHOSTLAYER will simulate where delays,
-              duplicated work, and broken handoffs are hurting performance.
+            <h1 className="mt-3 text-3xl font-bold md:text-4xl">
+              Find Workflow Inefficiencies Costing Your Business Time and
+              Revenue
+            </h1>
+            <p className="mt-2 max-w-3xl text-sm text-gray-400 md:text-base">
+              Ghostlayer scans business workflows to uncover delays, duplicate
+              work, broken handoffs, and hidden operational bottlenecks across
+              your team.
             </p>
           </div>
 
@@ -257,7 +304,7 @@ CONFIDENCE SCORE
               disabled={loading}
               className="rounded-2xl bg-white px-5 py-3 font-semibold text-black transition hover:opacity-80 disabled:opacity-50"
             >
-              {loading ? "Scanning..." : "Run AI Scan"}
+              {loading ? 'Scanning...' : 'Run Business Scan'}
             </button>
 
             <button
@@ -271,17 +318,17 @@ CONFIDENCE SCORE
               onClick={downloadReport}
               className="rounded-2xl border border-white/20 px-5 py-3 font-semibold text-white transition hover:bg-white hover:text-black"
             >
-              Download Report
+              Download Business Report
             </button>
 
             <button
               onClick={async () => {
-                await trackCtaClick("dashboard");
+                await trackCtaClick('dashboard');
                 setIsCalendlyOpen(true);
               }}
               className="rounded-2xl border border-cyan-400/30 px-5 py-3 text-center font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
             >
-              Book Free Call
+              Book Business Consultation
             </button>
           </div>
         </div>
@@ -305,8 +352,9 @@ CONFIDENCE SCORE
               Workflow Health
             </h3>
             <p className="mt-3 text-4xl font-bold">82%</p>
-            <p className="mt-2 text-sm text-gray-500">
-              Stable, but with visible inefficiency across key stages.
+            <p className="mt-2 text-sm text-gray-400">
+              Estimated visibility and operational consistency across core
+              business workflows.
             </p>
           </div>
 
@@ -316,7 +364,8 @@ CONFIDENCE SCORE
             </h3>
             <p className="mt-3 text-4xl font-bold">68/100</p>
             <p className="mt-2 text-sm text-gray-300">
-              Elevated due to delays, repeated effort, and weak handoffs.
+              Higher scores indicate delays, repeated effort, weak ownership,
+              and broken handoffs.
             </p>
           </div>
 
@@ -326,7 +375,8 @@ CONFIDENCE SCORE
             </h3>
             <p className="mt-3 text-4xl font-bold">$3,247/mo</p>
             <p className="mt-2 text-sm text-gray-300">
-              Estimated cost from workflow drag and missed execution.
+              Estimated monthly business cost caused by workflow drag and missed
+              execution.
             </p>
           </div>
 
@@ -336,25 +386,30 @@ CONFIDENCE SCORE
             </h3>
             <p className="mt-3 text-4xl font-bold">$4,200/mo</p>
             <p className="mt-2 text-sm text-gray-300">
-              Potential gain if high-friction issues are corrected.
+              Potential monthly gain if workflow friction and repeated effort
+              are reduced.
             </p>
           </div>
         </div>
 
-        <div className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-6">
+        <div
+          id="bookings"
+          className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-6"
+        >
           <div className="flex items-center justify-between gap-4">
             <div>
               <h3 className="text-xl font-semibold text-cyan-300">
                 Recent Bookings
               </h3>
               <p className="mt-2 text-sm text-gray-400">
-                Real bookings saved from your Calendly workflow.
+                Recent business consultations captured through your Calendly
+                workflow.
               </p>
             </div>
 
             <button
               onClick={loadBookings}
-              className="rounded-2xl border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
+              className="rounded-2xl border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white/10"
             >
               Refresh
             </button>
@@ -387,19 +442,19 @@ CONFIDENCE SCORE
                       className="border-b border-white/5 text-gray-200"
                     >
                       <td className="px-3 py-3">
-                        {booking.invitee_name || "Unknown"}
+                        {booking.invitee_name || 'Unknown'}
                       </td>
                       <td className="px-3 py-3">
-                        {booking.invitee_email || "No email"}
+                        {booking.invitee_email || 'No email'}
                       </td>
                       <td className="px-3 py-3">
-                        {formatEventType(booking.event_type_name)}
+                        {booking.event_type_name || 'Unknown event'}
                       </td>
                       <td className="px-3 py-3">
                         {formatDateTime(booking.scheduled_at)}
                       </td>
                       <td className="px-3 py-3">
-                        {booking.source || "Not tracked"}
+                        {booking.source || 'Not tracked'}
                       </td>
                     </tr>
                   ))}
@@ -409,11 +464,15 @@ CONFIDENCE SCORE
           )}
         </div>
 
-        <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-xl font-semibold">Workflow Input</h3>
+        <div
+          id="business-inputs"
+          className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6"
+        >
+          <h3 className="text-xl font-semibold">Business Workflow Inputs</h3>
           <p className="mt-2 text-sm text-gray-400">
-            Enter the core details below to generate a workflow inefficiency
-            scan.
+            Enter your business details below to simulate where workflow
+            inefficiencies may be slowing execution, increasing costs, and
+            creating missed opportunities.
           </p>
 
           <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -448,7 +507,10 @@ CONFIDENCE SCORE
         </div>
 
         <div className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-3">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div
+            id="delay-hotspots"
+            className="rounded-3xl border border-white/10 bg-white/5 p-6"
+          >
             <h3 className="text-xl font-semibold">Delay Hotspots</h3>
             <div className="mt-5 space-y-4">
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
@@ -477,7 +539,10 @@ CONFIDENCE SCORE
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div
+            id="broken-handoffs"
+            className="rounded-3xl border border-white/10 bg-white/5 p-6"
+          >
             <h3 className="text-xl font-semibold">Broken Handoffs</h3>
             <div className="mt-5 space-y-4">
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
@@ -505,7 +570,10 @@ CONFIDENCE SCORE
             </div>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+          <div
+            id="duplicate-work"
+            className="rounded-3xl border border-white/10 bg-white/5 p-6"
+          >
             <h3 className="text-xl font-semibold">Duplicate Work Alerts</h3>
             <div className="mt-5 space-y-4">
               <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
@@ -538,14 +606,18 @@ CONFIDENCE SCORE
 
         <div className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-6">
           <div className="flex items-center justify-between gap-4">
-            <h3 className="text-xl font-semibold text-cyan-300">AI Analysis</h3>
+            <h3 className="text-xl font-semibold text-cyan-300">
+              Business Workflow Analysis
+            </h3>
             <span className="text-xs uppercase tracking-[0.2em] text-gray-500">
-              Beta Estimate
+              Directional Estimate
             </span>
           </div>
 
           <p className="mt-2 text-sm text-gray-500">
-            These results are directional estimates and are improving over time.
+            These results are directional estimates designed to highlight
+            workflow inefficiencies, operational drag, and cost-saving
+            opportunities for your business.
           </p>
 
           <pre className="mt-4 whitespace-pre-wrap text-sm leading-7 text-gray-300">
@@ -554,9 +626,11 @@ CONFIDENCE SCORE
         </div>
 
         <div className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-6">
-          <h3 className="text-xl font-semibold">Help us improve GHOSTLAYER</h3>
+          <h3 className="text-xl font-semibold">
+            Help us improve Ghostlayer for business teams
+          </h3>
           <p className="mt-2 text-sm text-gray-400">
-            What would make this 10x more useful for your business?
+            What would make this workflow scanner more useful for your business?
           </p>
 
           <textarea
@@ -571,13 +645,19 @@ CONFIDENCE SCORE
             disabled={feedbackLoading}
             className="mt-4 rounded-2xl bg-white px-5 py-3 font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
           >
-            {feedbackLoading ? "Submitting..." : "Submit Feedback"}
+            {feedbackLoading ? 'Submitting...' : 'Submit Feedback'}
           </button>
 
           {feedbackMessage && (
             <p className="mt-4 text-sm text-cyan-300">{feedbackMessage}</p>
           )}
         </div>
+
+        <footer className="mt-12 border-t border-white/10 pt-6 text-sm text-gray-500">
+          © {new Date().getFullYear()} Ghostlayer. Built to help businesses
+          uncover workflow inefficiencies, reduce operational drag, and improve
+          execution.
+        </footer>
       </div>
     </main>
   );
