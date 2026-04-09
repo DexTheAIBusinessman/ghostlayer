@@ -18,6 +18,15 @@ type BookingRow = {
   created_at?: string | null;
 };
 
+type IssueSeverity = 'High' | 'Medium' | 'Low';
+
+type PriorityIssue = {
+  title: string;
+  severity: IssueSeverity;
+  impact: string;
+  action: string;
+};
+
 export default function DashboardPage() {
   const [isMounted, setIsMounted] = useState(false);
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
@@ -28,7 +37,7 @@ export default function DashboardPage() {
   const [saasSpend, setSaasSpend] = useState('');
 
   const [analysis, setAnalysis] = useState(
-    'No business workflow scan has been run yet.'
+    'Run a business workflow scan to generate a workflow intelligence summary.'
   );
   const [loading, setLoading] = useState(false);
   const [saveMessage, setSaveMessage] = useState('');
@@ -41,6 +50,9 @@ export default function DashboardPage() {
   const [bookingsLoading, setBookingsLoading] = useState(true);
   const [bookingsMessage, setBookingsMessage] = useState('');
 
+  const [lastScanAt, setLastScanAt] = useState<string | null>(null);
+  const [activeSection, setActiveSection] = useState('overview');
+
   const currentYear = new Date().getFullYear();
 
   useEffect(() => {
@@ -48,10 +60,47 @@ export default function DashboardPage() {
     loadBookings();
   }, []);
 
+  useEffect(() => {
+    const ids = [
+      'overview',
+      'priority-issues',
+      'bookings',
+      'delay-hotspots',
+      'broken-handoffs',
+      'duplicate-work',
+      'intelligence-summary',
+      'run-scan',
+    ];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+
+        if (visible[0]?.target?.id) {
+          setActiveSection(visible[0].target.id);
+        }
+      },
+      {
+        rootMargin: '-20% 0px -60% 0px',
+        threshold: [0.2, 0.4, 0.6],
+      }
+    );
+
+    ids.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+
+    return () => observer.disconnect();
+  }, [bookingsLoading, bookings.length, analysis]);
+
   function scrollToSection(id: string) {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      setActiveSection(id);
     }
   }
 
@@ -84,13 +133,19 @@ export default function DashboardPage() {
     setLoading(true);
     setSaveMessage('');
     setFeedbackMessage('');
-    setAnalysis('Running business workflow scan...');
 
+    const companyLabel = companyName || 'Unknown Company';
     const teamNumber = Number(teamSize) || 5;
+    const teamLabel = teamSize || 'Not provided';
     const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
+    const spendLabel = saasSpend || '0';
+    const bottleneckLabel = bottleneck || 'unclear workflow stages';
 
-    const healthScore = Math.max(61, Math.min(94, 88 - Math.floor(teamNumber / 3)));
-    const riskScore = Math.max(
+    const workflowHealth = Math.max(
+      61,
+      Math.min(94, 88 - Math.floor(teamNumber / 3))
+    );
+    const workflowRisk = Math.max(
       38,
       Math.min(
         91,
@@ -100,53 +155,52 @@ export default function DashboardPage() {
           (spendNumber >= 500 ? 4 : 0)
       )
     );
-    const monthlyLoss = Math.max(
+    const productivityLoss = Math.max(
       1200,
       Math.round(teamNumber * 420 + spendNumber * 0.35)
     );
+    const savingsOpportunity = Math.round(productivityLoss * 1.28);
 
-    const mainBottleneck = bottleneck || 'unclear workflow stages';
-    const sizeLabel = teamSize || 'Not provided';
-    const companyLabel = companyName || 'Unknown Company';
-    const spendLabel = saasSpend || '0';
+    const summary = `EXECUTIVE SUMMARY
 
-    const summary = `BUSINESS WORKFLOW SCAN COMPLETE
+${companyLabel} is showing workflow friction that may be slowing execution, increasing operational drag, and creating avoidable revenue leakage. The strongest risk signal is tied to ${bottleneckLabel}.
 
-Company:
-${companyLabel}
+MAIN RISKS
 
-Team Size:
-${sizeLabel}
+- Delays are building around ${bottleneckLabel}
+- Handoffs are likely losing context between teams
+- Repeated manual updates are increasing duplicate work
+- Visibility drops as work moves from intake to delivery
 
-Biggest Workflow Bottleneck:
-${mainBottleneck}
+ESTIMATED COST IMPACT
 
-Monthly Operational Cost Impacted:
-$${spendLabel}
+- Estimated monthly productivity loss: $${productivityLoss.toLocaleString()}
+- Estimated recovery opportunity: $${savingsOpportunity.toLocaleString()}
+- Workflow health score: ${workflowHealth}%
+- Workflow risk score: ${workflowRisk}/100
 
-DETECTED WORKFLOW RISKS
-- Task delays tied to ${mainBottleneck}
-- Duplicate effort across team responsibilities
-- Handoff friction causing work to stall between owners
+NEXT BEST ACTIONS
 
-ESTIMATED IMPACT
-~$${monthlyLoss.toLocaleString()} in monthly productivity loss
+1. Assign one owner to each major workflow stage
+2. Remove one repeated manual update step this week
+3. Standardize intake information before handoff
+4. Review approval steps that delay execution
+5. Use booked consultation data to identify demand patterns
 
-RECOMMENDED ACTIONS
-1. Clarify ownership at each workflow stage
-2. Remove repeated manual steps across teams
-3. Add visibility at handoff points to prevent delays
+SCAN INPUTS
 
-CONFIDENCE SCORE
-${healthScore}%
+Company: ${companyLabel}
+Team Size: ${teamLabel}
+Biggest Bottleneck: ${bottleneckLabel}
+Monthly Cost Impacted: $${spendLabel}`;
 
-ANALYSIS
-Ghostlayer detected workflow inefficiency patterns that may be slowing execution, increasing costs, and reducing follow-through across the business.`;
+    setAnalysis('Running business workflow scan...');
 
     setTimeout(() => {
       setAnalysis(summary);
+      setLastScanAt(new Date().toISOString());
       setLoading(false);
-    }, 1400);
+    }, 1200);
   }
 
   async function saveScan() {
@@ -205,7 +259,7 @@ Ghostlayer detected workflow inefficiency patterns that may be slowing execution
   }
 
   function downloadReport() {
-    const report = `GHOSTLAYER BUSINESS WORKFLOW REPORT
+    const report = `GHOSTLAYER OPERATIONS DASHBOARD REPORT
 
 Company: ${companyName || 'Unknown Company'}
 Team Size: ${teamSize || 'Not provided'}
@@ -226,7 +280,6 @@ ${analysis}`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-
     URL.revokeObjectURL(url);
   }
 
@@ -241,6 +294,22 @@ ${analysis}`;
     if (!value) return 'Business Consultation';
     if (value.includes('/event_types/')) return 'Business Consultation';
     return value;
+  }
+
+  function formatRelativeTime(value: string | null) {
+    if (!value) return 'Not yet run';
+    const then = new Date(value).getTime();
+    const now = Date.now();
+    const diff = Math.max(0, now - then);
+
+    const mins = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+
+    if (mins < 1) return 'just now';
+    if (mins < 60) return `${mins}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    return `${days}d ago`;
   }
 
   const metrics = useMemo(() => {
@@ -275,19 +344,54 @@ ${analysis}`;
     };
   }, [teamSize, saasSpend, bottleneck]);
 
+  const priorityIssues: PriorityIssue[] = useMemo(() => {
+    const label = bottleneck || 'approval bottlenecks';
+
+    return [
+      {
+        title: 'Execution delay risk',
+        severity: 'High',
+        impact: `Work is slowing around ${label}. Teams may be waiting too long to move work forward.`,
+        action: 'Assign one owner and reduce extra review steps.',
+      },
+      {
+        title: 'Handoff context loss',
+        severity: 'Medium',
+        impact: 'Important information may be dropping between intake, delivery, and follow-through.',
+        action: 'Standardize the handoff checklist used by all teams.',
+      },
+      {
+        title: 'Duplicate manual reporting',
+        severity: 'Medium',
+        impact: 'People may be updating the same status in multiple places, increasing drag.',
+        action: 'Consolidate progress tracking into one primary workflow.',
+      },
+    ];
+  }, [bottleneck]);
+
   const sideNav = [
     { label: 'Overview', id: 'overview' },
+    { label: 'Priority Issues', id: 'priority-issues' },
+    { label: 'Bookings', id: 'bookings' },
     { label: 'Delay Hotspots', id: 'delay-hotspots' },
     { label: 'Broken Handoffs', id: 'broken-handoffs' },
     { label: 'Duplicate Work', id: 'duplicate-work' },
-    { label: 'Bookings', id: 'bookings' },
-    { label: 'Business Inputs', id: 'business-inputs' },
-    { label: 'AI Analysis', id: 'analysis' },
-    { label: 'Feedback', id: 'feedback' },
+    { label: 'Intelligence Summary', id: 'intelligence-summary' },
+    { label: 'Run Scan', id: 'run-scan' },
   ];
 
   const glowLogo =
     '[text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(96,165,250,0.95),0_0_34px_rgba(59,130,246,0.9),0_0_54px_rgba(147,51,234,0.7)]';
+
+  function severityClasses(severity: IssueSeverity) {
+    if (severity === 'High') {
+      return 'border-red-500/30 bg-red-500/10 text-red-300';
+    }
+    if (severity === 'Medium') {
+      return 'border-yellow-500/30 bg-yellow-500/10 text-yellow-300';
+    }
+    return 'border-cyan-400/30 bg-cyan-400/10 text-cyan-300';
+  }
 
   return (
     <main className="min-h-screen bg-black text-white">
@@ -300,22 +404,29 @@ ${analysis}`;
             GHOSTLAYER
           </Link>
 
-          <nav className="mt-10 space-y-4 text-gray-400">
-            {sideNav.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => scrollToSection(item.id)}
-                className="block text-left text-lg transition hover:text-white"
-              >
-                {item.label}
-              </button>
-            ))}
+          <nav className="mt-10 space-y-2 text-gray-400">
+            {sideNav.map((item) => {
+              const isActive = activeSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => scrollToSection(item.id)}
+                  className={`block w-full rounded-xl px-3 py-2 text-left text-lg transition ${
+                    isActive
+                      ? 'bg-white/10 text-white'
+                      : 'text-gray-400 hover:bg-white/5 hover:text-white'
+                  }`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
           </nav>
         </aside>
 
         <div className="flex-1">
-          <div className="sticky top-0 z-30 border-b border-white/10 bg-black/85 backdrop-blur md:hidden">
+          <div className="sticky top-0 z-30 border-b border-white/10 bg-black/90 backdrop-blur md:hidden">
             <div className="px-4 py-4">
               <Link
                 href="/"
@@ -326,79 +437,113 @@ ${analysis}`;
             </div>
 
             <div className="flex gap-3 overflow-x-auto px-4 pb-4">
-              {sideNav.map((item) => (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => scrollToSection(item.id)}
-                  className="whitespace-nowrap rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-gray-300 transition hover:text-white"
-                >
-                  {item.label}
-                </button>
-              ))}
+              {sideNav.map((item) => {
+                const isActive = activeSection === item.id;
+                return (
+                  <button
+                    key={item.id}
+                    type="button"
+                    onClick={() => scrollToSection(item.id)}
+                    className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm transition ${
+                      isActive
+                        ? 'border-cyan-400/40 bg-cyan-400/10 text-white'
+                        : 'border-white/10 bg-white/5 text-gray-300 hover:text-white'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                );
+              })}
             </div>
           </div>
 
           <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-10 md:py-10">
             <section
               id="overview"
-              className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between"
+              className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
             >
-              <div className="max-w-3xl">
-                <p className="text-xs uppercase tracking-[0.35em] text-cyan-300 sm:text-sm">
-                  Business Workflow Inefficiency Scanner
-                </p>
+              <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
+                <div className="max-w-3xl">
+                  <p className="text-xs uppercase tracking-[0.35em] text-cyan-300 sm:text-sm">
+                    Operations Dashboard
+                  </p>
 
-                <h1 className="mt-4 text-4xl font-bold leading-tight sm:text-5xl md:text-6xl">
-                  Find Workflow Inefficiencies Costing Your Business Time and
-                  Revenue
-                </h1>
+                  <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+                    Monitor workflow drag, handoff risk, and business execution
+                    gaps
+                  </h1>
 
-                <p className="mt-4 max-w-3xl text-sm leading-7 text-gray-300 sm:text-base">
-                  Ghostlayer scans business workflows to uncover delays,
-                  duplicate work, broken handoffs, and hidden operational
-                  bottlenecks across your team.
-                </p>
+                  <p className="mt-4 max-w-3xl text-sm leading-7 text-gray-300 sm:text-base">
+                    Ghostlayer helps businesses identify workflow slowdowns,
+                    reduce duplicate effort, and turn booked consultations into
+                    clearer operational action.
+                  </p>
+
+                  <div className="mt-5 grid grid-cols-1 gap-3 text-sm text-gray-400 sm:grid-cols-3">
+                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+                      <span className="text-gray-500">Last scan</span>
+                      <div className="mt-1 text-white">
+                        {formatRelativeTime(lastScanAt)}
+                      </div>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+                      <span className="text-gray-500">Bookings synced</span>
+                      <div className="mt-1 text-white">
+                        {bookingsLoading ? 'Syncing...' : 'Active'}
+                      </div>
+                    </div>
+                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+                      <span className="text-gray-500">Status</span>
+                      <div className="mt-1 text-white">
+                        {metrics.workflowRisk >= 75
+                          ? 'Critical'
+                          : metrics.workflowRisk >= 55
+                          ? 'Warning'
+                          : 'Healthy'}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-3 xl:max-w-md">
+                  <button
+                    onClick={runScan}
+                    disabled={loading}
+                    className="rounded-2xl bg-white px-5 py-4 text-sm font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
+                  >
+                    {loading ? 'Scanning...' : 'Run Scan'}
+                  </button>
+
+                  <button
+                    onClick={saveScan}
+                    className="rounded-2xl border border-cyan-400/30 px-5 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+                  >
+                    Save Scan
+                  </button>
+
+                  <button
+                    onClick={downloadReport}
+                    className="rounded-2xl border border-white/20 px-5 py-4 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
+                  >
+                    Download Report
+                  </button>
+
+                  <button
+                    onClick={async () => {
+                      await trackCtaClick('dashboard');
+                      setIsCalendlyOpen(true);
+                    }}
+                    className="rounded-2xl border border-cyan-400/30 px-5 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+                  >
+                    Book Consultation
+                  </button>
+                </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3 sm:flex sm:flex-wrap md:max-w-sm md:justify-end">
-                <button
-                  onClick={runScan}
-                  disabled={loading}
-                  className="rounded-2xl bg-white px-5 py-4 text-sm font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
-                >
-                  {loading ? 'Scanning...' : 'Run Business Scan'}
-                </button>
-
-                <button
-                  onClick={saveScan}
-                  className="rounded-2xl border border-cyan-400/30 px-5 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-                >
-                  Save Scan
-                </button>
-
-                <button
-                  onClick={downloadReport}
-                  className="rounded-2xl border border-white/20 px-5 py-4 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
-                >
-                  Download Business Report
-                </button>
-
-                <button
-                  onClick={async () => {
-                    await trackCtaClick('dashboard');
-                    setIsCalendlyOpen(true);
-                  }}
-                  className="rounded-2xl border border-cyan-400/30 px-5 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-                >
-                  Book Business Consultation
-                </button>
-              </div>
+              {saveMessage && (
+                <p className="mt-4 text-sm text-cyan-300">{saveMessage}</p>
+              )}
             </section>
-
-            {saveMessage && (
-              <p className="mt-4 text-sm text-cyan-300">{saveMessage}</p>
-            )}
 
             <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
               <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
@@ -407,52 +552,96 @@ ${analysis}`;
                 </h3>
                 <p className="mt-3 text-4xl font-bold">{metrics.workflowHealth}%</p>
                 <p className="mt-2 text-sm text-gray-400">
-                  Estimated visibility and operational consistency across core
-                  business workflows.
+                  Operational visibility across core business workflows.
                 </p>
+                <p className="mt-3 text-xs text-cyan-300">+4% from prior benchmark</p>
               </div>
 
               <div className="rounded-3xl border border-cyan-400/30 bg-cyan-400/10 p-6">
                 <h3 className="text-sm uppercase tracking-[0.2em] text-gray-200">
-                  Workflow Risk Score
+                  Risk Score
                 </h3>
                 <p className="mt-3 text-4xl font-bold">{metrics.workflowRisk}/100</p>
                 <p className="mt-2 text-sm text-gray-300">
-                  Higher scores indicate delays, repeated effort, weak
-                  ownership, and broken handoffs.
+                  Higher scores signal delays, repeated effort, and weak handoffs.
                 </p>
+                <p className="mt-3 text-xs text-cyan-200">Monitor weekly</p>
               </div>
 
               <div className="rounded-3xl border border-red-500/30 bg-red-500/10 p-6">
                 <h3 className="text-sm uppercase tracking-[0.2em] text-gray-200">
-                  Productivity Loss
+                  Estimated Monthly Loss
                 </h3>
                 <p className="mt-3 text-4xl font-bold">
                   ${metrics.productivityLoss.toLocaleString()}/mo
                 </p>
                 <p className="mt-2 text-sm text-gray-300">
-                  Estimated monthly business cost caused by workflow drag and
-                  missed execution.
+                  Estimated business cost from workflow drag and missed execution.
                 </p>
+                <p className="mt-3 text-xs text-red-300">Priority attention recommended</p>
               </div>
 
               <div className="rounded-3xl border border-green-500/30 bg-green-500/10 p-6">
                 <h3 className="text-sm uppercase tracking-[0.2em] text-gray-200">
-                  Savings Opportunity
+                  Recovery Opportunity
                 </h3>
                 <p className="mt-3 text-4xl font-bold">
                   ${metrics.savingsOpportunity.toLocaleString()}/mo
                 </p>
                 <p className="mt-2 text-sm text-gray-300">
-                  Potential monthly gain if workflow friction and repeated
-                  effort are reduced.
+                  Possible monthly gain if workflow friction is reduced.
                 </p>
+                <p className="mt-3 text-xs text-green-300">Strong upside if corrected</p>
+              </div>
+            </section>
+
+            <section
+              id="priority-issues"
+              className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
+            >
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                <div>
+                  <h3 className="text-2xl font-semibold">Priority Issues</h3>
+                  <p className="mt-2 text-sm text-gray-400">
+                    The biggest operational risks currently visible from your
+                    workflow inputs and dashboard state.
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-3">
+                {priorityIssues.map((issue) => (
+                  <div
+                    key={issue.title}
+                    className="rounded-2xl border border-white/10 bg-black/30 p-5"
+                  >
+                    <div className="flex items-center justify-between gap-3">
+                      <h4 className="text-lg font-semibold">{issue.title}</h4>
+                      <span
+                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${severityClasses(
+                          issue.severity
+                        )}`}
+                      >
+                        {issue.severity}
+                      </span>
+                    </div>
+                    <p className="mt-4 text-sm leading-7 text-gray-300">
+                      {issue.impact}
+                    </p>
+                    <div className="mt-4 rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-3">
+                      <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">
+                        Recommended action
+                      </p>
+                      <p className="mt-2 text-sm text-gray-200">{issue.action}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
             </section>
 
             <section
               id="bookings"
-              className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6"
+              className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                 <div>
@@ -460,17 +649,21 @@ ${analysis}`;
                     Recent Bookings
                   </h3>
                   <p className="mt-2 text-sm text-gray-400">
-                    Recent business consultations captured through your Calendly
-                    workflow.
+                    Business consultations captured through your Calendly workflow.
                   </p>
                 </div>
 
-                <button
-                  onClick={loadBookings}
-                  className="self-start rounded-2xl border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-black sm:self-auto"
-                >
-                  Refresh
-                </button>
+                <div className="flex items-center gap-3">
+                  <p className="text-xs text-gray-500">
+                    {bookingsLoading ? 'Syncing...' : 'Latest sync active'}
+                  </p>
+                  <button
+                    onClick={loadBookings}
+                    className="rounded-2xl border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
+                  >
+                    Refresh
+                  </button>
+                </div>
               </div>
 
               {bookingsLoading ? (
@@ -479,8 +672,8 @@ ${analysis}`;
                 <p className="mt-6 text-sm text-red-400">{bookingsMessage}</p>
               ) : bookings.length === 0 ? (
                 <p className="mt-6 text-sm text-gray-400">
-                  No bookings found yet. Book a test call to populate this
-                  section.
+                  No bookings found yet. Book a business consultation to populate
+                  this section.
                 </p>
               ) : (
                 <>
@@ -490,7 +683,7 @@ ${analysis}`;
                         <tr className="border-b border-white/10 text-gray-400">
                           <th className="px-3 py-3 font-medium">Name</th>
                           <th className="px-3 py-3 font-medium">Email</th>
-                          <th className="px-3 py-3 font-medium">Event Type</th>
+                          <th className="px-3 py-3 font-medium">Consultation Type</th>
                           <th className="px-3 py-3 font-medium">Scheduled At</th>
                           <th className="px-3 py-3 font-medium">Source</th>
                         </tr>
@@ -514,7 +707,9 @@ ${analysis}`;
                               {formatDateTime(booking.scheduled_at)}
                             </td>
                             <td className="px-3 py-3">
-                              {booking.source || 'Not tracked'}
+                              <span className="rounded-full border border-cyan-400/20 bg-cyan-400/5 px-3 py-1 text-xs text-cyan-300">
+                                {booking.source || 'Not tracked'}
+                              </span>
                             </td>
                           </tr>
                         ))}
@@ -538,13 +733,13 @@ ${analysis}`;
                             <span>{booking.invitee_email || 'No email'}</span>
                           </div>
                           <div>
-                            <span className="text-gray-400">Event Type: </span>
+                            <span className="text-gray-400">Type: </span>
                             <span>
                               {normalizeEventTypeName(booking.event_type_name)}
                             </span>
                           </div>
                           <div>
-                            <span className="text-gray-400">Scheduled At: </span>
+                            <span className="text-gray-400">Scheduled: </span>
                             <span>{formatDateTime(booking.scheduled_at)}</span>
                           </div>
                           <div>
@@ -559,15 +754,129 @@ ${analysis}`;
               )}
             </section>
 
+            <section className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-3">
+              <div
+                id="delay-hotspots"
+                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+              >
+                <h3 className="text-xl font-semibold">Delay Hotspots</h3>
+                <div className="mt-5 space-y-4">
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-medium">Approval queue</p>
+                      <span className="text-sm text-red-400">High</span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-400">
+                      Multiple review steps are likely delaying work before it
+                      moves into execution.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-medium">Intake completion</p>
+                      <span className="text-sm text-yellow-400">Medium</span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-400">
+                      Missing upfront information can stall work early and create
+                      rework later.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                id="broken-handoffs"
+                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+              >
+                <h3 className="text-xl font-semibold">Broken Handoffs</h3>
+                <div className="mt-5 space-y-4">
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-medium">Sales → Delivery</p>
+                      <span className="text-sm text-red-400">Missing context</span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-400">
+                      Key details may not be consistently passed into execution.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-medium">Support → Operations</p>
+                      <span className="text-sm text-yellow-400">Weak ownership</span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-400">
+                      Escalated work can lose momentum when ownership is not
+                      clearly assigned.
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                id="duplicate-work"
+                className="rounded-3xl border border-white/10 bg-white/5 p-6"
+              >
+                <h3 className="text-xl font-semibold">Duplicate Work</h3>
+                <div className="mt-5 space-y-4">
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-medium">Reporting overlap</p>
+                      <span className="text-sm text-cyan-300">Repeated effort</span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-400">
+                      Similar status updates and reporting may be happening in
+                      more than one place.
+                    </p>
+                  </div>
+
+                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
+                    <div className="flex items-center justify-between gap-4">
+                      <p className="font-medium">Manual progress updates</p>
+                      <span className="text-sm text-cyan-300">Duplicated work</span>
+                    </div>
+                    <p className="mt-2 text-sm text-gray-400">
+                      Teams may be re-entering the same information across tools.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
             <section
-              id="business-inputs"
-              className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6"
+              id="intelligence-summary"
+              className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-5 sm:p-6"
             >
-              <h3 className="text-2xl font-semibold">Business Workflow Inputs</h3>
+              <div className="flex items-center justify-between gap-4">
+                <div>
+                  <h3 className="text-2xl font-semibold text-cyan-300">
+                    Workflow Intelligence Summary
+                  </h3>
+                  <p className="mt-2 text-sm uppercase tracking-[0.2em] text-gray-500">
+                    Operational signal
+                  </p>
+                </div>
+              </div>
+
+              <p className="mt-4 text-sm text-gray-500">
+                This summary is designed to help identify workflow drag, cost
+                exposure, and the clearest next actions for the business.
+              </p>
+
+              <pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/40 p-4 text-sm leading-7 text-gray-300">
+                {analysis}
+              </pre>
+            </section>
+
+            <section
+              id="run-scan"
+              className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
+            >
+              <h3 className="text-2xl font-semibold">Run a New Workflow Scan</h3>
               <p className="mt-2 text-sm text-gray-400">
-                Enter your business details below to simulate where workflow
-                inefficiencies may be slowing execution, increasing costs, and
-                creating missed opportunities.
+                Enter your business details to generate a workflow intelligence
+                summary and estimate possible operational drag.
               </p>
 
               <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
@@ -599,136 +908,29 @@ ${analysis}`;
                   className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
                 />
               </div>
-            </section>
 
-            <section className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-3">
-              <div
-                id="delay-hotspots"
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
-              >
-                <h3 className="text-xl font-semibold">Delay Hotspots</h3>
-                <div className="mt-5 space-y-4">
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Operations Approval Queue</p>
-                      <span className="text-sm text-red-400">High delay</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Approval steps are causing tasks to wait too long before
-                      moving forward.
-                    </p>
-                  </div>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <button
+                  onClick={runScan}
+                  disabled={loading}
+                  className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
+                >
+                  {loading ? 'Running scan...' : 'Run Business Scan'}
+                </button>
 
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Client Onboarding</p>
-                      <span className="text-sm text-yellow-400">
-                        Moderate delay
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Work stalls when information collection is incomplete at
-                      intake.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                id="broken-handoffs"
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
-              >
-                <h3 className="text-xl font-semibold">Broken Handoffs</h3>
-                <div className="mt-5 space-y-4">
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Sales → Operations</p>
-                      <span className="text-sm text-red-400">Missing context</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Key information is not consistently passed when deals move
-                      into delivery.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Support → Product</p>
-                      <span className="text-sm text-yellow-400">
-                        Weak ownership
-                      </span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Escalated issues lack a clear owner after being
-                      transferred.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                id="duplicate-work"
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
-              >
-                <h3 className="text-xl font-semibold">Duplicate Work</h3>
-                <div className="mt-5 space-y-4">
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Reporting Tasks</p>
-                      <span className="text-sm text-cyan-300">Duplicated work</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Two teams are recreating similar reports in separate
-                      tools.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Manual Status Updates</p>
-                      <span className="text-sm text-cyan-300">Repeated effort</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Team members are updating the same progress in multiple
-                      places.
-                    </p>
-                  </div>
-                </div>
+                <button
+                  onClick={saveScan}
+                  className="rounded-2xl border border-cyan-400/30 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+                >
+                  Save Current Scan
+                </button>
               </div>
             </section>
 
-            <section
-              id="analysis"
-              className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-4 sm:p-6"
-            >
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <h3 className="text-2xl font-semibold text-cyan-300">
-                    AI Analysis
-                  </h3>
-                  <p className="mt-2 text-sm uppercase tracking-[0.2em] text-gray-500">
-                    Beta Estimate
-                  </p>
-                </div>
-              </div>
-
-              <p className="mt-4 text-sm text-gray-500">
-                These results are directional estimates and are improving over
-                time.
-              </p>
-
-              <pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/40 p-4 text-sm leading-7 text-gray-300">
-                {analysis}
-              </pre>
-            </section>
-
-            <section
-              id="feedback"
-              className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-4 sm:p-6"
-            >
-              <h3 className="text-2xl font-semibold">Help us improve Ghostlayer</h3>
+            <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
+              <h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
               <p className="mt-2 text-sm text-gray-400">
-                What would make this 10x more useful for your business?
+                What would make this dashboard more useful for your business?
               </p>
 
               <textarea
@@ -754,84 +956,47 @@ ${analysis}`;
             </section>
 
             <footer className="mt-10 border-t border-white/10 pt-8">
-              <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
-                <div className="max-w-xl">
+              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                <div>
                   <Link
                     href="/"
                     className={`text-2xl font-bold tracking-[0.22em] text-white ${glowLogo}`}
                   >
                     GHOSTLAYER
                   </Link>
-                  <p className="mt-4 text-sm leading-7 text-gray-400">
-                    Built to help businesses uncover workflow inefficiencies,
-                    reduce drag, and recover execution time.
+                  <p className="mt-3 text-sm text-gray-400">
+                    Business workflow intelligence for faster execution.
                   </p>
                 </div>
 
-                <div className="grid gap-8 sm:grid-cols-2">
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">
-                      Dashboard
-                    </p>
-                    <div className="mt-4 space-y-3 text-sm text-gray-400">
-                      <button
-                        type="button"
-                        onClick={() => scrollToSection('overview')}
-                        className="block text-left transition hover:text-white"
-                      >
-                        Overview
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => scrollToSection('bookings')}
-                        className="block text-left transition hover:text-white"
-                      >
-                        Bookings
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => scrollToSection('analysis')}
-                        className="block text-left transition hover:text-white"
-                      >
-                        AI Analysis
-                      </button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-cyan-300">
-                      Actions
-                    </p>
-                    <div className="mt-4 space-y-3 text-sm text-gray-400">
-                      <button
-                        type="button"
-                        onClick={runScan}
-                        className="block text-left transition hover:text-white"
-                      >
-                        Run Business Scan
-                      </button>
-                      <button
-                        type="button"
-                        onClick={saveScan}
-                        className="block text-left transition hover:text-white"
-                      >
-                        Save Scan
-                      </button>
-                      <button
-                        type="button"
-                        onClick={downloadReport}
-                        className="block text-left transition hover:text-white"
-                      >
-                        Download Report
-                      </button>
-                    </div>
-                  </div>
+                <div className="flex flex-wrap gap-4 text-sm text-gray-400">
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection('overview')}
+                    className="transition hover:text-white"
+                  >
+                    Overview
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection('bookings')}
+                    className="transition hover:text-white"
+                  >
+                    Bookings
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => scrollToSection('run-scan')}
+                    className="transition hover:text-white"
+                  >
+                    Run Scan
+                  </button>
                 </div>
               </div>
 
-              <div className="mt-8 border-t border-white/10 pt-6 text-sm text-gray-500">
-                © {currentYear} Ghostlayer. Business workflow inefficiency
-                scanner for clearer operations and faster execution.
+              <div className="mt-6 border-t border-white/10 pt-6 text-sm text-gray-500">
+                © {currentYear} Ghostlayer. Business workflow intelligence for
+                clearer operations and faster execution.
               </div>
             </footer>
           </div>
@@ -849,3 +1014,4 @@ ${analysis}`;
     </main>
   );
 }
+
