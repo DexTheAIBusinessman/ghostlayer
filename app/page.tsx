@@ -1,379 +1,332 @@
 'use client';
 
 import Link from 'next/link';
-import { PopupModal } from 'react-calendly';
 import { useEffect, useState } from 'react';
+import { PopupModal } from 'react-calendly';
 import { trackCtaClick } from '@/lib/trackCtaClick';
 
 export default function HomePage() {
-  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-
-  const currentYear = new Date().getFullYear();
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
   }, []);
+
+  const currentYear = new Date().getFullYear();
+
+  const logoGlow =
+    '[text-shadow:0_0_6px_rgba(255,255,255,0.98),0_0_16px_rgba(96,165,250,0.95),0_0_30px_rgba(59,130,246,0.9),0_0_52px_rgba(147,51,234,0.7)]';
+
+  const heroGlow =
+    '[text-shadow:0_0_10px_rgba(255,255,255,0.96),0_0_24px_rgba(96,165,250,0.9),0_0_46px_rgba(59,130,246,0.75)]';
 
   async function openCalendly() {
     await trackCtaClick('homepage');
     setIsCalendlyOpen(true);
   }
 
-  const logoGlow =
-    '[text-shadow:0_0_6px_rgba(255,255,255,0.95),0_0_14px_rgba(96,165,250,0.95),0_0_28px_rgba(59,130,246,0.9),0_0_48px_rgba(147,51,234,0.65)]';
-
-  const heroGlow =
-    '[text-shadow:0_0_10px_rgba(255,255,255,0.28),0_0_22px_rgba(96,165,250,0.22),0_0_40px_rgba(59,130,246,0.18)]';
-
   return (
-    <main className="min-h-screen bg-black text-white">
-      <section className="relative overflow-hidden border-b border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(168,85,247,0.10),transparent_25%)]" />
+    <main className="min-h-screen overflow-x-hidden bg-black text-white">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.14),transparent_30%),radial-gradient(circle_at_bottom_right,rgba(147,51,234,0.12),transparent_28%)]" />
 
-        <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-10">
-          <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div className="flex items-center justify-between">
-              <Link
-                href="/"
-                className={`text-2xl font-bold tracking-[0.22em] text-white transition hover:text-cyan-300 sm:text-3xl ${logoGlow}`}
+      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <header className="flex items-center justify-between gap-4 py-6 sm:py-8">
+          <Link
+            href="/"
+            className={`text-[1.55rem] font-bold leading-none tracking-[0.2em] text-white transition hover:text-cyan-300 sm:text-[1.7rem] md:text-[1.9rem] ${logoGlow}`}
+          >
+            GHOSTLAYER
+          </Link>
+
+          <nav className="hidden items-center gap-6 text-sm text-gray-300 md:flex">
+            <a href="#how-it-works" className="transition hover:text-white">
+              How It Works
+            </a>
+            <a href="#who-it-helps" className="transition hover:text-white">
+              Who It Helps
+            </a>
+            <a href="#results" className="transition hover:text-white">
+              Results
+            </a>
+            <a href="#next-step" className="transition hover:text-white">
+              Next Step
+            </a>
+            <Link
+              href="/dashboard"
+              className="rounded-full border border-cyan-400/30 px-4 py-2 text-cyan-300 transition hover:bg-cyan-400/10"
+            >
+              Live Dashboard
+            </Link>
+          </nav>
+        </header>
+
+        <section className="grid items-center gap-10 py-8 sm:py-12 lg:grid-cols-[minmax(0,1.2fr)_minmax(320px,0.8fr)] lg:py-16">
+          <div className="min-w-0">
+            <p className="text-xs uppercase tracking-[0.35em] text-cyan-300 sm:text-sm">
+              Business Workflow Inefficiency Scanner
+            </p>
+
+            <h1 className="mt-5 max-w-5xl text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl xl:text-7xl">
+              <span className={heroGlow}>Find Workflow Friction</span>
+              <br />
+              <span className={heroGlow}>
+                Before It Slows Growth, Burns Time,
+              </span>
+              <br />
+              <span className={heroGlow}>and Costs Revenue</span>
+            </h1>
+
+            <p className="mt-6 max-w-3xl text-base leading-8 text-gray-300 sm:text-lg">
+              Ghostlayer helps businesses uncover broken handoffs, approval
+              bottlenecks, repeated manual work, and hidden operational drag so
+              teams can move faster with less waste.
+            </p>
+
+            <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <button
+                onClick={openCalendly}
+                className="rounded-2xl bg-white px-6 py-4 text-base font-semibold text-black transition hover:opacity-90"
               >
-                GHOSTLAYER
+                Book Business Consultation
+              </button>
+
+              <Link
+                href="/dashboard"
+                className="rounded-2xl border border-cyan-400/30 px-6 py-4 text-center text-base font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+              >
+                See Live Dashboard
               </Link>
             </div>
 
-            <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-300 md:justify-end">
-              <a href="#how-it-works" className="transition hover:text-white">
-                How It Works
-              </a>
-              <a href="#who-its-for" className="transition hover:text-white">
-                Who It Helps
-              </a>
-              <a href="#results" className="transition hover:text-white">
-                Results
-              </a>
-              <a href="#pricing" className="transition hover:text-white">
-                Next Step
-              </a>
-            </nav>
-          </header>
-
-          <div className="grid gap-10 py-12 md:grid-cols-[1.15fr_0.85fr] md:gap-12 md:py-24">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300 sm:text-sm">
-                Business Workflow Inefficiency Scanner
-              </p>
-
-              <h1
-                className={`mt-5 max-w-4xl text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl ${heroGlow}`}
-              >
-                Find Workflow Friction Before It Slows Growth, Burns Time, and
-                Costs Revenue
-              </h1>
-
-              <p className="mt-6 max-w-2xl text-sm leading-7 text-gray-300 sm:text-base md:text-lg">
-                Ghostlayer helps businesses uncover broken handoffs, approval
-                bottlenecks, duplicate work, and hidden operational drag so
-                teams can move faster with less waste.
-              </p>
-
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <button
-                  onClick={openCalendly}
-                  className="rounded-2xl bg-white px-6 py-4 text-base font-semibold text-black transition hover:opacity-85"
-                >
-                  Book Business Consultation
-                </button>
-
-                <Link
-                  href="/dashboard"
-                  className="rounded-2xl border border-cyan-400/30 px-6 py-4 text-center text-base font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-                >
-                  See Live Dashboard
-                </Link>
+            <div className="mt-8 grid grid-cols-1 gap-3 text-sm text-gray-400 sm:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                Reduce operational drag
               </div>
-
-              <div className="mt-8 grid grid-cols-1 gap-2 text-sm text-gray-400 sm:grid-cols-3 sm:gap-4">
-                <span>Reduce operational drag</span>
-                <span>Improve team accountability</span>
-                <span>Recover missed execution time</span>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                Improve team accountability
+              </div>
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3">
+                Recover missed execution time
               </div>
             </div>
+          </div>
 
-            <div className="rounded-[28px] border border-cyan-400/20 bg-white/5 p-4 shadow-[0_0_40px_rgba(34,211,238,0.08)] backdrop-blur sm:p-6">
+          <div className="min-w-0">
+            <div className="rounded-[28px] border border-cyan-400/20 bg-white/5 p-5 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_20px_80px_rgba(0,0,0,0.4)] backdrop-blur">
               <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
-                  <p className="text-xs uppercase tracking-[0.25em] text-gray-400">
-                    Workflow Health
-                  </p>
-                  <p className="mt-3 text-4xl font-bold">82%</p>
-                  <p className="mt-2 text-sm text-gray-300">
-                    Visibility is decent, but key process friction remains.
-                  </p>
-                </div>
-
-                <div className="rounded-3xl border border-cyan-400/30 bg-cyan-400/10 p-5">
-                  <p className="text-xs uppercase tracking-[0.25em] text-gray-200">
-                    Risk Score
+                <div className="rounded-2xl border border-white/10 bg-black/35 p-5">
+                  <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">
+                    Workflow risk
                   </p>
                   <p className="mt-3 text-4xl font-bold">68/100</p>
-                  <p className="mt-2 text-sm text-gray-300">
-                    Delays, repeated effort, and weak handoffs are active.
+                  <p className="mt-2 text-sm text-gray-400">
+                    Elevated due to repeated approvals, weak ownership, and
+                    broken handoffs.
                   </p>
                 </div>
 
-                <div className="rounded-3xl border border-red-500/30 bg-red-500/10 p-5">
-                  <p className="text-xs uppercase tracking-[0.25em] text-gray-200">
-                    Productivity Loss
+                <div className="rounded-2xl border border-red-500/25 bg-red-500/10 p-5">
+                  <p className="text-xs uppercase tracking-[0.2em] text-red-300">
+                    Estimated loss
                   </p>
                   <p className="mt-3 text-4xl font-bold">$3,247/mo</p>
                   <p className="mt-2 text-sm text-gray-300">
-                    Estimated cost from execution drag and operational waste.
-                  </p>
-                </div>
-
-                <div className="rounded-3xl border border-green-500/30 bg-green-500/10 p-5">
-                  <p className="text-xs uppercase tracking-[0.25em] text-gray-200">
-                    Savings Opportunity
-                  </p>
-                  <p className="mt-3 text-4xl font-bold">$4,200/mo</p>
-                  <p className="mt-2 text-sm text-gray-300">
-                    Recoverable value if workflow friction is corrected.
+                    Estimated productivity drag from process friction and missed
+                    follow-through.
                   </p>
                 </div>
               </div>
 
-              <div className="mt-5 rounded-3xl border border-white/10 bg-black/40 p-5">
-                <p className="text-sm font-semibold text-cyan-300">
-                  What Ghostlayer surfaces
+              <div className="mt-4 rounded-2xl border border-white/10 bg-black/30 p-5">
+                <p className="text-xs uppercase tracking-[0.2em] text-gray-400">
+                  What Ghostlayer finds
                 </p>
-                <ul className="mt-4 space-y-3 text-sm text-gray-300">
-                  <li>• Approval steps that slow deals and delivery</li>
-                  <li>• Handoffs where ownership gets blurry</li>
-                  <li>• Duplicate manual work across teams</li>
-                  <li>• Missed revenue caused by workflow drag</li>
+                <ul className="mt-4 space-y-3 text-sm leading-7 text-gray-300">
+                  <li>• Approval delays that stall delivery</li>
+                  <li>• Handoffs losing key client or operational context</li>
+                  <li>• Duplicate reporting and repeated manual updates</li>
+                  <li>• Missed revenue caused by broken execution flow</li>
                 </ul>
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="how-it-works" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:px-10">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
-            How It Works
-          </p>
-          <h2 className="mt-4 text-3xl font-bold md:text-4xl">
-            A faster way to spot what is slowing your business down
-          </h2>
-          <p className="mt-4 text-base leading-7 text-gray-400">
-            Ghostlayer is designed to help business owners, operators, and lean
-            teams quickly identify workflow inefficiencies without needing a
-            full operations department.
-          </p>
-        </div>
-
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
+        <section
+          id="how-it-works"
+          className="grid gap-6 border-t border-white/10 py-16 md:grid-cols-3"
+        >
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-            <div className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">
+            <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">
               Step 1
-            </div>
-            <h3 className="mt-4 text-xl font-semibold">
-              Enter your business workflow inputs
+            </p>
+            <h3 className="mt-4 text-2xl font-semibold">
+              Book a business consultation
             </h3>
-            <p className="mt-3 text-sm leading-7 text-gray-400">
-              Add basic business details like team size, bottlenecks, and
-              operational cost pressure.
+            <p className="mt-4 text-sm leading-7 text-gray-400">
+              Use the consultation booking flow to begin capturing real business
+              demand and operational signals.
             </p>
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-            <div className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">
+            <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">
               Step 2
-            </div>
-            <h3 className="mt-4 text-xl font-semibold">
-              Review friction signals instantly
+            </p>
+            <h3 className="mt-4 text-2xl font-semibold">
+              Surface workflow friction
             </h3>
-            <p className="mt-3 text-sm leading-7 text-gray-400">
-              See risk signals tied to delays, duplicate work, broken handoffs,
-              and missed execution.
+            <p className="mt-4 text-sm leading-7 text-gray-400">
+              Ghostlayer highlights bottlenecks, handoff failures, repeated
+              work, and workflow drag that slow growth.
             </p>
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-            <div className="text-sm font-semibold uppercase tracking-[0.25em] text-cyan-300">
+            <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">
               Step 3
-            </div>
-            <h3 className="mt-4 text-xl font-semibold">
-              Turn insights into business action
+            </p>
+            <h3 className="mt-4 text-2xl font-semibold">
+              Turn signal into action
             </h3>
-            <p className="mt-3 text-sm leading-7 text-gray-400">
-              Use the results to tighten operations, improve accountability, and
-              protect revenue.
+            <p className="mt-4 text-sm leading-7 text-gray-400">
+              Use the dashboard to monitor risk, estimate cost impact, and act
+              on the clearest next fixes.
             </p>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <section id="who-its-for" className="border-y border-white/10 bg-white/5">
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:px-10">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
-              Who It Helps
+        <section
+          id="who-it-helps"
+          className="grid gap-6 border-t border-white/10 py-16 lg:grid-cols-2"
+        >
+          <div className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8">
+            <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">
+              Who it helps
             </p>
-            <h2 className="mt-4 text-3xl font-bold md:text-4xl">
-              Built for businesses that need smoother execution
-            </h2>
-            <p className="mt-4 text-base leading-7 text-gray-400">
-              Ghostlayer is a strong fit for small businesses, service firms,
-              agencies, consultancies, operators, founders, and individuals
-              managing complex work with limited time and limited margin for
-              waste.
-            </p>
-          </div>
-
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-            <div className="rounded-3xl border border-white/10 bg-black/40 p-6">
-              <h3 className="text-xl font-semibold">Founders</h3>
-              <p className="mt-3 text-sm leading-7 text-gray-400">
-                Get visibility into what is slowing the business before it turns
-                into expensive chaos.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-black/40 p-6">
-              <h3 className="text-xl font-semibold">Operations Teams</h3>
-              <p className="mt-3 text-sm leading-7 text-gray-400">
-                Spot handoff issues, unclear ownership, and process drag across
-                the team.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-black/40 p-6">
-              <h3 className="text-xl font-semibold">Service Businesses</h3>
-              <p className="mt-3 text-sm leading-7 text-gray-400">
-                Reduce delays between intake, onboarding, delivery, and client
-                communication.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-white/10 bg-black/40 p-6">
-              <h3 className="text-xl font-semibold">Individuals</h3>
-              <p className="mt-3 text-sm leading-7 text-gray-400">
-                Use the scanner to better structure workload, decision points,
-                and recurring responsibilities.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="results" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:px-10">
-        <div className="max-w-3xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
-            What Businesses Want
-          </p>
-          <h2 className="mt-4 text-3xl font-bold md:text-4xl">
-            Clearer workflows. Faster execution. Less waste.
-          </h2>
-          <p className="mt-4 text-base leading-7 text-gray-400">
-            The best workflow tools do not just look smart. They help teams move
-            faster, operate more clearly, and stop losing time to preventable
-            friction.
-          </p>
-        </div>
-
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
-          <div className="rounded-3xl border border-cyan-400/20 bg-cyan-400/10 p-6">
-            <h3 className="text-xl font-semibold text-cyan-300">
-              What Ghostlayer helps reduce
+            <h3 className="mt-4 text-3xl font-semibold">
+              Built for businesses that need cleaner execution
             </h3>
-            <ul className="mt-5 space-y-3 text-sm leading-7 text-gray-200">
-              <li>• Delayed approvals and stalled execution</li>
-              <li>• Duplicate admin work across different tools</li>
-              <li>• Broken handoffs between departments or people</li>
-              <li>• Revenue leakage caused by slow follow-through</li>
-            </ul>
-          </div>
-
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
-            <h3 className="text-xl font-semibold">What businesses gain</h3>
-            <ul className="mt-5 space-y-3 text-sm leading-7 text-gray-300">
-              <li>• Better visibility into operational weak spots</li>
-              <li>• Faster movement across critical workflows</li>
-              <li>• Stronger ownership and less confusion</li>
-              <li>• More confidence in scaling what already works</li>
-            </ul>
-          </div>
-        </div>
-      </section>
-
-      <section
-        id="pricing"
-        className="border-y border-white/10 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.10),transparent_35%)]"
-      >
-        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:px-10">
-          <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
-              Next Step
+            <p className="mt-4 max-w-2xl text-sm leading-8 text-gray-400">
+              Ghostlayer is designed for founders, service businesses,
+              consultants, operators, agencies, and growing teams that need
+              stronger systems without extra waste.
             </p>
-            <h2 className="mt-4 text-3xl font-bold md:text-4xl">
-              Start with a consultation and see where the real drag lives
-            </h2>
-            <p className="mt-4 text-base leading-7 text-gray-400">
-              The fastest way to see whether Ghostlayer fits your business is to
-              walk through your workflow and identify the friction points
-              directly.
-            </p>
-          </div>
 
-          <div className="mt-10 rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-[0_0_60px_rgba(34,211,238,0.08)] sm:p-8">
-            <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
-              <div>
-                <h3 className="text-2xl font-semibold">
-                  Book a business workflow consultation
-                </h3>
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-400">
-                  Get a focused conversation around your bottlenecks, workflow
-                  friction, and where execution may be slipping. Good for
-                  businesses, operators, and individuals ready to tighten how
-                  work moves.
+            <div className="mt-8 grid gap-4 sm:grid-cols-2">
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+                <h4 className="text-lg font-medium">Founders</h4>
+                <p className="mt-2 text-sm text-gray-400">
+                  See where execution is slipping before growth stalls.
                 </p>
-
-                <div className="mt-5 flex flex-wrap gap-4 text-sm text-gray-300">
-                  <span>Business workflow review</span>
-                  <span>Operational bottleneck discussion</span>
-                  <span>Next-step recommendations</span>
-                </div>
               </div>
 
-              <button
-                onClick={openCalendly}
-                className="rounded-2xl bg-white px-6 py-4 text-base font-semibold text-black transition hover:opacity-85"
-              >
-                Book Now
-              </button>
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+                <h4 className="text-lg font-medium">Service teams</h4>
+                <p className="mt-2 text-sm text-gray-400">
+                  Improve delivery, ownership, and client handoffs.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+                <h4 className="text-lg font-medium">Operators</h4>
+                <p className="mt-2 text-sm text-gray-400">
+                  Reduce repeated work and tighten operational visibility.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-4">
+                <h4 className="text-lg font-medium">Consultants</h4>
+                <p className="mt-2 text-sm text-gray-400">
+                  Turn discovery into a sharper advisory workflow.
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      <footer className="border-t border-white/10 bg-black">
-        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-10">
+          <div
+            id="results"
+            className="rounded-3xl border border-white/10 bg-white/5 p-6 sm:p-8"
+          >
+            <p className="text-sm uppercase tracking-[0.2em] text-cyan-300">
+              What strong results look like
+            </p>
+            <div className="mt-8 grid gap-4">
+              <div className="rounded-2xl border border-green-500/25 bg-green-500/10 p-5">
+                <h4 className="text-xl font-semibold">$4,200/mo recovered</h4>
+                <p className="mt-2 text-sm leading-7 text-gray-300">
+                  Potential monthly recovery opportunity when workflow drag is
+                  reduced.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-5">
+                <h4 className="text-xl font-semibold">Faster team throughput</h4>
+                <p className="mt-2 text-sm leading-7 text-gray-300">
+                  Less waiting, fewer broken handoffs, and better visibility at
+                  each stage of execution.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/30 p-5">
+                <h4 className="text-xl font-semibold">Cleaner business signal</h4>
+                <p className="mt-2 text-sm leading-7 text-gray-400">
+                  Real bookings and workflow summaries in one place so you can
+                  act from signal instead of guesswork.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="next-step"
+          className="border-t border-white/10 py-16 text-center"
+        >
+          <div className="mx-auto max-w-4xl rounded-[32px] border border-cyan-400/20 bg-white/5 p-8 sm:p-10">
+            <p className="text-sm uppercase tracking-[0.3em] text-cyan-300">
+              Next step
+            </p>
+            <h2 className="mt-4 text-3xl font-bold sm:text-4xl">
+              See where your business is leaking time, motion, and revenue
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-8 text-gray-400 sm:text-base">
+              Book a consultation, capture real workflow demand, and use
+              Ghostlayer to identify the friction points holding execution back.
+            </p>
+
+            <div className="mt-8 flex flex-col justify-center gap-4 sm:flex-row">
+              <button
+                onClick={openCalendly}
+                className="rounded-2xl bg-white px-6 py-4 text-base font-semibold text-black transition hover:opacity-90"
+              >
+                Book Business Consultation
+              </button>
+
+              <Link
+                href="/dashboard"
+                className="rounded-2xl border border-cyan-400/30 px-6 py-4 text-base font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+              >
+                Open Dashboard
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        <footer className="border-t border-white/10 py-10">
           <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
             <div className="max-w-xl">
               <Link
                 href="/"
-                className={`text-2xl font-bold tracking-[0.22em] text-white transition hover:text-cyan-300 sm:text-3xl ${logoGlow}`}
+                className={`text-[1.15rem] font-bold leading-none tracking-[0.18em] text-white transition hover:text-cyan-300 sm:text-[1.25rem] md:text-[1.4rem] ${logoGlow}`}
               >
                 GHOSTLAYER
               </Link>
 
               <p className="mt-4 text-sm leading-7 text-gray-400">
-                Ghostlayer helps businesses and individuals uncover workflow
-                inefficiencies, reduce operational drag, strengthen execution,
-                and recover valuable time.
+                Business workflow intelligence for clearer operations, stronger
+                follow-through, and faster execution.
               </p>
             </div>
 
@@ -383,27 +336,15 @@ export default function HomePage() {
                   Explore
                 </p>
                 <div className="mt-4 space-y-3 text-sm text-gray-400">
-                  <a
-                    href="#how-it-works"
-                    className="block transition hover:text-white"
-                  >
+                  <a href="#how-it-works" className="block transition hover:text-white">
                     How It Works
                   </a>
-                  <a
-                    href="#who-its-for"
-                    className="block transition hover:text-white"
-                  >
+                  <a href="#who-it-helps" className="block transition hover:text-white">
                     Who It Helps
                   </a>
                   <a href="#results" className="block transition hover:text-white">
                     Results
                   </a>
-                  <Link
-                    href="/dashboard"
-                    className="block transition hover:text-white"
-                  >
-                    Dashboard
-                  </Link>
                 </div>
               </div>
 
@@ -422,7 +363,7 @@ export default function HomePage() {
                     href="/dashboard"
                     className="block transition hover:text-white"
                   >
-                    View Live Dashboard
+                    Open Dashboard
                   </Link>
                 </div>
               </div>
@@ -430,11 +371,11 @@ export default function HomePage() {
           </div>
 
           <div className="mt-8 border-t border-white/10 pt-6 text-sm text-gray-500">
-            © {currentYear} Ghostlayer. Built to help businesses uncover
-            workflow inefficiencies, reduce drag, and recover execution time.
+            © {currentYear} Ghostlayer. Business workflow intelligence for
+            clearer operations and faster execution.
           </div>
-        </div>
-      </footer>
+        </footer>
+      </div>
 
       {isMounted && (
         <PopupModal
