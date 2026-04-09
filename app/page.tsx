@@ -29,7 +29,7 @@ export default function HomePage() {
           <header className="flex items-center justify-between gap-4">
             <Link
               href="/"
-              className="text-xl font-bold tracking-[0.2em] text-white transition hover:text-cyan-300"
+              className="text-xl font-bold tracking-[0.2em] text-white transition hover:text-cyan-300 [text-shadow:0_0_10px_rgba(255,255,255,0.55),0_0_22px_rgba(59,130,246,0.55),0_0_38px_rgba(147,51,234,0.35)]"
             >
               GHOSTLAYER
             </Link>
@@ -72,7 +72,7 @@ export default function HomePage() {
                 Business Workflow Inefficiency Scanner
               </p>
 
-              <h1 className="mt-5 max-w-4xl text-4xl font-bold leading-tight md:text-6xl">
+              <h1 className="mt-5 max-w-4xl text-4xl font-bold leading-tight text-white md:text-6xl [text-shadow:0_0_14px_rgba(255,255,255,0.18),0_0_28px_rgba(34,211,238,0.16)]">
                 Find Workflow Friction Before It Slows Growth, Burns Time, and
                 Costs Revenue
               </h1>
@@ -371,7 +371,7 @@ export default function HomePage() {
             <div className="max-w-xl">
               <Link
                 href="/"
-                className="text-xl font-bold tracking-[0.2em] text-white transition hover:text-cyan-300"
+                className="text-xl font-bold tracking-[0.2em] text-white transition hover:text-cyan-300 [text-shadow:0_0_10px_rgba(255,255,255,0.55),0_0_22px_rgba(59,130,246,0.55),0_0_38px_rgba(147,51,234,0.35)]"
               >
                 GHOSTLAYER
               </Link>
