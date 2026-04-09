@@ -20,21 +20,29 @@ export default function HomePage() {
     setIsCalendlyOpen(true);
   }
 
+  const logoGlow =
+    '[text-shadow:0_0_6px_rgba(255,255,255,0.95),0_0_14px_rgba(96,165,250,0.95),0_0_28px_rgba(59,130,246,0.9),0_0_48px_rgba(147,51,234,0.65)]';
+
+  const heroGlow =
+    '[text-shadow:0_0_10px_rgba(255,255,255,0.28),0_0_22px_rgba(96,165,250,0.22),0_0_40px_rgba(59,130,246,0.18)]';
+
   return (
     <main className="min-h-screen bg-black text-white">
       <section className="relative overflow-hidden border-b border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(34,211,238,0.16),transparent_28%),radial-gradient(circle_at_right,rgba(168,85,247,0.10),transparent_25%)]" />
 
-        <div className="relative mx-auto max-w-7xl px-6 py-8 md:px-10">
-          <header className="flex items-center justify-between gap-4">
-            <Link
-              href="/"
-              className="text-xl font-bold tracking-[0.2em] text-white transition hover:text-cyan-300 [text-shadow:0_0_10px_rgba(255,255,255,0.55),0_0_22px_rgba(59,130,246,0.55),0_0_38px_rgba(147,51,234,0.35)]"
-            >
-              GHOSTLAYER
-            </Link>
+        <div className="relative mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-10">
+          <header className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center justify-between">
+              <Link
+                href="/"
+                className={`text-2xl font-bold tracking-[0.22em] text-white transition hover:text-cyan-300 sm:text-3xl ${logoGlow}`}
+              >
+                GHOSTLAYER
+              </Link>
+            </div>
 
-            <nav className="hidden items-center gap-6 text-sm text-gray-300 md:flex">
+            <nav className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-300 md:justify-end">
               <a href="#how-it-works" className="transition hover:text-white">
                 How It Works
               </a>
@@ -48,42 +56,28 @@ export default function HomePage() {
                 Next Step
               </a>
             </nav>
-
-            <div className="flex items-center gap-3">
-              <Link
-                href="/dashboard"
-                className="hidden rounded-2xl border border-white/15 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-black sm:inline-flex"
-              >
-                View Dashboard
-              </Link>
-
-              <button
-                onClick={openCalendly}
-                className="rounded-2xl bg-white px-4 py-2 text-sm font-semibold text-black transition hover:opacity-85"
-              >
-                Book Consultation
-              </button>
-            </div>
           </header>
 
-          <div className="grid gap-12 py-16 md:grid-cols-[1.15fr_0.85fr] md:py-24">
+          <div className="grid gap-10 py-12 md:grid-cols-[1.15fr_0.85fr] md:gap-12 md:py-24">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-cyan-300">
+              <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300 sm:text-sm">
                 Business Workflow Inefficiency Scanner
               </p>
 
-              <h1 className="mt-5 max-w-4xl text-4xl font-bold leading-tight text-white md:text-6xl [text-shadow:0_0_14px_rgba(255,255,255,0.18),0_0_28px_rgba(34,211,238,0.16)]">
+              <h1
+                className={`mt-5 max-w-4xl text-4xl font-bold leading-tight text-white sm:text-5xl md:text-6xl ${heroGlow}`}
+              >
                 Find Workflow Friction Before It Slows Growth, Burns Time, and
                 Costs Revenue
               </h1>
 
-              <p className="mt-6 max-w-2xl text-base leading-7 text-gray-300 md:text-lg">
+              <p className="mt-6 max-w-2xl text-sm leading-7 text-gray-300 sm:text-base md:text-lg">
                 Ghostlayer helps businesses uncover broken handoffs, approval
                 bottlenecks, duplicate work, and hidden operational drag so
                 teams can move faster with less waste.
               </p>
 
-              <div className="mt-8 flex flex-col gap-4 sm:flex-row">
+              <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <button
                   onClick={openCalendly}
                   className="rounded-2xl bg-white px-6 py-4 text-base font-semibold text-black transition hover:opacity-85"
@@ -93,21 +87,21 @@ export default function HomePage() {
 
                 <Link
                   href="/dashboard"
-                  className="rounded-2xl border border-cyan-400/30 px-6 py-4 text-base font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+                  className="rounded-2xl border border-cyan-400/30 px-6 py-4 text-center text-base font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
                 >
                   See Live Dashboard
                 </Link>
               </div>
 
-              <div className="mt-8 flex flex-wrap gap-6 text-sm text-gray-400">
+              <div className="mt-8 grid grid-cols-1 gap-2 text-sm text-gray-400 sm:grid-cols-3 sm:gap-4">
                 <span>Reduce operational drag</span>
                 <span>Improve team accountability</span>
                 <span>Recover missed execution time</span>
               </div>
             </div>
 
-            <div className="rounded-[28px] border border-cyan-400/20 bg-white/5 p-6 shadow-[0_0_40px_rgba(34,211,238,0.08)] backdrop-blur">
-              <div className="grid grid-cols-2 gap-4">
+            <div className="rounded-[28px] border border-cyan-400/20 bg-white/5 p-4 shadow-[0_0_40px_rgba(34,211,238,0.08)] backdrop-blur sm:p-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="rounded-3xl border border-white/10 bg-white/5 p-5">
                   <p className="text-xs uppercase tracking-[0.25em] text-gray-400">
                     Workflow Health
@@ -165,7 +159,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="how-it-works" className="mx-auto max-w-7xl px-6 py-16 md:px-10">
+      <section id="how-it-works" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:px-10">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
             How It Works
@@ -223,7 +217,7 @@ export default function HomePage() {
       </section>
 
       <section id="who-its-for" className="border-y border-white/10 bg-white/5">
-        <div className="mx-auto max-w-7xl px-6 py-16 md:px-10">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:px-10">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
               Who It Helps
@@ -275,7 +269,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section id="results" className="mx-auto max-w-7xl px-6 py-16 md:px-10">
+      <section id="results" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:px-10">
         <div className="max-w-3xl">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
             What Businesses Want
@@ -319,7 +313,7 @@ export default function HomePage() {
         id="pricing"
         className="border-y border-white/10 bg-[radial-gradient(circle_at_center,rgba(34,211,238,0.10),transparent_35%)]"
       >
-        <div className="mx-auto max-w-7xl px-6 py-16 md:px-10">
+        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 md:px-10">
           <div className="max-w-3xl">
             <p className="text-sm font-semibold uppercase tracking-[0.3em] text-cyan-300">
               Next Step
@@ -334,7 +328,7 @@ export default function HomePage() {
             </p>
           </div>
 
-          <div className="mt-10 rounded-[32px] border border-white/10 bg-white/5 p-8 shadow-[0_0_60px_rgba(34,211,238,0.08)]">
+          <div className="mt-10 rounded-[32px] border border-white/10 bg-white/5 p-6 shadow-[0_0_60px_rgba(34,211,238,0.08)] sm:p-8">
             <div className="grid gap-8 md:grid-cols-[1fr_auto] md:items-center">
               <div>
                 <h3 className="text-2xl font-semibold">
@@ -366,12 +360,12 @@ export default function HomePage() {
       </section>
 
       <footer className="border-t border-white/10 bg-black">
-        <div className="mx-auto max-w-7xl px-6 py-10 md:px-10">
+        <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-10">
           <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
             <div className="max-w-xl">
               <Link
                 href="/"
-                className="text-xl font-bold tracking-[0.2em] text-white transition hover:text-cyan-300 [text-shadow:0_0_10px_rgba(255,255,255,0.55),0_0_22px_rgba(59,130,246,0.55),0_0_38px_rgba(147,51,234,0.35)]"
+                className={`text-2xl font-bold tracking-[0.22em] text-white transition hover:text-cyan-300 sm:text-3xl ${logoGlow}`}
               >
                 GHOSTLAYER
               </Link>
@@ -389,16 +383,25 @@ export default function HomePage() {
                   Explore
                 </p>
                 <div className="mt-4 space-y-3 text-sm text-gray-400">
-                  <a href="#how-it-works" className="block transition hover:text-white">
+                  <a
+                    href="#how-it-works"
+                    className="block transition hover:text-white"
+                  >
                     How It Works
                   </a>
-                  <a href="#who-its-for" className="block transition hover:text-white">
+                  <a
+                    href="#who-its-for"
+                    className="block transition hover:text-white"
+                  >
                     Who It Helps
                   </a>
                   <a href="#results" className="block transition hover:text-white">
                     Results
                   </a>
-                  <Link href="/dashboard" className="block transition hover:text-white">
+                  <Link
+                    href="/dashboard"
+                    className="block transition hover:text-white"
+                  >
                     Dashboard
                   </Link>
                 </div>
@@ -415,7 +418,10 @@ export default function HomePage() {
                   >
                     Book Consultation
                   </button>
-                  <Link href="/dashboard" className="block transition hover:text-white">
+                  <Link
+                    href="/dashboard"
+                    className="block transition hover:text-white"
+                  >
                     View Live Dashboard
                   </Link>
                 </div>
