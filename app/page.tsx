@@ -14,6 +14,13 @@ duration: string;
 opacity: number;
 };
 
+type ShootingStar = {
+top: string;
+left: string;
+delay: string;
+duration: string;
+};
+
 export default function HomePage() {
 const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 const currentYear = new Date().getFullYear();
@@ -40,6 +47,16 @@ const sparkles = useMemo<Sparkle[]>(
 { left: '33%', top: '92%', size: 2, delay: '1.4s', duration: '5.1s', opacity: 0.64 },
 { left: '54%', top: '6%', size: 2, delay: '2.1s', duration: '6.6s', opacity: 0.56 },
 { left: '73%', top: '90%', size: 2, delay: '0.8s', duration: '5.4s', opacity: 0.65 },
+],
+[]
+);
+
+const shootingStars = useMemo<ShootingStar[]>(
+() => [
+{ top: '12%', left: '62%', delay: '2s', duration: '8s' },
+{ top: '24%', left: '78%', delay: '9s', duration: '9s' },
+{ top: '18%', left: '48%', delay: '16s', duration: '10s' },
+{ top: '30%', left: '70%', delay: '24s', duration: '11s' },
 ],
 []
 );
@@ -78,6 +95,19 @@ height: `${sparkle.size}px`,
 animationDelay: sparkle.delay,
 animationDuration: sparkle.duration,
 opacity: sparkle.opacity,
+}}
+/>
+))}
+
+{shootingStars.map((star, index) => (
+<span
+key={index}
+className="shooting-star"
+style={{
+top: star.top,
+left: star.left,
+animationDelay: star.delay,
+animationDuration: star.duration,
 }}
 />
 ))}
@@ -127,7 +157,7 @@ Dashboard
 Business Workflow Inefficiency Scanner
 </p>
 
-<h1 className="mt-5 max-w-4xl text-4xl font-bold leading-[1.02] text-white sm:text-5xl lg:text-6xl xl:text-[4.5rem] [text-shadow:0_0_10px_rgba(255,255,255,1),0_0_22px_rgba(255,255,255,0.96),0_0_42px_rgba(96,165,250,0.95),0_0_70px_rgba(59,130,246,0.88),0_0_110px_rgba(147,51,234,0.72)]">
+<h1 className="hero-glow mt-5 max-w-4xl text-4xl font-bold leading-[1.02] text-white sm:text-5xl lg:text-6xl xl:text-[4.5rem]">
 Find Workflow Friction
 <br />
 Before It Slows
@@ -405,7 +435,7 @@ follow-through, and faster execution.
 </p>
 </div>
 
-<div className="grid grid-cols-2 gap-4 text-sm text-gray-400 sm:grid-cols-3 md:text-right">
+<div className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-400 md:max-w-md md:justify-end">
 <a href="#how-it-works" className="transition hover:text-white">
 How It Works
 </a>
@@ -423,7 +453,7 @@ Live Dashboard
 </Link>
 <button
 onClick={() => openCalendly('homepage')}
-className="text-left transition hover:text-white md:text-right"
+className="text-left transition hover:text-white"
 >
 Book Consultation
 </button>
@@ -447,6 +477,16 @@ rootElement={document.body}
 )}
 
 <style jsx>{`
+.hero-glow {
+animation: heroPulse 6s ease-in-out infinite;
+text-shadow:
+0 0 8px rgba(255, 255, 255, 0.72),
+0 0 16px rgba(255, 255, 255, 0.68),
+0 0 30px rgba(96, 165, 250, 0.72),
+0 0 54px rgba(59, 130, 246, 0.62),
+0 0 90px rgba(147, 51, 234, 0.52);
+}
+
 .sparkle {
 position: absolute;
 border-radius: 9999px;
@@ -457,6 +497,29 @@ box-shadow:
 0 0 30px rgba(147, 51, 234, 0.42);
 animation-name: twinkle;
 animation-timing-function: ease-in-out;
+animation-iteration-count: infinite;
+}
+
+.shooting-star {
+position: absolute;
+width: 140px;
+height: 2px;
+border-radius: 9999px;
+background: linear-gradient(
+90deg,
+rgba(255, 255, 255, 0),
+rgba(255, 255, 255, 0.98),
+rgba(96, 165, 250, 0.78),
+rgba(255, 255, 255, 0)
+);
+box-shadow:
+0 0 12px rgba(255, 255, 255, 0.95),
+0 0 24px rgba(96, 165, 250, 0.7),
+0 0 36px rgba(147, 51, 234, 0.35);
+transform: rotate(-25deg) translateX(0);
+opacity: 0;
+animation-name: shootingStar;
+animation-timing-function: linear;
 animation-iteration-count: infinite;
 }
 
@@ -577,6 +640,28 @@ bottom: 10%;
 animation: fogDriftThree 34s ease-in-out infinite;
 }
 
+@keyframes heroPulse {
+0%,
+100% {
+opacity: 0.92;
+text-shadow:
+0 0 6px rgba(255, 255, 255, 0.58),
+0 0 12px rgba(255, 255, 255, 0.52),
+0 0 24px rgba(96, 165, 250, 0.56),
+0 0 42px rgba(59, 130, 246, 0.5),
+0 0 70px rgba(147, 51, 234, 0.4);
+}
+50% {
+opacity: 1;
+text-shadow:
+0 0 10px rgba(255, 255, 255, 0.92),
+0 0 22px rgba(255, 255, 255, 0.88),
+0 0 40px rgba(96, 165, 250, 0.9),
+0 0 68px rgba(59, 130, 246, 0.78),
+0 0 108px rgba(147, 51, 234, 0.62);
+}
+}
+
 @keyframes twinkle {
 0%,
 100% {
@@ -594,6 +679,24 @@ opacity: 0.55;
 75% {
 transform: translateY(4px) scale(1.04);
 opacity: 0.82;
+}
+}
+
+@keyframes shootingStar {
+0% {
+opacity: 0;
+transform: rotate(-25deg) translate3d(0, 0, 0) scaleX(0.7);
+}
+8% {
+opacity: 1;
+}
+20% {
+opacity: 0;
+transform: rotate(-25deg) translate3d(-220px, 180px, 0) scaleX(1);
+}
+100% {
+opacity: 0;
+transform: rotate(-25deg) translate3d(-220px, 180px, 0) scaleX(1);
 }
 }
 
