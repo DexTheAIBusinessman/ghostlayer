@@ -186,11 +186,11 @@ export default function HomePage() {
                     <p className="text-[11px] uppercase tracking-[0.24em] text-red-200 sm:text-xs">
                       Estimated Loss
                     </p>
-                    <p className="mt-3 flex flex-wrap items-baseline gap-x-1 break-words text-white">
-                      <span className="text-[2rem] font-bold leading-none sm:text-[2.3rem] lg:text-[2.5rem]">
+                    <p className="mt-3 flex items-baseline whitespace-nowrap text-white">
+                      <span className="text-[2rem] font-bold leading-none sm:text-[2.3rem] lg:text-[2.45rem]">
                         $3,247
                       </span>
-                      <span className="text-[1.2rem] font-bold leading-none sm:text-[1.28rem]">
+                      <span className="ml-1 text-[1.1rem] font-bold leading-none sm:text-[1.18rem] lg:text-[1.22rem]">
                         /mo
                       </span>
                     </p>
@@ -463,13 +463,13 @@ export default function HomePage() {
         }
 
         .logo-pulse {
-          animation: logoPulse 6s ease-in-out infinite;
+          animation: logoPulse 4.8s ease-in-out infinite;
           text-shadow:
-            0 0 7px rgba(255, 255, 255, 0.72),
-            0 0 14px rgba(255, 255, 255, 0.66),
-            0 0 28px rgba(96, 165, 250, 0.72),
-            0 0 48px rgba(59, 130, 246, 0.6),
-            0 0 82px rgba(147, 51, 234, 0.5);
+            0 0 8px rgba(255, 255, 255, 0.76),
+            0 0 16px rgba(255, 255, 255, 0.72),
+            0 0 30px rgba(96, 165, 250, 0.8),
+            0 0 56px rgba(59, 130, 246, 0.72),
+            0 0 94px rgba(147, 51, 234, 0.62);
         }
 
         .sparkle {
@@ -627,22 +627,22 @@ export default function HomePage() {
         @keyframes logoPulse {
           0%,
           100% {
-            opacity: 0.9;
+            opacity: 0.72;
             text-shadow:
-              0 0 5px rgba(255, 255, 255, 0.56),
-              0 0 10px rgba(255, 255, 255, 0.48),
-              0 0 20px rgba(96, 165, 250, 0.52),
-              0 0 36px rgba(59, 130, 246, 0.44),
-              0 0 62px rgba(147, 51, 234, 0.34);
+              0 0 4px rgba(255, 255, 255, 0.4),
+              0 0 8px rgba(255, 255, 255, 0.34),
+              0 0 16px rgba(96, 165, 250, 0.32),
+              0 0 28px rgba(59, 130, 246, 0.26),
+              0 0 44px rgba(147, 51, 234, 0.18);
           }
           50% {
             opacity: 1;
             text-shadow:
-              0 0 9px rgba(255, 255, 255, 0.9),
-              0 0 18px rgba(255, 255, 255, 0.82),
-              0 0 34px rgba(96, 165, 250, 0.88),
-              0 0 58px rgba(59, 130, 246, 0.74),
-              0 0 92px rgba(147, 51, 234, 0.58);
+              0 0 10px rgba(255, 255, 255, 0.98),
+              0 0 22px rgba(255, 255, 255, 0.94),
+              0 0 42px rgba(96, 165, 250, 0.95),
+              0 0 72px rgba(59, 130, 246, 0.86),
+              0 0 118px rgba(147, 51, 234, 0.72);
           }
         }
 
@@ -749,3 +749,4 @@ export default function HomePage() {
     </main>
   );
 }
+
