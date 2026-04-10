@@ -56,7 +56,7 @@ export default function DashboardPage() {
   const currentYear = new Date().getFullYear();
 
   const glowLogo =
-    '[text-shadow:0_0_6px_rgba(255,255,255,0.96),0_0_14px_rgba(96,165,250,0.92),0_0_28px_rgba(59,130,246,0.88),0_0_46px_rgba(147,51,234,0.62)]';
+    '[text-shadow:0_0_8px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.95),0_0_30px_rgba(96,165,250,0.95),0_0_52px_rgba(59,130,246,0.9),0_0_78px_rgba(147,51,234,0.75)]';
 
   useEffect(() => {
     setIsMounted(true);
@@ -86,8 +86,8 @@ export default function DashboardPage() {
         }
       },
       {
-        rootMargin: '-20% 0px -60% 0px',
-        threshold: [0.2, 0.4, 0.6],
+        rootMargin: '-20% 0px -55% 0px',
+        threshold: [0.2, 0.35, 0.5, 0.7],
       }
     );
 
@@ -148,6 +148,7 @@ export default function DashboardPage() {
       61,
       Math.min(94, 88 - Math.floor(teamNumber / 3))
     );
+
     const workflowRisk = Math.max(
       38,
       Math.min(
@@ -158,10 +159,12 @@ export default function DashboardPage() {
           (spendNumber >= 500 ? 4 : 0)
       )
     );
+
     const productivityLoss = Math.max(
       1200,
       Math.round(teamNumber * 420 + spendNumber * 0.35)
     );
+
     const savingsOpportunity = Math.round(productivityLoss * 1.28);
 
     const summary = `EXECUTIVE SUMMARY
@@ -242,9 +245,7 @@ Monthly Cost Impacted: $${spendLabel}`;
       setFeedbackMessage('Saving feedback...');
 
       const { error } = await supabase.from('feedback').insert([
-        {
-          message: feedback,
-        },
+        { message: feedback },
       ]);
 
       if (error) {
@@ -325,6 +326,7 @@ ${analysis}`;
       61,
       Math.min(94, 88 - Math.floor(teamNumber / 3))
     );
+
     const workflowRisk = Math.max(
       38,
       Math.min(
@@ -335,10 +337,12 @@ ${analysis}`;
           (spendNumber >= 500 ? 4 : 0)
       )
     );
+
     const productivityLoss = Math.max(
       1200,
       Math.round(teamNumber * 420 + spendNumber * 0.35)
     );
+
     const savingsOpportunity = Math.round(productivityLoss * 1.28);
 
     return {
@@ -400,23 +404,24 @@ ${analysis}`;
   return (
     <main className="min-h-screen overflow-x-hidden bg-black text-white">
       <div className="flex min-h-screen">
-        <aside className="hidden w-[240px] shrink-0 border-r border-white/10 bg-black/80 p-5 md:block lg:w-[250px]">
+        <aside className="hidden w-[220px] shrink-0 border-r border-white/10 bg-black/85 px-4 py-5 md:block lg:w-[236px] xl:w-[248px]">
           <Link
             href="/"
-            className={`block max-w-full overflow-hidden text-[1.9rem] font-bold leading-none tracking-[0.16em] text-white whitespace-nowrap ${glowLogo}`}
+            className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.08rem] font-bold leading-none tracking-[0.09em] text-white lg:text-[1.18rem] xl:text-[1.24rem] ${glowLogo}`}
           >
             GHOSTLAYER
           </Link>
 
-          <nav className="mt-10 space-y-2 text-gray-400">
+          <nav className="mt-8 space-y-2 text-gray-400">
             {sideNav.map((item) => {
               const isActive = activeSection === item.id;
+
               return (
                 <button
                   key={item.id}
                   type="button"
                   onClick={() => scrollToSection(item.id)}
-                  className={`block w-full rounded-xl px-3 py-2 text-left text-lg transition ${
+                  className={`block w-full rounded-xl px-3 py-2.5 text-left text-base transition lg:text-[1.05rem] ${
                     isActive
                       ? 'bg-white/10 text-white'
                       : 'text-gray-400 hover:bg-white/5 hover:text-white'
@@ -434,15 +439,16 @@ ${analysis}`;
             <div className="px-4 py-4">
               <Link
                 href="/"
-                className={`block max-w-full overflow-hidden text-[1.45rem] font-bold leading-none tracking-[0.16em] text-white whitespace-nowrap ${glowLogo}`}
+                className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[0.98rem] font-bold leading-none tracking-[0.08em] text-white ${glowLogo}`}
               >
                 GHOSTLAYER
               </Link>
             </div>
 
-            <div className="flex gap-3 overflow-x-auto px-4 pb-4">
+            <div className="flex gap-3 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {sideNav.map((item) => {
                 const isActive = activeSection === item.id;
+
                 return (
                   <button
                     key={item.id}
@@ -461,14 +467,14 @@ ${analysis}`;
             </div>
           </div>
 
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-8 lg:px-10 md:py-10">
+          <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 md:px-8 lg:px-10 md:py-10">
             <section
               id="overview"
-              className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
+              className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 lg:p-7"
             >
-              <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-                <div className="max-w-3xl min-w-0">
-                  <p className="text-xs uppercase tracking-[0.35em] text-cyan-300 sm:text-sm">
+              <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-start 2xl:justify-between">
+                <div className="min-w-0 max-w-4xl">
+                  <p className="text-[11px] uppercase tracking-[0.32em] text-cyan-300 sm:text-xs">
                     Operations Dashboard
                   </p>
 
@@ -483,20 +489,22 @@ ${analysis}`;
                     clearer operational action.
                   </p>
 
-                  <div className="mt-5 grid grid-cols-1 gap-3 text-sm text-gray-400 sm:grid-cols-3">
-                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+                  <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
+                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-gray-400">
                       <span className="text-gray-500">Last scan</span>
                       <div className="mt-1 text-white">
                         {formatRelativeTime(lastScanAt)}
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+
+                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-gray-400">
                       <span className="text-gray-500">Bookings synced</span>
                       <div className="mt-1 text-white">
                         {bookingsLoading ? 'Syncing...' : 'Active'}
                       </div>
                     </div>
-                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3">
+
+                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-gray-400 sm:col-span-2 xl:col-span-1">
                       <span className="text-gray-500">Status</span>
                       <div className="mt-1 text-white">
                         {metrics.workflowRisk >= 75
@@ -509,7 +517,7 @@ ${analysis}`;
                   </div>
                 </div>
 
-                <div className="grid w-full grid-cols-2 gap-3 xl:max-w-md">
+                <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 2xl:max-w-md">
                   <button
                     onClick={runScan}
                     disabled={loading}
@@ -549,8 +557,8 @@ ${analysis}`;
               )}
             </section>
 
-            <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-4">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-6">
+            <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4">
+              <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
                 <h3 className="text-sm uppercase tracking-[0.2em] text-gray-300">
                   Workflow Health
                 </h3>
@@ -561,7 +569,7 @@ ${analysis}`;
                 <p className="mt-3 text-xs text-cyan-300">+4% from prior benchmark</p>
               </div>
 
-              <div className="rounded-3xl border border-cyan-400/30 bg-cyan-400/10 p-6">
+              <div className="rounded-3xl border border-cyan-400/30 bg-cyan-400/10 p-5 sm:p-6">
                 <h3 className="text-sm uppercase tracking-[0.2em] text-gray-200">
                   Risk Score
                 </h3>
@@ -572,11 +580,11 @@ ${analysis}`;
                 <p className="mt-3 text-xs text-cyan-200">Monitor weekly</p>
               </div>
 
-              <div className="rounded-3xl border border-red-500/30 bg-red-500/10 p-6">
+              <div className="rounded-3xl border border-red-500/30 bg-red-500/10 p-5 sm:p-6">
                 <h3 className="text-sm uppercase tracking-[0.2em] text-gray-200">
                   Estimated Monthly Loss
                 </h3>
-                <p className="mt-3 text-4xl font-bold">
+                <p className="mt-3 break-words text-4xl font-bold">
                   ${metrics.productivityLoss.toLocaleString()}/mo
                 </p>
                 <p className="mt-2 text-sm text-gray-300">
@@ -585,11 +593,11 @@ ${analysis}`;
                 <p className="mt-3 text-xs text-red-300">Priority attention recommended</p>
               </div>
 
-              <div className="rounded-3xl border border-green-500/30 bg-green-500/10 p-6">
+              <div className="rounded-3xl border border-green-500/30 bg-green-500/10 p-5 sm:p-6">
                 <h3 className="text-sm uppercase tracking-[0.2em] text-gray-200">
                   Recovery Opportunity
                 </h3>
-                <p className="mt-3 text-4xl font-bold">
+                <p className="mt-3 break-words text-4xl font-bold">
                   ${metrics.savingsOpportunity.toLocaleString()}/mo
                 </p>
                 <p className="mt-2 text-sm text-gray-300">
@@ -603,14 +611,12 @@ ${analysis}`;
               id="priority-issues"
               className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
             >
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-                <div>
-                  <h3 className="text-2xl font-semibold">Priority Issues</h3>
-                  <p className="mt-2 text-sm text-gray-400">
-                    The biggest operational risks currently visible from your
-                    workflow inputs and dashboard state.
-                  </p>
-                </div>
+              <div>
+                <h3 className="text-2xl font-semibold">Priority Issues</h3>
+                <p className="mt-2 text-sm text-gray-400">
+                  The biggest operational risks currently visible from your
+                  workflow inputs and dashboard state.
+                </p>
               </div>
 
               <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-3">
@@ -629,9 +635,11 @@ ${analysis}`;
                         {issue.severity}
                       </span>
                     </div>
+
                     <p className="mt-4 text-sm leading-7 text-gray-300">
                       {issue.impact}
                     </p>
+
                     <div className="mt-4 rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-3">
                       <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">
                         Recommended action
@@ -648,7 +656,7 @@ ${analysis}`;
               className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
             >
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div>
+                <div className="min-w-0">
                   <h3 className="text-2xl font-semibold text-cyan-300">
                     Recent Bookings
                   </h3>
@@ -681,7 +689,7 @@ ${analysis}`;
                 </p>
               ) : (
                 <>
-                  <div className="mt-6 hidden overflow-x-auto lg:block">
+                  <div className="mt-6 hidden overflow-x-auto xl:block">
                     <table className="min-w-full border-collapse text-left text-sm">
                       <thead>
                         <tr className="border-b border-white/10 text-gray-400">
@@ -702,7 +710,9 @@ ${analysis}`;
                               {booking.invitee_name || 'Unknown'}
                             </td>
                             <td className="px-3 py-3">
-                              {booking.invitee_email || 'No email'}
+                              <span className="break-all">
+                                {booking.invitee_email || 'No email'}
+                              </span>
                             </td>
                             <td className="px-3 py-3">
                               {normalizeEventTypeName(booking.event_type_name)}
@@ -721,7 +731,7 @@ ${analysis}`;
                     </table>
                   </div>
 
-                  <div className="mt-6 grid gap-4 lg:hidden">
+                  <div className="mt-6 grid gap-4 xl:hidden">
                     {bookings.map((booking) => (
                       <div
                         key={booking.id}
@@ -734,7 +744,9 @@ ${analysis}`;
                           </div>
                           <div>
                             <span className="text-gray-400">Email: </span>
-                            <span>{booking.invitee_email || 'No email'}</span>
+                            <span className="break-all">
+                              {booking.invitee_email || 'No email'}
+                            </span>
                           </div>
                           <div>
                             <span className="text-gray-400">Type: </span>
@@ -764,6 +776,7 @@ ${analysis}`;
                 className="rounded-3xl border border-white/10 bg-white/5 p-6"
               >
                 <h3 className="text-xl font-semibold">Delay Hotspots</h3>
+
                 <div className="mt-5 space-y-4">
                   <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
                     <div className="flex items-center justify-between gap-4">
@@ -794,6 +807,7 @@ ${analysis}`;
                 className="rounded-3xl border border-white/10 bg-white/5 p-6"
               >
                 <h3 className="text-xl font-semibold">Broken Handoffs</h3>
+
                 <div className="mt-5 space-y-4">
                   <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
                     <div className="flex items-center justify-between gap-4">
@@ -823,6 +837,7 @@ ${analysis}`;
                 className="rounded-3xl border border-white/10 bg-white/5 p-6"
               >
                 <h3 className="text-xl font-semibold">Duplicate Work</h3>
+
                 <div className="mt-5 space-y-4">
                   <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
                     <div className="flex items-center justify-between gap-4">
@@ -868,7 +883,7 @@ ${analysis}`;
                 exposure, and the clearest next actions for the business.
               </p>
 
-              <pre className="mt-4 overflow-x-auto whitespace-pre-wrap rounded-2xl border border-white/10 bg-black/40 p-4 text-sm leading-7 text-gray-300">
+              <pre className="mt-4 overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/10 bg-black/40 p-4 text-sm leading-7 text-gray-300">
                 {analysis}
               </pre>
             </section>
@@ -888,28 +903,28 @@ ${analysis}`;
                   value={companyName}
                   onChange={(e) => setCompanyName(e.target.value)}
                   placeholder="Company name"
-                  className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
+                  className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
                 />
 
                 <input
                   value={teamSize}
                   onChange={(e) => setTeamSize(e.target.value)}
                   placeholder="Team size"
-                  className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
+                  className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
                 />
 
                 <input
                   value={bottleneck}
                   onChange={(e) => setBottleneck(e.target.value)}
                   placeholder="Biggest workflow bottleneck"
-                  className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
+                  className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
                 />
 
                 <input
                   value={saasSpend}
                   onChange={(e) => setSaasSpend(e.target.value)}
                   placeholder="Monthly operational cost impacted"
-                  className="rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
+                  className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
                 />
               </div>
 
@@ -961,10 +976,10 @@ ${analysis}`;
 
             <footer className="mt-10 border-t border-white/10 pt-8">
               <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-                <div>
+                <div className="min-w-0">
                   <Link
                     href="/"
-                    className={`text-[1.15rem] font-bold leading-none tracking-[0.18em] text-white sm:text-[1.25rem] ${glowLogo}`}
+                    className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1rem] font-bold leading-none tracking-[0.1em] text-white sm:text-[1.1rem] ${glowLogo}`}
                   >
                     GHOSTLAYER
                   </Link>
