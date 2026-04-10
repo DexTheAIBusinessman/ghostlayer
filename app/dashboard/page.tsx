@@ -56,7 +56,7 @@ export default function DashboardPage() {
   const currentYear = new Date().getFullYear();
 
   const glowLogo =
-    '[text-shadow:0_0_8px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.95),0_0_30px_rgba(96,165,250,0.95),0_0_52px_rgba(59,130,246,0.9),0_0_78px_rgba(147,51,234,0.75)]';
+    '[text-shadow:0_0_10px_rgba(255,255,255,1),0_0_22px_rgba(255,255,255,0.98),0_0_38px_rgba(125,211,252,0.98),0_0_62px_rgba(59,130,246,0.95),0_0_92px_rgba(147,51,234,0.9),0_0_128px_rgba(147,51,234,0.72)]';
 
   useEffect(() => {
     setIsMounted(true);
@@ -407,7 +407,7 @@ ${analysis}`;
         <aside className="hidden w-[220px] shrink-0 border-r border-white/10 bg-black/85 px-4 py-5 md:block lg:w-[236px] xl:w-[248px]">
           <Link
             href="/"
-            className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.08rem] font-bold leading-none tracking-[0.09em] text-white lg:text-[1.18rem] xl:text-[1.24rem] ${glowLogo}`}
+            className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.08em] text-white lg:text-[1.12rem] xl:text-[1.18rem] ${glowLogo}`}
           >
             GHOSTLAYER
           </Link>
@@ -439,7 +439,7 @@ ${analysis}`;
             <div className="px-4 py-4">
               <Link
                 href="/"
-                className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[0.98rem] font-bold leading-none tracking-[0.08em] text-white ${glowLogo}`}
+                className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[0.96rem] font-bold leading-none tracking-[0.08em] text-white ${glowLogo}`}
               >
                 GHOSTLAYER
               </Link>
@@ -979,7 +979,7 @@ ${analysis}`;
                 <div className="min-w-0">
                   <Link
                     href="/"
-                    className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1rem] font-bold leading-none tracking-[0.1em] text-white sm:text-[1.1rem] ${glowLogo}`}
+                    className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.2rem] font-bold leading-none tracking-[0.11em] text-white sm:text-[1.32rem] ${glowLogo}`}
                   >
                     GHOSTLAYER
                   </Link>
