@@ -55,6 +55,9 @@ export default function DashboardPage() {
 
   const currentYear = new Date().getFullYear();
 
+  const glowLogo =
+    '[text-shadow:0_0_6px_rgba(255,255,255,0.96),0_0_14px_rgba(96,165,250,0.92),0_0_28px_rgba(59,130,246,0.88),0_0_46px_rgba(147,51,234,0.62)]';
+
   useEffect(() => {
     setIsMounted(true);
     loadBookings();
@@ -293,6 +296,8 @@ ${analysis}`;
   function normalizeEventTypeName(value: string | null) {
     if (!value) return 'Business Consultation';
     if (value.includes('/event_types/')) return 'Business Consultation';
+    if (value.toLowerCase().includes('30 minute')) return 'Business Consultation';
+    if (value.toLowerCase().includes('consult')) return 'Business Consultation';
     return value;
   }
 
@@ -357,13 +362,15 @@ ${analysis}`;
       {
         title: 'Handoff context loss',
         severity: 'Medium',
-        impact: 'Important information may be dropping between intake, delivery, and follow-through.',
+        impact:
+          'Important information may be dropping between intake, delivery, and follow-through.',
         action: 'Standardize the handoff checklist used by all teams.',
       },
       {
         title: 'Duplicate manual reporting',
         severity: 'Medium',
-        impact: 'People may be updating the same status in multiple places, increasing drag.',
+        impact:
+          'People may be updating the same status in multiple places, increasing drag.',
         action: 'Consolidate progress tracking into one primary workflow.',
       },
     ];
@@ -380,9 +387,6 @@ ${analysis}`;
     { label: 'Run Scan', id: 'run-scan' },
   ];
 
-  const glowLogo =
-    '[text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(96,165,250,0.95),0_0_34px_rgba(59,130,246,0.9),0_0_54px_rgba(147,51,234,0.7)]';
-
   function severityClasses(severity: IssueSeverity) {
     if (severity === 'High') {
       return 'border-red-500/30 bg-red-500/10 text-red-300';
@@ -394,12 +398,12 @@ ${analysis}`;
   }
 
   return (
-    <main className="min-h-screen bg-black text-white">
+    <main className="min-h-screen overflow-x-hidden bg-black text-white">
       <div className="flex min-h-screen">
-        <aside className="hidden w-64 shrink-0 border-r border-white/10 bg-black/80 p-6 md:block">
+        <aside className="hidden w-[240px] shrink-0 border-r border-white/10 bg-black/80 p-5 md:block lg:w-[250px]">
           <Link
             href="/"
-            className={`text-3xl font-bold tracking-[0.22em] text-white ${glowLogo}`}
+            className={`block max-w-full overflow-hidden text-[1.9rem] font-bold leading-none tracking-[0.16em] text-white whitespace-nowrap ${glowLogo}`}
           >
             GHOSTLAYER
           </Link>
@@ -425,12 +429,12 @@ ${analysis}`;
           </nav>
         </aside>
 
-        <div className="flex-1">
+        <div className="min-w-0 flex-1">
           <div className="sticky top-0 z-30 border-b border-white/10 bg-black/90 backdrop-blur md:hidden">
             <div className="px-4 py-4">
               <Link
                 href="/"
-                className={`text-2xl font-bold tracking-[0.2em] text-white ${glowLogo}`}
+                className={`block max-w-full overflow-hidden text-[1.45rem] font-bold leading-none tracking-[0.16em] text-white whitespace-nowrap ${glowLogo}`}
               >
                 GHOSTLAYER
               </Link>
@@ -457,18 +461,18 @@ ${analysis}`;
             </div>
           </div>
 
-          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-10 md:py-10">
+          <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 md:px-8 lg:px-10 md:py-10">
             <section
               id="overview"
               className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
             >
               <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-                <div className="max-w-3xl">
+                <div className="max-w-3xl min-w-0">
                   <p className="text-xs uppercase tracking-[0.35em] text-cyan-300 sm:text-sm">
                     Operations Dashboard
                   </p>
 
-                  <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
+                  <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
                     Monitor workflow drag, handoff risk, and business execution
                     gaps
                   </h1>
@@ -505,25 +509,25 @@ ${analysis}`;
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 xl:max-w-md">
+                <div className="grid w-full grid-cols-2 gap-3 xl:max-w-md">
                   <button
                     onClick={runScan}
                     disabled={loading}
-                    className="rounded-2xl bg-white px-5 py-4 text-sm font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
+                    className="rounded-2xl bg-white px-4 py-4 text-sm font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
                   >
                     {loading ? 'Scanning...' : 'Run Scan'}
                   </button>
 
                   <button
                     onClick={saveScan}
-                    className="rounded-2xl border border-cyan-400/30 px-5 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+                    className="rounded-2xl border border-cyan-400/30 px-4 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
                   >
                     Save Scan
                   </button>
 
                   <button
                     onClick={downloadReport}
-                    className="rounded-2xl border border-white/20 px-5 py-4 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
+                    className="rounded-2xl border border-white/20 px-4 py-4 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
                   >
                     Download Report
                   </button>
@@ -533,7 +537,7 @@ ${analysis}`;
                       await trackCtaClick('dashboard');
                       setIsCalendlyOpen(true);
                     }}
-                    className="rounded-2xl border border-cyan-400/30 px-5 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
+                    className="rounded-2xl border border-cyan-400/30 px-4 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
                   >
                     Book Consultation
                   </button>
@@ -960,7 +964,7 @@ ${analysis}`;
                 <div>
                   <Link
                     href="/"
-                    className={`text-2xl font-bold tracking-[0.22em] text-white ${glowLogo}`}
+                    className={`text-[1.15rem] font-bold leading-none tracking-[0.18em] text-white sm:text-[1.25rem] ${glowLogo}`}
                   >
                     GHOSTLAYER
                   </Link>
@@ -1014,4 +1018,3 @@ ${analysis}`;
     </main>
   );
 }
-
