@@ -87,7 +87,7 @@ opacity: sparkle.opacity,
 <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-6 md:px-8 lg:px-10">
 <Link
 href="/"
-className="hero-glow inline-block text-[1.14rem] font-bold tracking-[0.16em] text-white sm:text-[1.3rem]"
+className="inline-block text-[1.14rem] font-bold tracking-[0.16em] text-white [text-shadow:0_0_8px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.96),0_0_34px_rgba(96,165,250,0.95),0_0_58px_rgba(59,130,246,0.9),0_0_92px_rgba(147,51,234,0.76)] sm:text-[1.3rem]"
 >
 GHOSTLAYER
 </Link>
@@ -400,7 +400,7 @@ Open Live Dashboard
 <div className="max-w-md">
 <Link
 href="/"
-className="hero-glow inline-block text-[1.28rem] font-bold tracking-[0.14em] text-white sm:text-[1.38rem]"
+className="inline-block text-[1.28rem] font-bold tracking-[0.14em] text-white [text-shadow:0_0_8px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.96),0_0_34px_rgba(96,165,250,0.95),0_0_58px_rgba(59,130,246,0.9),0_0_92px_rgba(147,51,234,0.76)] sm:text-[1.38rem]"
 >
 GHOSTLAYER
 </Link>
