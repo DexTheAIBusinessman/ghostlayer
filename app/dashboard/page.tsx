@@ -1,1035 +1,719 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PopupModal } from 'react-calendly';
-import { supabase } from '@/lib/supabase';
 import { trackCtaClick } from '@/lib/trackCtaClick';
 
-type BookingRow = {
-  id: number;
-  calendly_event_uri: string | null;
-  calendly_invitee_uri: string | null;
-  event_type_name: string | null;
-  invitee_name: string | null;
-  invitee_email: string | null;
-  scheduled_at: string | null;
-  source: string | null;
-  created_at?: string | null;
+type Sparkle = {
+left: string;
+top: string;
+size: number;
+delay: string;
+duration: string;
+opacity: number;
 };
 
-type IssueSeverity = 'High' | 'Medium' | 'Low';
-
-type PriorityIssue = {
-  title: string;
-  severity: IssueSeverity;
-  impact: string;
-  action: string;
-};
-
-export default function DashboardPage() {
-  const [isMounted, setIsMounted] = useState(false);
-  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
-
-  const [companyName, setCompanyName] = useState('');
-  const [teamSize, setTeamSize] = useState('');
-  const [bottleneck, setBottleneck] = useState('');
-  const [saasSpend, setSaasSpend] = useState('');
-
-  const [analysis, setAnalysis] = useState(
-    'Run a business workflow scan to generate a workflow intelligence summary.'
-  );
-  const [loading, setLoading] = useState(false);
-  const [saveMessage, setSaveMessage] = useState('');
-
-  const [feedback, setFeedback] = useState('');
-  const [feedbackMessage, setFeedbackMessage] = useState('');
-  const [feedbackLoading, setFeedbackLoading] = useState(false);
-
-  const [bookings, setBookings] = useState<BookingRow[]>([]);
-  const [bookingsLoading, setBookingsLoading] = useState(true);
-  const [bookingsMessage, setBookingsMessage] = useState('');
-
-  const [lastScanAt, setLastScanAt] = useState<string | null>(null);
-  const [activeSection, setActiveSection] = useState('overview');
-
-  const currentYear = new Date().getFullYear();
-
-  const glowLogo =
-    '[text-shadow:0_0_10px_rgba(255,255,255,1),0_0_22px_rgba(255,255,255,0.98),0_0_38px_rgba(125,211,252,0.98),0_0_62px_rgba(59,130,246,0.95),0_0_92px_rgba(147,51,234,0.9),0_0_128px_rgba(147,51,234,0.72)]';
-
-  useEffect(() => {
-    setIsMounted(true);
-    loadBookings();
-  }, []);
-
-  useEffect(() => {
-    const ids = [
-      'overview',
-      'priority-issues',
-      'bookings',
-      'delay-hotspots',
-      'broken-handoffs',
-      'duplicate-work',
-      'intelligence-summary',
-      'run-scan',
-    ];
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .sort((a, b) => b.intersectionRatio - a.intersectionRatio);
-
-        if (visible[0]?.target?.id) {
-          setActiveSection(visible[0].target.id);
-        }
-      },
-      {
-        rootMargin: '-20% 0px -55% 0px',
-        threshold: [0.2, 0.35, 0.5, 0.7],
-      }
-    );
-
-    ids.forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-
-    return () => observer.disconnect();
-  }, [bookingsLoading, bookings.length, analysis]);
-
-  function scrollToSection(id: string) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      setActiveSection(id);
-    }
-  }
-
-  async function loadBookings() {
-    try {
-      setBookingsLoading(true);
-      setBookingsMessage('');
-
-      const { data, error } = await supabase
-        .from('bookings')
-        .select('*')
-        .order('id', { ascending: false });
-
-      if (error) {
-        setBookingsMessage(`Failed to load bookings: ${error.message}`);
-        setBookings([]);
-        return;
-      }
-
-      setBookings((data as BookingRow[]) || []);
-    } catch {
-      setBookingsMessage('Failed to load bookings.');
-      setBookings([]);
-    } finally {
-      setBookingsLoading(false);
-    }
-  }
-
-  async function runScan() {
-    setLoading(true);
-    setSaveMessage('');
-    setFeedbackMessage('');
-
-    const companyLabel = companyName || 'Unknown Company';
-    const teamNumber = Number(teamSize) || 5;
-    const teamLabel = teamSize || 'Not provided';
-    const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
-    const spendLabel = saasSpend || '0';
-    const bottleneckLabel = bottleneck || 'unclear workflow stages';
-
-    const workflowHealth = Math.max(
-      61,
-      Math.min(94, 88 - Math.floor(teamNumber / 3))
-    );
-
-    const workflowRisk = Math.max(
-      38,
-      Math.min(
-        91,
-        52 +
-          (bottleneck ? 9 : 0) +
-          (teamNumber >= 10 ? 7 : 0) +
-          (spendNumber >= 500 ? 4 : 0)
-      )
-    );
-
-    const productivityLoss = Math.max(
-      1200,
-      Math.round(teamNumber * 420 + spendNumber * 0.35)
-    );
-
-    const savingsOpportunity = Math.round(productivityLoss * 1.28);
-
-    const summary = `EXECUTIVE SUMMARY
-
-${companyLabel} is showing workflow friction that may be slowing execution, increasing operational drag, and creating avoidable revenue leakage. The strongest risk signal is tied to ${bottleneckLabel}.
-
-MAIN RISKS
-
-- Delays are building around ${bottleneckLabel}
-- Handoffs are likely losing context between teams
-- Repeated manual updates are increasing duplicate work
-- Visibility drops as work moves from intake to delivery
-
-ESTIMATED COST IMPACT
-
-- Estimated monthly productivity loss: $${productivityLoss.toLocaleString()}
-- Estimated recovery opportunity: $${savingsOpportunity.toLocaleString()}
-- Workflow health score: ${workflowHealth}%
-- Workflow risk score: ${workflowRisk}/100
-
-NEXT BEST ACTIONS
-
-1. Assign one owner to each major workflow stage
-2. Remove one repeated manual update step this week
-3. Standardize intake information before handoff
-4. Review approval steps that delay execution
-5. Use booked consultation data to identify demand patterns
-
-SCAN INPUTS
-
-Company: ${companyLabel}
-Team Size: ${teamLabel}
-Biggest Bottleneck: ${bottleneckLabel}
-Monthly Cost Impacted: $${spendLabel}`;
-
-    setAnalysis('Running business workflow scan...');
-
-    setTimeout(() => {
-      setAnalysis(summary);
-      setLastScanAt(new Date().toISOString());
-      setLoading(false);
-    }, 1200);
-  }
-
-  async function saveScan() {
-    try {
-      setSaveMessage('Saving scan...');
-
-      const { error } = await supabase.from('scans').insert([
-        {
-          company_name: companyName || 'Unknown Company',
-          team_size: teamSize || 'Not provided',
-          bottleneck: bottleneck || 'Not provided',
-          saas_spend: saasSpend || '0',
-          analysis,
-        },
-      ]);
-
-      if (error) {
-        setSaveMessage(`Failed to save scan: ${error.message}`);
-        return;
-      }
-
-      setSaveMessage('Scan saved successfully.');
-    } catch {
-      setSaveMessage('Failed to save scan.');
-    }
-  }
-
-  async function submitFeedback() {
-    if (!feedback.trim()) {
-      setFeedbackMessage('Please enter feedback before submitting.');
-      return;
-    }
-
-    try {
-      setFeedbackLoading(true);
-      setFeedbackMessage('Saving feedback...');
-
-      const { error } = await supabase.from('feedback').insert([
-        { message: feedback },
-      ]);
-
-      if (error) {
-        setFeedbackMessage(`Failed to save feedback: ${error.message}`);
-        return;
-      }
-
-      setFeedbackMessage('Feedback submitted. Thank you.');
-      setFeedback('');
-    } catch {
-      setFeedbackMessage('Failed to save feedback.');
-    } finally {
-      setFeedbackLoading(false);
-    }
-  }
-
-  function downloadReport() {
-    const report = `GHOSTLAYER OPERATIONS DASHBOARD REPORT
-
-Company: ${companyName || 'Unknown Company'}
-Team Size: ${teamSize || 'Not provided'}
-Biggest Workflow Bottleneck: ${bottleneck || 'Not provided'}
-Monthly Operational Cost Impacted: $${saasSpend || '0'}
-
-${analysis}`;
-
-    const blob = new Blob([report], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `ghostlayer-report-${(companyName || 'company')
-      .toLowerCase()
-      .replace(/\s+/g, '-')}.txt`;
-
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-  }
-
-  function formatDateTime(value: string | null) {
-    if (!value) return 'Not scheduled';
-    const date = new Date(value);
-    if (Number.isNaN(date.getTime())) return value;
-    return date.toLocaleString();
-  }
-
-  function normalizeEventTypeName(value: string | null) {
-    if (!value) return 'Business Consultation';
-    if (value.includes('/event_types/')) return 'Business Consultation';
-    if (value.toLowerCase().includes('30 minute')) return 'Business Consultation';
-    if (value.toLowerCase().includes('consult')) return 'Business Consultation';
-    return value;
-  }
-
-  function formatRelativeTime(value: string | null) {
-    if (!value) return 'Not yet run';
-    const then = new Date(value).getTime();
-    const now = Date.now();
-    const diff = Math.max(0, now - then);
-
-    const mins = Math.floor(diff / 60000);
-    const hours = Math.floor(diff / 3600000);
-    const days = Math.floor(diff / 86400000);
-
-    if (mins < 1) return 'just now';
-    if (mins < 60) return `${mins}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    return `${days}d ago`;
-  }
-
-  const metrics = useMemo(() => {
-    const teamNumber = Number(teamSize) || 5;
-    const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
-
-    const workflowHealth = Math.max(
-      61,
-      Math.min(94, 88 - Math.floor(teamNumber / 3))
-    );
-
-    const workflowRisk = Math.max(
-      38,
-      Math.min(
-        91,
-        52 +
-          (bottleneck ? 9 : 0) +
-          (teamNumber >= 10 ? 7 : 0) +
-          (spendNumber >= 500 ? 4 : 0)
-      )
-    );
-
-    const productivityLoss = Math.max(
-      1200,
-      Math.round(teamNumber * 420 + spendNumber * 0.35)
-    );
-
-    const savingsOpportunity = Math.round(productivityLoss * 1.28);
-
-    return {
-      workflowHealth,
-      workflowRisk,
-      productivityLoss,
-      savingsOpportunity,
-    };
-  }, [teamSize, saasSpend, bottleneck]);
-
-  const priorityIssues: PriorityIssue[] = useMemo(() => {
-    const label = bottleneck || 'approval bottlenecks';
-
-    return [
-      {
-        title: 'Execution delay risk',
-        severity: 'High',
-        impact: `Work is slowing around ${label}. Teams may be waiting too long to move work forward.`,
-        action: 'Assign one owner and reduce extra review steps.',
-      },
-      {
-        title: 'Handoff context loss',
-        severity: 'Medium',
-        impact:
-          'Important information may be dropping between intake, delivery, and follow-through.',
-        action: 'Standardize the handoff checklist used by all teams.',
-      },
-      {
-        title: 'Duplicate manual reporting',
-        severity: 'Medium',
-        impact:
-          'People may be updating the same status in multiple places, increasing drag.',
-        action: 'Consolidate progress tracking into one primary workflow.',
-      },
-    ];
-  }, [bottleneck]);
-
-  const sideNav = [
-    { label: 'Overview', id: 'overview' },
-    { label: 'Priority Issues', id: 'priority-issues' },
-    { label: 'Bookings', id: 'bookings' },
-    { label: 'Delay Hotspots', id: 'delay-hotspots' },
-    { label: 'Broken Handoffs', id: 'broken-handoffs' },
-    { label: 'Duplicate Work', id: 'duplicate-work' },
-    { label: 'Intelligence Summary', id: 'intelligence-summary' },
-    { label: 'Run Scan', id: 'run-scan' },
-  ];
-
-  function severityClasses(severity: IssueSeverity) {
-    if (severity === 'High') {
-      return 'border-red-500/30 bg-red-500/10 text-red-300';
-    }
-    if (severity === 'Medium') {
-      return 'border-yellow-500/30 bg-yellow-500/10 text-yellow-300';
-    }
-    return 'border-cyan-400/30 bg-cyan-400/10 text-cyan-300';
-  }
-
-  return (
-    <main className="min-h-screen overflow-x-hidden bg-black text-white">
-      <div className="flex min-h-screen">
-        <aside className="hidden w-[220px] shrink-0 border-r border-white/10 bg-black/85 px-4 py-5 md:block lg:w-[236px] xl:w-[248px]">
-          <Link
-            href="/"
-            className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.08em] text-white lg:text-[1.12rem] xl:text-[1.18rem] ${glowLogo}`}
-          >
-            GHOSTLAYER
-          </Link>
-
-          <nav className="mt-8 space-y-2 text-gray-400">
-            {sideNav.map((item) => {
-              const isActive = activeSection === item.id;
-
-              return (
-                <button
-                  key={item.id}
-                  type="button"
-                  onClick={() => scrollToSection(item.id)}
-                  className={`block w-full rounded-xl px-3 py-2.5 text-left text-base transition lg:text-[1.05rem] ${
-                    isActive
-                      ? 'bg-white/10 text-white'
-                      : 'text-gray-400 hover:bg-white/5 hover:text-white'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </nav>
-        </aside>
-
-        <div className="min-w-0 flex-1">
-          <div className="sticky top-0 z-30 border-b border-white/10 bg-black/90 backdrop-blur md:hidden">
-            <div className="px-4 py-4">
-              <Link
-                href="/"
-                className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[0.96rem] font-bold leading-none tracking-[0.08em] text-white ${glowLogo}`}
-              >
-                GHOSTLAYER
-              </Link>
-            </div>
-
-            <div className="flex gap-3 overflow-x-auto px-4 pb-4 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {sideNav.map((item) => {
-                const isActive = activeSection === item.id;
-
-                return (
-                  <button
-                    key={item.id}
-                    type="button"
-                    onClick={() => scrollToSection(item.id)}
-                    className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm transition ${
-                      isActive
-                        ? 'border-cyan-400/40 bg-cyan-400/10 text-white'
-                        : 'border-white/10 bg-white/5 text-gray-300 hover:text-white'
-                    }`}
-                  >
-                    {item.label}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 md:px-8 lg:px-10 md:py-10">
-            <section
-              id="overview"
-              className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6 lg:p-7"
-            >
-              <div className="flex flex-col gap-6 2xl:flex-row 2xl:items-start 2xl:justify-between">
-                <div className="min-w-0 max-w-4xl">
-                  <p className="text-[11px] uppercase tracking-[0.32em] text-cyan-300 sm:text-xs">
-                    Operations Dashboard
-                  </p>
-
-                  <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
-                    Monitor workflow drag, handoff risk, and business execution
-                    gaps
-                  </h1>
-
-                  <p className="mt-4 max-w-3xl text-sm leading-7 text-gray-300 sm:text-base">
-                    Ghostlayer helps businesses identify workflow slowdowns,
-                    reduce duplicate effort, and turn booked consultations into
-                    clearer operational action.
-                  </p>
-
-                  <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-gray-400">
-                      <span className="text-gray-500">Last scan</span>
-                      <div className="mt-1 text-white">
-                        {formatRelativeTime(lastScanAt)}
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-gray-400">
-                      <span className="text-gray-500">Bookings synced</span>
-                      <div className="mt-1 text-white">
-                        {bookingsLoading ? 'Syncing...' : 'Active'}
-                      </div>
-                    </div>
-
-                    <div className="rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-gray-400 sm:col-span-2 xl:col-span-1">
-                      <span className="text-gray-500">Status</span>
-                      <div className="mt-1 text-white">
-                        {metrics.workflowRisk >= 75
-                          ? 'Critical'
-                          : metrics.workflowRisk >= 55
-                          ? 'Warning'
-                          : 'Healthy'}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-2 2xl:max-w-md">
-                  <button
-                    onClick={runScan}
-                    disabled={loading}
-                    className="rounded-2xl bg-white px-4 py-4 text-sm font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
-                  >
-                    {loading ? 'Scanning...' : 'Run Scan'}
-                  </button>
-
-                  <button
-                    onClick={saveScan}
-                    className="rounded-2xl border border-cyan-400/30 px-4 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-                  >
-                    Save Scan
-                  </button>
-
-                  <button
-                    onClick={downloadReport}
-                    className="rounded-2xl border border-white/20 px-4 py-4 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
-                  >
-                    Download Report
-                  </button>
-
-                  <button
-                    onClick={async () => {
-                      await trackCtaClick('dashboard');
-                      setIsCalendlyOpen(true);
-                    }}
-                    className="rounded-2xl border border-cyan-400/30 px-4 py-4 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-                  >
-                    Book Consultation
-                  </button>
-                </div>
-              </div>
-
-              {saveMessage && (
-                <p className="mt-4 text-sm text-cyan-300">{saveMessage}</p>
-              )}
-            </section>
-
-            <section className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 2xl:grid-cols-4">
-              <div className="rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
-                <h3 className="text-sm uppercase tracking-[0.2em] text-gray-300">
-                  Workflow Health
-                </h3>
-                <p className="mt-3 text-4xl font-bold">{metrics.workflowHealth}%</p>
-                <p className="mt-2 text-sm text-gray-400">
-                  Operational visibility across core business workflows.
-                </p>
-                <p className="mt-3 text-xs text-cyan-300">+4% from prior benchmark</p>
-              </div>
-
-              <div className="rounded-3xl border border-cyan-400/30 bg-cyan-400/10 p-5 sm:p-6">
-                <h3 className="text-sm uppercase tracking-[0.2em] text-gray-200">
-                  Risk Score
-                </h3>
-                <p className="mt-3 text-4xl font-bold">{metrics.workflowRisk}/100</p>
-                <p className="mt-2 text-sm text-gray-300">
-                  Higher scores signal delays, repeated effort, and weak handoffs.
-                </p>
-                <p className="mt-3 text-xs text-cyan-200">Monitor weekly</p>
-              </div>
-
-              <div className="rounded-3xl border border-red-500/30 bg-red-500/10 p-5 sm:p-6">
-                <h3 className="text-sm uppercase tracking-[0.2em] text-gray-200">
-                  Estimated Monthly Loss
-                </h3>
-                <p className="mt-3 break-words text-4xl font-bold">
-                  ${metrics.productivityLoss.toLocaleString()}/mo
-                </p>
-                <p className="mt-2 text-sm text-gray-300">
-                  Estimated business cost from workflow drag and missed execution.
-                </p>
-                <p className="mt-3 text-xs text-red-300">Priority attention recommended</p>
-              </div>
-
-              <div className="rounded-3xl border border-green-500/30 bg-green-500/10 p-5 sm:p-6">
-                <h3 className="text-sm uppercase tracking-[0.2em] text-gray-200">
-                  Recovery Opportunity
-                </h3>
-                <p className="mt-3 break-words text-4xl font-bold">
-                  ${metrics.savingsOpportunity.toLocaleString()}/mo
-                </p>
-                <p className="mt-2 text-sm text-gray-300">
-                  Possible monthly gain if workflow friction is reduced.
-                </p>
-                <p className="mt-3 text-xs text-green-300">Strong upside if corrected</p>
-              </div>
-            </section>
-
-            <section
-              id="priority-issues"
-              className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
-            >
-              <div>
-                <h3 className="text-2xl font-semibold">Priority Issues</h3>
-                <p className="mt-2 text-sm text-gray-400">
-                  The biggest operational risks currently visible from your
-                  workflow inputs and dashboard state.
-                </p>
-              </div>
-
-              <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-3">
-                {priorityIssues.map((issue) => (
-                  <div
-                    key={issue.title}
-                    className="rounded-2xl border border-white/10 bg-black/30 p-5"
-                  >
-                    <div className="flex items-center justify-between gap-3">
-                      <h4 className="text-lg font-semibold">{issue.title}</h4>
-                      <span
-                        className={`rounded-full border px-3 py-1 text-xs font-semibold ${severityClasses(
-                          issue.severity
-                        )}`}
-                      >
-                        {issue.severity}
-                      </span>
-                    </div>
-
-                    <p className="mt-4 text-sm leading-7 text-gray-300">
-                      {issue.impact}
-                    </p>
-
-                    <div className="mt-4 rounded-xl border border-cyan-400/20 bg-cyan-400/5 p-3">
-                      <p className="text-xs uppercase tracking-[0.2em] text-cyan-300">
-                        Recommended action
-                      </p>
-                      <p className="mt-2 text-sm text-gray-200">{issue.action}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section
-              id="bookings"
-              className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
-            >
-              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-                <div className="min-w-0">
-                  <h3 className="text-2xl font-semibold text-cyan-300">
-                    Recent Bookings
-                  </h3>
-                  <p className="mt-2 text-sm text-gray-400">
-                    Business consultations captured through your Calendly workflow.
-                  </p>
-                </div>
-
-                <div className="flex items-center gap-3">
-                  <p className="text-xs text-gray-500">
-                    {bookingsLoading ? 'Syncing...' : 'Latest sync active'}
-                  </p>
-                  <button
-                    onClick={loadBookings}
-                    className="rounded-2xl border border-white/20 px-4 py-2 text-sm font-semibold text-white transition hover:bg-white hover:text-black"
-                  >
-                    Refresh
-                  </button>
-                </div>
-              </div>
-
-              {bookingsLoading ? (
-                <p className="mt-6 text-sm text-gray-400">Loading bookings...</p>
-              ) : bookingsMessage ? (
-                <p className="mt-6 text-sm text-red-400">{bookingsMessage}</p>
-              ) : bookings.length === 0 ? (
-                <p className="mt-6 text-sm text-gray-400">
-                  No bookings found yet. Book a business consultation to populate
-                  this section.
-                </p>
-              ) : (
-                <>
-                  <div className="mt-6 hidden overflow-x-auto xl:block">
-                    <table className="min-w-full border-collapse text-left text-sm">
-                      <thead>
-                        <tr className="border-b border-white/10 text-gray-400">
-                          <th className="px-3 py-3 font-medium">Name</th>
-                          <th className="px-3 py-3 font-medium">Email</th>
-                          <th className="px-3 py-3 font-medium">Consultation Type</th>
-                          <th className="px-3 py-3 font-medium">Scheduled At</th>
-                          <th className="px-3 py-3 font-medium">Source</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {bookings.map((booking) => (
-                          <tr
-                            key={booking.id}
-                            className="border-b border-white/5 text-gray-200"
-                          >
-                            <td className="px-3 py-3">
-                              {booking.invitee_name || 'Unknown'}
-                            </td>
-                            <td className="px-3 py-3">
-                              <span className="break-all">
-                                {booking.invitee_email || 'No email'}
-                              </span>
-                            </td>
-                            <td className="px-3 py-3">
-                              {normalizeEventTypeName(booking.event_type_name)}
-                            </td>
-                            <td className="px-3 py-3">
-                              {formatDateTime(booking.scheduled_at)}
-                            </td>
-                            <td className="px-3 py-3">
-                              <span className="rounded-full border border-cyan-400/20 bg-cyan-400/5 px-3 py-1 text-xs text-cyan-300">
-                                {booking.source || 'Not tracked'}
-                              </span>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
-                  </div>
-
-                  <div className="mt-6 grid gap-4 xl:hidden">
-                    {bookings.map((booking) => (
-                      <div
-                        key={booking.id}
-                        className="rounded-2xl border border-white/10 bg-black/30 p-4"
-                      >
-                        <div className="grid gap-2 text-sm">
-                          <div>
-                            <span className="text-gray-400">Name: </span>
-                            <span>{booking.invitee_name || 'Unknown'}</span>
-                          </div>
-                          <div>
-                            <span className="text-gray-400">Email: </span>
-                            <span className="break-all">
-                              {booking.invitee_email || 'No email'}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-gray-400">Type: </span>
-                            <span>
-                              {normalizeEventTypeName(booking.event_type_name)}
-                            </span>
-                          </div>
-                          <div>
-                            <span className="text-gray-400">Scheduled: </span>
-                            <span>{formatDateTime(booking.scheduled_at)}</span>
-                          </div>
-                          <div>
-                            <span className="text-gray-400">Source: </span>
-                            <span>{booking.source || 'Not tracked'}</span>
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </>
-              )}
-            </section>
-
-            <section className="mt-10 grid grid-cols-1 gap-6 xl:grid-cols-3">
-              <div
-                id="delay-hotspots"
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
-              >
-                <h3 className="text-xl font-semibold">Delay Hotspots</h3>
-
-                <div className="mt-5 space-y-4">
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Approval queue</p>
-                      <span className="text-sm text-red-400">High</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Multiple review steps are likely delaying work before it
-                      moves into execution.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Intake completion</p>
-                      <span className="text-sm text-yellow-400">Medium</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Missing upfront information can stall work early and create
-                      rework later.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                id="broken-handoffs"
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
-              >
-                <h3 className="text-xl font-semibold">Broken Handoffs</h3>
-
-                <div className="mt-5 space-y-4">
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Sales → Delivery</p>
-                      <span className="text-sm text-red-400">Missing context</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Key details may not be consistently passed into execution.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Support → Operations</p>
-                      <span className="text-sm text-yellow-400">Weak ownership</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Escalated work can lose momentum when ownership is not
-                      clearly assigned.
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div
-                id="duplicate-work"
-                className="rounded-3xl border border-white/10 bg-white/5 p-6"
-              >
-                <h3 className="text-xl font-semibold">Duplicate Work</h3>
-
-                <div className="mt-5 space-y-4">
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Reporting overlap</p>
-                      <span className="text-sm text-cyan-300">Repeated effort</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Similar status updates and reporting may be happening in
-                      more than one place.
-                    </p>
-                  </div>
-
-                  <div className="rounded-2xl border border-white/10 bg-black/40 p-4">
-                    <div className="flex items-center justify-between gap-4">
-                      <p className="font-medium">Manual progress updates</p>
-                      <span className="text-sm text-cyan-300">Duplicated work</span>
-                    </div>
-                    <p className="mt-2 text-sm text-gray-400">
-                      Teams may be re-entering the same information across tools.
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section
-              id="intelligence-summary"
-              className="mt-10 rounded-3xl border border-cyan-400/20 bg-white/5 p-5 sm:p-6"
-            >
-              <div className="flex items-center justify-between gap-4">
-                <div>
-                  <h3 className="text-2xl font-semibold text-cyan-300">
-                    Workflow Intelligence Summary
-                  </h3>
-                  <p className="mt-2 text-sm uppercase tracking-[0.2em] text-gray-500">
-                    Operational signal
-                  </p>
-                </div>
-              </div>
-
-              <p className="mt-4 text-sm text-gray-500">
-                This summary is designed to help identify workflow drag, cost
-                exposure, and the clearest next actions for the business.
-              </p>
-
-              <pre className="mt-4 overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/10 bg-black/40 p-4 text-sm leading-7 text-gray-300">
-                {analysis}
-              </pre>
-            </section>
-
-            <section
-              id="run-scan"
-              className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6"
-            >
-              <h3 className="text-2xl font-semibold">Run a New Workflow Scan</h3>
-              <p className="mt-2 text-sm text-gray-400">
-                Enter your business details to generate a workflow intelligence
-                summary and estimate possible operational drag.
-              </p>
-
-              <div className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2">
-                <input
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  placeholder="Company name"
-                  className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
-                />
-
-                <input
-                  value={teamSize}
-                  onChange={(e) => setTeamSize(e.target.value)}
-                  placeholder="Team size"
-                  className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
-                />
-
-                <input
-                  value={bottleneck}
-                  onChange={(e) => setBottleneck(e.target.value)}
-                  placeholder="Biggest workflow bottleneck"
-                  className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
-                />
-
-                <input
-                  value={saasSpend}
-                  onChange={(e) => setSaasSpend(e.target.value)}
-                  placeholder="Monthly operational cost impacted"
-                  className="w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
-                />
-              </div>
-
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <button
-                  onClick={runScan}
-                  disabled={loading}
-                  className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
-                >
-                  {loading ? 'Running scan...' : 'Run Business Scan'}
-                </button>
-
-                <button
-                  onClick={saveScan}
-                  className="rounded-2xl border border-cyan-400/30 px-5 py-3 text-sm font-semibold text-cyan-300 transition hover:bg-cyan-400/10"
-                >
-                  Save Current Scan
-                </button>
-              </div>
-            </section>
-
-            <section className="mt-10 rounded-3xl border border-white/10 bg-white/5 p-5 sm:p-6">
-              <h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
-              <p className="mt-2 text-sm text-gray-400">
-                What would make this dashboard more useful for your business?
-              </p>
-
-              <textarea
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                placeholder="Tell us what would make this more useful..."
-                className="mt-6 min-h-[140px] w-full rounded-2xl border border-white/10 bg-black px-4 py-3 text-white outline-none transition focus:border-cyan-400/50"
-              />
-
-              <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-                <button
-                  onClick={submitFeedback}
-                  disabled={feedbackLoading}
-                  className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-black transition hover:opacity-85 disabled:opacity-50"
-                >
-                  {feedbackLoading ? 'Submitting...' : 'Submit Feedback'}
-                </button>
-
-                {feedbackMessage && (
-                  <p className="text-sm text-cyan-300">{feedbackMessage}</p>
-                )}
-              </div>
-            </section>
-
-            <footer className="mt-10 border-t border-white/10 pt-8">
-              <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-                <div className="min-w-0">
-                  <Link
-                    href="/"
-                    className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.2rem] font-bold leading-none tracking-[0.11em] text-white sm:text-[1.32rem] ${glowLogo}`}
-                  >
-                    GHOSTLAYER
-                  </Link>
-                  <p className="mt-3 text-sm text-gray-400">
-                    Business workflow intelligence for faster execution.
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-4 text-sm text-gray-400">
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('overview')}
-                    className="transition hover:text-white"
-                  >
-                    Overview
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('bookings')}
-                    className="transition hover:text-white"
-                  >
-                    Bookings
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => scrollToSection('run-scan')}
-                    className="transition hover:text-white"
-                  >
-                    Run Scan
-                  </button>
-                </div>
-              </div>
-
-              <div className="mt-6 border-t border-white/10 pt-6 text-sm text-gray-500">
-                © {currentYear} Ghostlayer. Business workflow intelligence for
-                clearer operations and faster execution.
-              </div>
-            </footer>
-          </div>
-        </div>
-      </div>
-
-      {isMounted && (
-        <PopupModal
-          url="https://calendly.com/dexterstevens630/30min"
-          onModalClose={() => setIsCalendlyOpen(false)}
-          open={isCalendlyOpen}
-          rootElement={document.body}
-        />
-      )}
-    </main>
-  );
+export default function HomePage() {
+const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+const currentYear = new Date().getFullYear();
+
+const sparkles = useMemo<Sparkle[]>(
+() => [
+{ left: '5%', top: '12%', size: 2, delay: '0s', duration: '5.5s', opacity: 0.55 },
+{ left: '9%', top: '28%', size: 3, delay: '1.2s', duration: '6.1s', opacity: 0.8 },
+{ left: '14%', top: '74%', size: 2, delay: '2.4s', duration: '5.2s', opacity: 0.6 },
+{ left: '20%', top: '46%', size: 2, delay: '0.7s', duration: '6.8s', opacity: 0.72 },
+{ left: '26%', top: '16%', size: 3, delay: '1.8s', duration: '5.9s', opacity: 0.82 },
+{ left: '31%', top: '63%', size: 2, delay: '2.8s', duration: '6.3s', opacity: 0.66 },
+{ left: '38%', top: '30%', size: 2, delay: '1.1s', duration: '5.6s', opacity: 0.74 },
+{ left: '44%', top: '82%', size: 3, delay: '2.2s', duration: '6.5s', opacity: 0.84 },
+{ left: '51%', top: '10%', size: 2, delay: '0.9s', duration: '5.7s', opacity: 0.56 },
+{ left: '57%', top: '50%', size: 3, delay: '2.6s', duration: '6.4s', opacity: 0.8 },
+{ left: '63%', top: '76%', size: 2, delay: '1.5s', duration: '5.4s', opacity: 0.62 },
+{ left: '69%', top: '22%', size: 2, delay: '2.9s', duration: '6.2s', opacity: 0.76 },
+{ left: '75%', top: '58%', size: 3, delay: '1.7s', duration: '5.8s', opacity: 0.82 },
+{ left: '81%', top: '14%', size: 2, delay: '0.4s', duration: '6.7s', opacity: 0.6 },
+{ left: '87%', top: '41%', size: 2, delay: '2s', duration: '5.3s', opacity: 0.7 },
+{ left: '92%', top: '71%', size: 3, delay: '1.3s', duration: '6s', opacity: 0.82 },
+{ left: '12%', top: '90%', size: 2, delay: '2.5s', duration: '6.9s', opacity: 0.52 },
+{ left: '33%', top: '92%', size: 2, delay: '1.4s', duration: '5.1s', opacity: 0.64 },
+{ left: '54%', top: '6%', size: 2, delay: '2.1s', duration: '6.6s', opacity: 0.56 },
+{ left: '73%', top: '90%', size: 2, delay: '0.8s', duration: '5.4s', opacity: 0.65 },
+],
+[]
+);
+
+async function openCalendly(source: 'homepage' | 'dashboard' = 'homepage') {
+await trackCtaClick(source);
+setIsCalendlyOpen(true);
+}
+
+return (
+<main className="relative min-h-screen overflow-x-hidden bg-black text-white">
+<div className="pointer-events-none absolute inset-0 overflow-hidden">
+<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.15),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.14),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(6,182,212,0.10),transparent_24%),radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_42%)]" />
+
+<div className="smoke smoke-a" />
+<div className="smoke smoke-b" />
+<div className="smoke smoke-c" />
+
+<div className="fog fog-a" />
+<div className="fog fog-b" />
+<div className="fog fog-c" />
+
+<div className="orb orb-cyan" />
+<div className="orb orb-blue" />
+<div className="orb orb-purple" />
+
+{sparkles.map((sparkle, index) => (
+<span
+key={index}
+className="sparkle"
+style={{
+left: sparkle.left,
+top: sparkle.top,
+width: `${sparkle.size}px`,
+height: `${sparkle.size}px`,
+animationDelay: sparkle.delay,
+animationDuration: sparkle.duration,
+opacity: sparkle.opacity,
+}}
+/>
+))}
+</div>
+
+<header className="relative z-20 border-b border-white/10 bg-black/55 backdrop-blur">
+<div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-6 md:px-8 lg:px-10">
+<Link
+href="/"
+className="inline-block text-[1.14rem] font-bold tracking-[0.16em] text-white [text-shadow:0_0_8px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.96),0_0_34px_rgba(96,165,250,0.95),0_0_58px_rgba(59,130,246,0.9),0_0_92px_rgba(147,51,234,0.76)] sm:text-[1.3rem]"
+>
+GHOSTLAYER
+</Link>
+
+<nav className="hidden items-center gap-8 text-sm text-gray-300 lg:flex">
+<a href="#how-it-works" className="transition hover:text-white">
+How It Works
+</a>
+<a href="#who-it-helps" className="transition hover:text-white">
+Who It Helps
+</a>
+<a href="#results" className="transition hover:text-white">
+Results
+</a>
+<a href="#next-step" className="transition hover:text-white">
+Next Step
+</a>
+<Link href="/dashboard" className="font-semibold text-cyan-300 transition hover:text-white">
+Live Dashboard
+</Link>
+</nav>
+
+<Link
+href="/dashboard"
+className="rounded-xl border border-cyan-400/30 bg-cyan-400/5 px-3 py-2 text-xs font-semibold text-cyan-300 transition hover:bg-cyan-400/10 hover:text-white lg:hidden"
+>
+Dashboard
+</Link>
+</div>
+</header>
+
+<section className="relative z-10 overflow-hidden px-4 pb-16 pt-10 sm:px-6 sm:pb-20 md:px-8 md:pt-14 lg:px-10 lg:pb-24 xl:px-12">
+<div className="mx-auto max-w-7xl">
+<div className="grid items-start gap-10 xl:grid-cols-[minmax(0,1.08fr)_minmax(360px,460px)] xl:gap-12 2xl:grid-cols-[minmax(0,1.12fr)_minmax(390px,500px)]">
+<div className="max-w-4xl">
+<p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
+Business Workflow Inefficiency Scanner
+</p>
+
+<h1 className="hero-glow mt-5 max-w-4xl text-4xl font-bold leading-[1.02] text-white sm:text-5xl lg:text-6xl xl:text-[4.5rem]">
+Find Workflow Friction
+<br />
+Before It Slows
+<br />
+Growth, Burns Time,
+<br />
+and Costs Revenue
+</h1>
+
+<p className="mt-6 max-w-3xl text-base leading-8 text-gray-300 sm:text-lg">
+Ghostlayer helps businesses uncover broken handoffs, approval
+bottlenecks, repeated manual work, and hidden operational drag so
+teams can move faster with less waste.
+</p>
+
+<div className="mt-8 flex flex-col gap-4 sm:flex-row">
+<button
+onClick={() => openCalendly('homepage')}
+className="rounded-2xl bg-white px-8 py-4 text-base font-semibold text-black transition hover:opacity-90"
+>
+Book Business Consultation
+</button>
+
+<Link
+href="/dashboard"
+className="rounded-2xl border border-cyan-400/35 bg-cyan-400/5 px-8 py-4 text-center text-base font-semibold text-cyan-300 transition hover:bg-cyan-400/10 hover:text-white"
+>
+See Live Dashboard
+</Link>
+</div>
+
+<div className="mt-8 flex flex-col gap-3 text-sm text-gray-400 sm:flex-row sm:flex-wrap sm:gap-6">
+<span>Reduce operational drag</span>
+<span>Improve team accountability</span>
+<span>Recover missed execution time</span>
+</div>
+</div>
+
+<div className="w-full xl:-mt-2 2xl:-mt-6">
+<div className="rounded-[2rem] border border-cyan-400/25 bg-white/5 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_30px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-5">
+<div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+<div className="min-w-0 rounded-3xl border border-cyan-400/20 bg-cyan-400/5 p-5">
+<p className="text-[11px] uppercase tracking-[0.24em] text-cyan-300 sm:text-xs">
+Workflow Risk
+</p>
+<p className="mt-3 break-words text-[2.2rem] font-bold leading-none text-white sm:text-[2.5rem] lg:text-[2.7rem]">
+68/100
+</p>
+<p className="mt-3 text-sm leading-7 text-gray-300">
+Elevated due to repeated approvals, weak ownership, and
+broken handoffs.
+</p>
+</div>
+
+<div className="min-w-0 rounded-3xl border border-red-500/25 bg-red-500/10 p-5">
+<p className="text-[11px] uppercase tracking-[0.24em] text-red-200 sm:text-xs">
+Estimated Loss
+</p>
+<p className="mt-3 flex items-baseline whitespace-nowrap text-white">
+<span className="text-[2rem] font-bold leading-none sm:text-[2.3rem] lg:text-[2.45rem]">
+$3,247
+</span>
+<span className="ml-1 text-[1.08rem] font-bold leading-none sm:text-[1.14rem] lg:text-[1.18rem]">
+/mo
+</span>
+</p>
+<p className="mt-3 text-sm leading-7 text-gray-300">
+Estimated productivity drag from process friction and missed
+follow-through.
+</p>
+</div>
+</div>
+
+<div className="mt-4 rounded-3xl border border-white/10 bg-black/25 p-5">
+<p className="text-xs uppercase tracking-[0.24em] text-gray-300">
+What Ghostlayer Finds
+</p>
+
+<ul className="mt-4 space-y-4 text-sm leading-7 text-gray-200 sm:text-[15px]">
+<li>• Approval delays that stall delivery</li>
+<li>• Handoffs losing key client or operational context</li>
+<li>• Duplicate reporting and repeated manual updates</li>
+<li>• Missed revenue caused by broken execution flow</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="how-it-works" className="relative z-10 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+<div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+<div className="max-w-3xl">
+<p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
+How It Works
+</p>
+<h2 className="mt-4 text-3xl font-bold sm:text-4xl">
+A clean workflow intelligence experience for real businesses
+</h2>
+<p className="mt-4 text-base leading-8 text-gray-300">
+Ghostlayer helps you spot where execution is slowing down, where
+handoffs are breaking, and where repeated manual work is costing
+time and revenue.
+</p>
+</div>
+
+<div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
+<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<p className="text-sm uppercase tracking-[0.22em] text-cyan-300">1. Capture</p>
+<h3 className="mt-3 text-xl font-semibold">Bring consultations into one view</h3>
+<p className="mt-3 text-sm leading-7 text-gray-400">
+Ghostlayer connects booked business consultations to your workflow
+view so you can see operational demand clearly.
+</p>
+</div>
+
+<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<p className="text-sm uppercase tracking-[0.22em] text-cyan-300">2. Diagnose</p>
+<h3 className="mt-3 text-xl font-semibold">Identify bottlenecks and drag</h3>
+<p className="mt-3 text-sm leading-7 text-gray-400">
+Surface approval delays, broken handoffs, repeated updates, and
+workflow friction that slow delivery.
+</p>
+</div>
+
+<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<p className="text-sm uppercase tracking-[0.22em] text-cyan-300">3. Improve</p>
+<h3 className="mt-3 text-xl font-semibold">Turn visibility into action</h3>
+<p className="mt-3 text-sm leading-7 text-gray-400">
+Use the dashboard to prioritize issues, reduce waste, and tighten
+business operations without guesswork.
+</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="who-it-helps" className="relative z-10 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+<div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+<div className="max-w-3xl">
+<p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
+Who It Helps
+</p>
+<h2 className="mt-4 text-3xl font-bold sm:text-4xl">
+Built for businesses that need cleaner execution
+</h2>
+<p className="mt-4 text-base leading-8 text-gray-300">
+Best for service businesses, agencies, operators, consultants, and
+growing teams that need better handoffs, less manual waste, and
+stronger operational visibility.
+</p>
+</div>
+
+<div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<h3 className="text-xl font-semibold">Agencies</h3>
+<p className="mt-3 text-sm leading-7 text-gray-400">
+Reduce handoff chaos between sales, onboarding, delivery, and support.
+</p>
+</div>
+<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<h3 className="text-xl font-semibold">Consulting Firms</h3>
+<p className="mt-3 text-sm leading-7 text-gray-400">
+Improve intake quality, client follow-through, and internal execution.
+</p>
+</div>
+<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<h3 className="text-xl font-semibold">Service Businesses</h3>
+<p className="mt-3 text-sm leading-7 text-gray-400">
+Spot where delivery slows down and where repeated admin work hurts margin.
+</p>
+</div>
+<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<h3 className="text-xl font-semibold">Operations Leaders</h3>
+<p className="mt-3 text-sm leading-7 text-gray-400">
+Get a simple operational signal without turning the experience into clutter.
+</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="results" className="relative z-10 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+<div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+<div className="max-w-3xl">
+<p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
+Results
+</p>
+<h2 className="mt-4 text-3xl font-bold sm:text-4xl">
+See the cost of friction before it compounds
+</h2>
+</div>
+
+<div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
+<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<p className="text-sm uppercase tracking-[0.2em] text-gray-300">Workflow Health</p>
+<p className="mt-3 text-4xl font-bold">82%</p>
+<p className="mt-3 text-sm text-gray-400">
+Visibility and operational consistency across core business workflows.
+</p>
+</div>
+
+<div className="rounded-3xl border border-cyan-400/30 bg-cyan-400/10 p-6">
+<p className="text-sm uppercase tracking-[0.2em] text-gray-200">Risk Score</p>
+<p className="mt-3 text-4xl font-bold">68/100</p>
+<p className="mt-3 text-sm text-gray-300">
+Higher scores indicate delays, repeated effort, weak ownership, and broken handoffs.
+</p>
+</div>
+
+<div className="rounded-3xl border border-red-500/30 bg-red-500/10 p-6">
+<p className="text-sm uppercase tracking-[0.2em] text-gray-200">Productivity Loss</p>
+<p className="mt-3 text-4xl font-bold">$3,247/mo</p>
+<p className="mt-3 text-sm text-gray-300">
+Estimated monthly business cost caused by workflow drag and missed execution.
+</p>
+</div>
+
+<div className="rounded-3xl border border-green-500/30 bg-green-500/10 p-6">
+<p className="text-sm uppercase tracking-[0.2em] text-gray-200">Savings Opportunity</p>
+<p className="mt-3 text-4xl font-bold">$4,200/mo</p>
+<p className="mt-3 text-sm text-gray-300">
+Potential monthly gain if workflow friction and repeated effort are reduced.
+</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="next-step" className="relative z-10 px-4 py-8 pb-16 sm:px-6 md:px-8 lg:px-10 lg:pb-24 xl:px-12">
+<div className="mx-auto max-w-7xl rounded-[2rem] border border-cyan-400/20 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+<div className="grid items-center gap-8 xl:grid-cols-[minmax(0,1fr)_auto]">
+<div className="max-w-3xl">
+<p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
+Next Step
+</p>
+<h2 className="mt-4 text-3xl font-bold sm:text-4xl">
+Book a consultation and see where your workflow is leaking time and revenue
+</h2>
+<p className="mt-4 text-base leading-8 text-gray-300">
+Ghostlayer is built to make operational friction visible, actionable,
+and expensive to ignore. If the process is slowing growth, you should
+see it immediately.
+</p>
+</div>
+
+<div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row xl:flex-col">
+<button
+onClick={() => openCalendly('homepage')}
+className="rounded-2xl bg-white px-8 py-4 text-base font-semibold text-black transition hover:opacity-90"
+>
+Book Business Consultation
+</button>
+
+<Link
+href="/dashboard"
+className="rounded-2xl border border-cyan-400/35 bg-cyan-400/5 px-8 py-4 text-center text-base font-semibold text-cyan-300 transition hover:bg-cyan-400/10 hover:text-white"
+>
+Open Live Dashboard
+</Link>
+</div>
+</div>
+</div>
+</section>
+
+<footer className="relative z-10 border-t border-white/10 bg-black/60 backdrop-blur">
+<div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-8 lg:px-10">
+<div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
+<div className="max-w-md">
+<Link
+href="/"
+className="inline-block text-[1.28rem] font-bold tracking-[0.14em] text-white [text-shadow:0_0_8px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.96),0_0_34px_rgba(96,165,250,0.95),0_0_58px_rgba(59,130,246,0.9),0_0_92px_rgba(147,51,234,0.76)] sm:text-[1.38rem]"
+>
+GHOSTLAYER
+</Link>
+<p className="mt-4 text-sm leading-7 text-gray-400">
+Business workflow intelligence for clearer operations, stronger
+follow-through, and faster execution.
+</p>
+</div>
+
+<div className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-400 md:max-w-md md:justify-end">
+<a href="#how-it-works" className="transition hover:text-white">
+How It Works
+</a>
+<a href="#who-it-helps" className="transition hover:text-white">
+Who It Helps
+</a>
+<a href="#results" className="transition hover:text-white">
+Results
+</a>
+<a href="#next-step" className="transition hover:text-white">
+Next Step
+</a>
+<Link href="/dashboard" className="transition hover:text-white">
+Live Dashboard
+</Link>
+<button
+onClick={() => openCalendly('homepage')}
+className="text-left transition hover:text-white"
+>
+Book Consultation
+</button>
+</div>
+</div>
+
+<p className="mt-8 border-t border-white/10 pt-6 text-sm text-gray-500">
+© {currentYear} Ghostlayer. Business workflow intelligence for clearer operations,
+stronger follow-through, and faster execution.
+</p>
+</div>
+</footer>
+
+{isCalendlyOpen && (
+<PopupModal
+url="https://calendly.com/dexterstevens630/30min"
+onModalClose={() => setIsCalendlyOpen(false)}
+open={isCalendlyOpen}
+rootElement={document.body}
+/>
+)}
+
+<style jsx>{`
+.hero-glow {
+animation: heroPulse 6s ease-in-out infinite;
+text-shadow:
+0 0 8px rgba(255, 255, 255, 0.72),
+0 0 16px rgba(255, 255, 255, 0.68),
+0 0 30px rgba(96, 165, 250, 0.72),
+0 0 54px rgba(59, 130, 246, 0.62),
+0 0 90px rgba(147, 51, 234, 0.52);
+}
+
+.sparkle {
+position: absolute;
+border-radius: 9999px;
+background: white;
+box-shadow:
+0 0 10px rgba(255, 255, 255, 0.95),
+0 0 18px rgba(96, 165, 250, 0.8),
+0 0 30px rgba(147, 51, 234, 0.42);
+animation-name: twinkle;
+animation-timing-function: ease-in-out;
+animation-iteration-count: infinite;
+}
+
+.orb {
+position: absolute;
+border-radius: 9999px;
+filter: blur(80px);
+opacity: 0.7;
+}
+
+.orb-cyan {
+left: -10%;
+top: -8%;
+height: 30rem;
+width: 30rem;
+background: rgba(34, 211, 238, 0.12);
+animation: floatSlow 16s ease-in-out infinite;
+}
+
+.orb-blue {
+right: -10%;
+top: 14%;
+height: 28rem;
+width: 28rem;
+background: rgba(59, 130, 246, 0.1);
+animation: floatSlower 19s ease-in-out infinite;
+}
+
+.orb-purple {
+bottom: -12%;
+left: 24%;
+height: 26rem;
+width: 26rem;
+background: rgba(168, 85, 247, 0.1);
+animation: floatSlow 20s ease-in-out infinite;
+}
+
+.smoke {
+position: absolute;
+border-radius: 9999px;
+filter: blur(120px);
+opacity: 0.16;
+mix-blend-mode: screen;
+}
+
+.smoke-a {
+left: -8%;
+top: 24%;
+width: 30rem;
+height: 16rem;
+background: linear-gradient(
+90deg,
+rgba(255, 255, 255, 0.05),
+rgba(56, 189, 248, 0.12),
+rgba(255, 255, 255, 0.02)
+);
+animation: driftOne 22s ease-in-out infinite;
+}
+
+.smoke-b {
+right: -10%;
+top: 34%;
+width: 32rem;
+height: 18rem;
+background: linear-gradient(
+90deg,
+rgba(168, 85, 247, 0.04),
+rgba(59, 130, 246, 0.12),
+rgba(255, 255, 255, 0.03)
+);
+animation: driftTwo 26s ease-in-out infinite;
+}
+
+.smoke-c {
+left: 20%;
+bottom: 8%;
+width: 38rem;
+height: 14rem;
+background: linear-gradient(
+90deg,
+rgba(255, 255, 255, 0.02),
+rgba(6, 182, 212, 0.12),
+rgba(168, 85, 247, 0.05)
+);
+animation: driftThree 24s ease-in-out infinite;
+}
+
+.fog {
+position: absolute;
+left: -10%;
+right: -10%;
+height: 180px;
+border-radius: 9999px;
+filter: blur(90px);
+opacity: 0.12;
+mix-blend-mode: screen;
+background: linear-gradient(
+90deg,
+rgba(255, 255, 255, 0),
+rgba(255, 255, 255, 0.08),
+rgba(96, 165, 250, 0.09),
+rgba(255, 255, 255, 0.02)
+);
+}
+
+.fog-a {
+top: 12%;
+animation: fogDriftOne 30s ease-in-out infinite;
+}
+
+.fog-b {
+top: 42%;
+animation: fogDriftTwo 36s ease-in-out infinite;
+}
+
+.fog-c {
+bottom: 10%;
+animation: fogDriftThree 34s ease-in-out infinite;
+}
+
+@keyframes heroPulse {
+0%,
+100% {
+opacity: 0.92;
+text-shadow:
+0 0 6px rgba(255, 255, 255, 0.58),
+0 0 12px rgba(255, 255, 255, 0.52),
+0 0 24px rgba(96, 165, 250, 0.56),
+0 0 42px rgba(59, 130, 246, 0.5),
+0 0 70px rgba(147, 51, 234, 0.4);
+}
+50% {
+opacity: 1;
+text-shadow:
+0 0 10px rgba(255, 255, 255, 0.92),
+0 0 22px rgba(255, 255, 255, 0.88),
+0 0 40px rgba(96, 165, 250, 0.9),
+0 0 68px rgba(59, 130, 246, 0.78),
+0 0 108px rgba(147, 51, 234, 0.62);
+}
+}
+
+@keyframes twinkle {
+0%,
+100% {
+transform: translateY(0px) scale(0.9);
+opacity: 0.28;
+}
+25% {
+transform: translateY(-6px) scale(1.08);
+opacity: 1;
+}
+50% {
+transform: translateY(0px) scale(0.95);
+opacity: 0.55;
+}
+75% {
+transform: translateY(4px) scale(1.04);
+opacity: 0.82;
+}
+}
+
+@keyframes floatSlow {
+0%,
+100% {
+transform: translate3d(0, 0, 0);
+}
+50% {
+transform: translate3d(0, 18px, 0);
+}
+}
+
+@keyframes floatSlower {
+0%,
+100% {
+transform: translate3d(0, 0, 0);
+}
+50% {
+transform: translate3d(-14px, 22px, 0);
+}
+}
+
+@keyframes driftOne {
+0%,
+100% {
+transform: translate3d(0, 0, 0) scale(1);
+}
+50% {
+transform: translate3d(70px, -24px, 0) scale(1.08);
+}
+}
+
+@keyframes driftTwo {
+0%,
+100% {
+transform: translate3d(0, 0, 0) scale(1);
+}
+50% {
+transform: translate3d(-90px, 20px, 0) scale(1.06);
+}
+}
+
+@keyframes driftThree {
+0%,
+100% {
+transform: translate3d(0, 0, 0) scale(1);
+}
+50% {
+transform: translate3d(50px, -18px, 0) scale(1.04);
+}
+}
+
+@keyframes fogDriftOne {
+0%,
+100% {
+transform: translateX(-4%) translateY(0px) scaleX(1);
+}
+50% {
+transform: translateX(6%) translateY(-8px) scaleX(1.08);
+}
+}
+
+@keyframes fogDriftTwo {
+0%,
+100% {
+transform: translateX(6%) translateY(0px) scaleX(1.04);
+}
+50% {
+transform: translateX(-5%) translateY(10px) scaleX(1.1);
+}
+}
+
+@keyframes fogDriftThree {
+0%,
+100% {
+transform: translateX(-2%) translateY(0px) scaleX(1.02);
+}
+50% {
+transform: translateX(7%) translateY(-6px) scaleX(1.08);
+}
+}
+`}</style>
+</main>
+);
 }
