@@ -56,7 +56,7 @@ const [activeSection, setActiveSection] = useState('overview');
 const currentYear = new Date().getFullYear();
 
 const animatedGlow =
-'animate-[dashboardGlow_3.8s_ease-in-out_infinite] [text-shadow:0_0_6px_rgba(255,255,255,0.7),0_0_14px_rgba(255,255,255,0.6),0_0_28px_rgba(96,165,250,0.62),0_0_48px_rgba(59,130,246,0.5),0_0_78px_rgba(147,51,234,0.34)]';
+'animate-[dashboardGhostGlow_2.8s_ease-in-out_infinite] [text-shadow:0_0_10px_rgba(255,255,255,0.92),0_0_22px_rgba(255,255,255,0.88),0_0_40px_rgba(96,165,250,0.9),0_0_68px_rgba(59,130,246,0.82),0_0_108px_rgba(147,51,234,0.72)]';
 
 useEffect(() => {
 setIsMounted(true);
@@ -1041,25 +1041,28 @@ rootElement={document.body}
 )}
 
 <style jsx global>{`
-@keyframes dashboardGlow {
+@keyframes dashboardGhostGlow {
 0%,
 100% {
-opacity: 0.88;
+opacity: 0.86;
 text-shadow:
-0 0 5px rgba(255, 255, 255, 0.45),
-0 0 10px rgba(255, 255, 255, 0.38),
-0 0 18px rgba(96, 165, 250, 0.34),
-0 0 30px rgba(59, 130, 246, 0.26),
-0 0 44px rgba(147, 51, 234, 0.16);
+0 0 6px rgba(255, 255, 255, 0.55),
+0 0 14px rgba(255, 255, 255, 0.48),
+0 0 26px rgba(96, 165, 250, 0.5),
+0 0 44px rgba(59, 130, 246, 0.4),
+0 0 70px rgba(147, 51, 234, 0.26);
+filter: brightness(0.96);
 }
+
 50% {
 opacity: 1;
 text-shadow:
-0 0 10px rgba(255, 255, 255, 1),
-0 0 22px rgba(255, 255, 255, 0.95),
-0 0 38px rgba(96, 165, 250, 0.95),
-0 0 62px rgba(59, 130, 246, 0.88),
-0 0 96px rgba(147, 51, 234, 0.7);
+0 0 12px rgba(255, 255, 255, 1),
+0 0 26px rgba(255, 255, 255, 0.98),
+0 0 48px rgba(96, 165, 250, 1),
+0 0 82px rgba(59, 130, 246, 0.96),
+0 0 128px rgba(147, 51, 234, 0.88);
+filter: brightness(1.18);
 }
 }
 `}</style>
