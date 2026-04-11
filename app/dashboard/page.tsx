@@ -55,8 +55,8 @@ const [activeSection, setActiveSection] = useState('overview');
 
 const currentYear = new Date().getFullYear();
 
-const animatedGlow =
-'animate-[dashboardGhostGlow_2.8s_ease-in-out_infinite] [text-shadow:0_0_10px_rgba(255,255,255,0.92),0_0_22px_rgba(255,255,255,0.88),0_0_40px_rgba(96,165,250,0.9),0_0_68px_rgba(59,130,246,0.82),0_0_108px_rgba(147,51,234,0.72)]';
+const logoGlow =
+'animate-[dashboardGhostGlow_3s_ease-in-out_infinite] text-white [text-shadow:0_0_10px_rgba(255,255,255,0.96),0_0_22px_rgba(255,255,255,0.92),0_0_42px_rgba(96,165,250,0.9),0_0_72px_rgba(59,130,246,0.84),0_0_116px_rgba(147,51,234,0.76)]';
 
 useEffect(() => {
 setIsMounted(true);
@@ -244,9 +244,7 @@ try {
 setFeedbackLoading(true);
 setFeedbackMessage('Saving feedback...');
 
-const { error } = await supabase.from('feedback').insert([
-{ message: feedback },
-]);
+const { error } = await supabase.from('feedback').insert([{ message: feedback }]);
 
 if (error) {
 setFeedbackMessage(`Failed to save feedback: ${error.message}`);
@@ -392,24 +390,21 @@ const sideNav = [
 ];
 
 function severityClasses(severity: IssueSeverity) {
-if (severity === 'High') {
-return 'border-red-500/30 bg-red-500/10 text-red-300';
-}
-if (severity === 'Medium') {
+if (severity === 'High') return 'border-red-500/30 bg-red-500/10 text-red-300';
+if (severity === 'Medium')
 return 'border-yellow-500/30 bg-yellow-500/10 text-yellow-300';
-}
 return 'border-cyan-400/30 bg-cyan-400/10 text-cyan-300';
 }
 
 return (
 <main className="min-h-screen overflow-x-hidden bg-[#05070b] text-white">
 <div className="flex min-h-screen">
-<aside className="hidden w-[230px] shrink-0 border-r border-white/10 bg-[#0a0d14] md:block lg:w-[244px] xl:w-[258px]">
+<aside className="hidden w-[236px] shrink-0 border-r border-white/10 bg-[#080b11] md:block lg:w-[248px] xl:w-[264px]">
 <div className="sticky top-0 flex h-screen flex-col overflow-y-auto px-4 py-5">
 <div className="flex items-center justify-between">
 <Link
 href="/"
-className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.08em] text-white lg:text-[1.12rem] xl:text-[1.18rem] ${animatedGlow}`}
+className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.05rem] font-bold leading-none tracking-[0.1em] lg:text-[1.14rem] xl:text-[1.2rem] ${logoGlow}`}
 >
 GHOSTLAYER
 </Link>
@@ -420,15 +415,14 @@ GHOSTLAYER
 Workspace
 </p>
 <p className="mt-2 text-sm font-medium text-white">Operations Intelligence</p>
-<p className="mt-1 text-xs text-gray-400">
-Monitor drag, risk, and execution flow.
+<p className="mt-1 text-xs leading-6 text-gray-400">
+Premium command view for drag, risk, and execution flow.
 </p>
 </div>
 
 <nav className="mt-6 space-y-1.5">
 {sideNav.map((item) => {
 const isActive = activeSection === item.id;
-
 return (
 <button
 key={item.id}
@@ -461,6 +455,12 @@ Bookings sync
 {bookingsLoading ? 'Syncing...' : 'Active'}
 </p>
 </div>
+<div className="rounded-2xl border border-white/8 bg-black/30 p-3">
+<p className="text-[10px] uppercase tracking-[0.22em] text-gray-500">
+Environment
+</p>
+<p className="mt-2 text-sm text-emerald-300">Live</p>
+</div>
 </div>
 
 <div className="mt-auto pt-6">
@@ -483,7 +483,7 @@ Book Consultation
 <div className="min-w-0">
 <Link
 href="/"
-className={`block overflow-hidden text-ellipsis whitespace-nowrap text-[0.96rem] font-bold leading-none tracking-[0.08em] text-white md:hidden ${animatedGlow}`}
+className={`block overflow-hidden text-ellipsis whitespace-nowrap text-[0.98rem] font-bold leading-none tracking-[0.1em] md:hidden ${logoGlow}`}
 >
 GHOSTLAYER
 </Link>
@@ -537,7 +537,7 @@ isActive
 <div className="mx-auto w-full max-w-7xl px-4 py-6 sm:px-6 md:px-8 lg:px-10 md:py-8">
 <section
 id="overview"
-className="overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] shadow-[0_10px_40px_rgba(0,0,0,0.28)]"
+className="overflow-hidden rounded-[30px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] shadow-[0_12px_44px_rgba(0,0,0,0.3)]"
 >
 <div className="border-b border-white/8 px-5 py-5 sm:px-6 lg:px-7">
 <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
@@ -551,8 +551,8 @@ Monitor workflow drag, handoff risk, and execution quality
 </h1>
 
 <p className="mt-4 max-w-3xl text-sm leading-7 text-gray-300 sm:text-base">
-Ghostlayer helps businesses surface approval delays, broken handoffs,
-repeated manual work, and operational loss signals in one clean view.
+Ghostlayer surfaces approval delays, broken handoffs, repeated manual work,
+and operational loss signals in one premium command view.
 </p>
 </div>
 
@@ -581,9 +581,7 @@ Book Business Consultation
 </div>
 </div>
 
-{saveMessage && (
-<p className="mt-4 text-sm text-cyan-300">{saveMessage}</p>
-)}
+{saveMessage && <p className="mt-4 text-sm text-cyan-300">{saveMessage}</p>}
 </div>
 
 <div className="grid grid-cols-1 gap-4 px-5 py-5 sm:px-6 lg:grid-cols-4 lg:px-7">
@@ -635,13 +633,18 @@ Possible gain if delays and repeated work are reduced.
 
 <section
 id="priority-issues"
-className="mt-8 rounded-[28px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-6"
+className="mt-8 rounded-[30px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-6"
 >
-<div className="flex flex-col gap-2">
+<div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+<div>
 <h3 className="text-2xl font-semibold">Priority Issues</h3>
 <p className="text-sm text-gray-400">
 Highest-value areas to address first based on current workflow inputs.
 </p>
+</div>
+<div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-gray-400">
+Operator view
+</div>
 </div>
 
 <div className="mt-6 grid grid-cols-1 gap-4 xl:grid-cols-3">
@@ -661,9 +664,7 @@ issue.severity
 </span>
 </div>
 
-<p className="mt-4 text-sm leading-7 text-gray-300">
-{issue.impact}
-</p>
+<p className="mt-4 text-sm leading-7 text-gray-300">{issue.impact}</p>
 
 <div className="mt-4 rounded-2xl border border-cyan-400/15 bg-cyan-400/5 p-4">
 <p className="text-[10px] uppercase tracking-[0.22em] text-cyan-300">
@@ -679,7 +680,7 @@ Recommended action
 <section className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[1.15fr_0.85fr]">
 <div
 id="bookings"
-className="rounded-[28px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-6"
+className="rounded-[30px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-6"
 >
 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 <div className="min-w-0">
@@ -715,11 +716,21 @@ No bookings found yet. Book a business consultation to populate this panel.
 <table className="min-w-full border-separate border-spacing-0 text-left text-sm">
 <thead>
 <tr className="text-gray-400">
-<th className="border-b border-white/8 px-3 py-3 font-medium">Name</th>
-<th className="border-b border-white/8 px-3 py-3 font-medium">Email</th>
-<th className="border-b border-white/8 px-3 py-3 font-medium">Type</th>
-<th className="border-b border-white/8 px-3 py-3 font-medium">Scheduled</th>
-<th className="border-b border-white/8 px-3 py-3 font-medium">Source</th>
+<th className="border-b border-white/8 px-3 py-3 font-medium">
+Name
+</th>
+<th className="border-b border-white/8 px-3 py-3 font-medium">
+Email
+</th>
+<th className="border-b border-white/8 px-3 py-3 font-medium">
+Type
+</th>
+<th className="border-b border-white/8 px-3 py-3 font-medium">
+Scheduled
+</th>
+<th className="border-b border-white/8 px-3 py-3 font-medium">
+Source
+</th>
 </tr>
 </thead>
 <tbody>
@@ -790,7 +801,7 @@ className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4"
 <div className="grid gap-6">
 <section
 id="delay-hotspots"
-className="rounded-[28px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-6"
+className="rounded-[30px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-6"
 >
 <h3 className="text-xl font-semibold">Delay Hotspots</h3>
 <div className="mt-5 space-y-4">
@@ -818,7 +829,7 @@ Missing initial details can create early delays and downstream rework.
 
 <section
 id="broken-handoffs"
-className="rounded-[28px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-6"
+className="rounded-[30px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-6"
 >
 <h3 className="text-xl font-semibold">Broken Handoffs</h3>
 <div className="mt-5 space-y-4">
@@ -846,7 +857,7 @@ Escalated requests can lose momentum when ownership is unclear.
 
 <section
 id="duplicate-work"
-className="rounded-[28px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-6"
+className="rounded-[30px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-6"
 >
 <h3 className="text-xl font-semibold">Duplicate Work</h3>
 <div className="mt-5 space-y-4">
@@ -877,8 +888,9 @@ Teams may be re-entering status data across tools and stages.
 <section className="mt-8 grid grid-cols-1 gap-6 xl:grid-cols-[0.95fr_1.05fr]">
 <section
 id="intelligence-summary"
-className="rounded-[28px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-6"
+className="rounded-[30px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-6"
 >
+<div className="flex items-center justify-between gap-4">
 <div>
 <h3 className="text-2xl font-semibold text-cyan-300">
 Workflow Intelligence Summary
@@ -886,6 +898,10 @@ Workflow Intelligence Summary
 <p className="mt-2 text-sm uppercase tracking-[0.2em] text-gray-500">
 Operational signal
 </p>
+</div>
+<span className="hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-gray-400 sm:block">
+Premium view
+</span>
 </div>
 
 <p className="mt-4 text-sm text-gray-500">
@@ -899,7 +915,7 @@ This summary helps identify workflow drag, cost exposure, and the clearest next 
 
 <section
 id="run-scan"
-className="rounded-[28px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-6"
+className="rounded-[30px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-6"
 >
 <h3 className="text-2xl font-semibold">Run a New Workflow Scan</h3>
 <p className="mt-2 text-sm text-gray-400">
@@ -955,7 +971,7 @@ Save Current Scan
 </section>
 </section>
 
-<section className="mt-8 rounded-[28px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-6">
+<section className="mt-8 rounded-[30px] border border-white/8 bg-white/[0.025] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-6">
 <h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
 <p className="mt-2 text-sm text-gray-400">
 What would make this dashboard more useful for your business?
@@ -988,7 +1004,7 @@ className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-black trans
 <div className="min-w-0">
 <Link
 href="/"
-className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.2rem] font-bold leading-none tracking-[0.11em] text-white sm:text-[1.32rem] ${animatedGlow}`}
+className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.28rem] font-bold leading-none tracking-[0.12em] sm:text-[1.4rem] ${logoGlow}`}
 >
 GHOSTLAYER
 </Link>
@@ -1023,8 +1039,8 @@ Run Scan
 </div>
 
 <div className="mt-6 border-t border-white/8 pt-6 text-sm text-gray-500">
-© {currentYear} Ghostlayer. Business workflow intelligence for
-clearer operations and faster execution.
+© {currentYear} Ghostlayer. Business workflow intelligence for clearer operations
+and faster execution.
 </div>
 </footer>
 </div>
@@ -1044,25 +1060,25 @@ rootElement={document.body}
 @keyframes dashboardGhostGlow {
 0%,
 100% {
-opacity: 0.86;
+opacity: 0.9;
 text-shadow:
-0 0 6px rgba(255, 255, 255, 0.55),
-0 0 14px rgba(255, 255, 255, 0.48),
-0 0 26px rgba(96, 165, 250, 0.5),
-0 0 44px rgba(59, 130, 246, 0.4),
-0 0 70px rgba(147, 51, 234, 0.26);
-filter: brightness(0.96);
+0 0 7px rgba(255, 255, 255, 0.62),
+0 0 16px rgba(255, 255, 255, 0.56),
+0 0 30px rgba(96, 165, 250, 0.56),
+0 0 50px rgba(59, 130, 246, 0.44),
+0 0 76px rgba(147, 51, 234, 0.28);
+filter: brightness(1);
 }
 
 50% {
 opacity: 1;
 text-shadow:
-0 0 12px rgba(255, 255, 255, 1),
-0 0 26px rgba(255, 255, 255, 0.98),
-0 0 48px rgba(96, 165, 250, 1),
-0 0 82px rgba(59, 130, 246, 0.96),
-0 0 128px rgba(147, 51, 234, 0.88);
-filter: brightness(1.18);
+0 0 14px rgba(255, 255, 255, 1),
+0 0 28px rgba(255, 255, 255, 0.98),
+0 0 52px rgba(96, 165, 250, 1),
+0 0 90px rgba(59, 130, 246, 0.98),
+0 0 138px rgba(147, 51, 234, 0.94);
+filter: brightness(1.22);
 }
 }
 `}</style>
