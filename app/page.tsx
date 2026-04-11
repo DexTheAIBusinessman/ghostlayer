@@ -18,6 +18,9 @@ export default function HomePage() {
 const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 const currentYear = new Date().getFullYear();
 
+const logoPulseGlow =
+'animate-[logoPulseGlow_3.2s_ease-in-out_infinite] [text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(255,255,255,0.82),0_0_34px_rgba(96,165,250,0.62),0_0_56px_rgba(59,130,246,0.48)]';
+
 const sparkles = useMemo<Sparkle[]>(
 () => [
 { left: '8%', top: '14%', size: 2, delay: '0s', duration: '5.8s', opacity: 0.3 },
@@ -71,7 +74,7 @@ opacity: sparkle.opacity,
 <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-6 md:px-8 lg:px-10">
 <Link
 href="/"
-className="inline-block text-[1.06rem] font-bold tracking-[0.16em] text-white [text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(255,255,255,0.85),0_0_34px_rgba(96,165,250,0.65),0_0_56px_rgba(59,130,246,0.5)] sm:text-[1.18rem]"
+className={`inline-block text-[1.06rem] font-bold tracking-[0.16em] text-white sm:text-[1.18rem] ${logoPulseGlow}`}
 >
 GHOSTLAYER
 </Link>
@@ -394,7 +397,7 @@ Open Live Dashboard
 <div className="max-w-md">
 <Link
 href="/"
-className="inline-block text-[1.2rem] font-bold tracking-[0.14em] text-white [text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(255,255,255,0.85),0_0_34px_rgba(96,165,250,0.65),0_0_56px_rgba(59,130,246,0.5)] sm:text-[1.3rem]"
+className={`inline-block text-[1.2rem] font-bold tracking-[0.14em] text-white sm:text-[1.3rem] ${logoPulseGlow}`}
 >
 GHOSTLAYER
 </Link>
@@ -540,6 +543,27 @@ text-shadow:
 0 0 36px rgba(96, 165, 250, 0.66),
 0 0 58px rgba(59, 130, 246, 0.56),
 0 0 88px rgba(147, 51, 234, 0.38);
+}
+}
+
+@keyframes logoPulseGlow {
+0%,
+100% {
+opacity: 0.82;
+text-shadow:
+0 0 5px rgba(255, 255, 255, 0.42),
+0 0 12px rgba(255, 255, 255, 0.34),
+0 0 22px rgba(96, 165, 250, 0.28),
+0 0 36px rgba(59, 130, 246, 0.2);
+}
+50% {
+opacity: 1;
+text-shadow:
+0 0 10px rgba(255, 255, 255, 1),
+0 0 22px rgba(255, 255, 255, 0.92),
+0 0 40px rgba(96, 165, 250, 0.86),
+0 0 64px rgba(59, 130, 246, 0.68),
+0 0 96px rgba(147, 51, 234, 0.44);
 }
 }
 
