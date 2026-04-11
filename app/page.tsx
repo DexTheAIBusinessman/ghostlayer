@@ -50,18 +50,15 @@ setIsCalendlyOpen(true);
 }
 
 return (
-<main className="relative min-h-screen overflow-x-hidden bg-black text-white">
+<main className="relative min-h-screen overflow-x-hidden bg-[#04060a] text-white">
 <div className="pointer-events-none absolute inset-0 overflow-hidden">
-<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.15),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.14),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(6,182,212,0.10),transparent_24%),radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_42%)]" />
-
+<div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(59,130,246,0.14),transparent_28%),radial-gradient(circle_at_top_right,rgba(168,85,247,0.12),transparent_26%),radial-gradient(circle_at_bottom_left,rgba(6,182,212,0.08),transparent_24%),radial-gradient(circle_at_center,rgba(255,255,255,0.03),transparent_42%)]" />
 <div className="smoke smoke-a" />
 <div className="smoke smoke-b" />
 <div className="smoke smoke-c" />
-
 <div className="fog fog-a" />
 <div className="fog fog-b" />
 <div className="fog fog-c" />
-
 <div className="orb orb-cyan" />
 <div className="orb orb-blue" />
 <div className="orb orb-purple" />
@@ -83,11 +80,11 @@ opacity: sparkle.opacity,
 ))}
 </div>
 
-<header className="relative z-20 border-b border-white/10 bg-black/55 backdrop-blur">
+<header className="relative z-20 border-b border-white/8 bg-[#04060a]/75 backdrop-blur-xl">
 <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-6 md:px-8 lg:px-10">
 <Link
 href="/"
-className="inline-block text-[1.14rem] font-bold tracking-[0.16em] text-white [text-shadow:0_0_8px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.96),0_0_34px_rgba(96,165,250,0.95),0_0_58px_rgba(59,130,246,0.9),0_0_92px_rgba(147,51,234,0.76)] sm:text-[1.3rem]"
+className="inline-block text-[1.12rem] font-bold tracking-[0.16em] text-white [text-shadow:0_0_8px_rgba(255,255,255,1),0_0_18px_rgba(255,255,255,0.96),0_0_34px_rgba(96,165,250,0.95),0_0_58px_rgba(59,130,246,0.9),0_0_92px_rgba(147,51,234,0.76)] sm:text-[1.26rem]"
 >
 GHOSTLAYER
 </Link>
@@ -112,7 +109,7 @@ Live Dashboard
 
 <Link
 href="/dashboard"
-className="rounded-xl border border-cyan-400/30 bg-cyan-400/5 px-3 py-2 text-xs font-semibold text-cyan-300 transition hover:bg-cyan-400/10 hover:text-white lg:hidden"
+className="rounded-xl border border-cyan-400/25 bg-cyan-400/8 px-3 py-2 text-xs font-semibold text-cyan-200 transition hover:bg-cyan-400/12 hover:text-white lg:hidden"
 >
 Dashboard
 </Link>
@@ -121,10 +118,10 @@ Dashboard
 
 <section className="relative z-10 overflow-hidden px-4 pb-16 pt-10 sm:px-6 sm:pb-20 md:px-8 md:pt-14 lg:px-10 lg:pb-24 xl:px-12">
 <div className="mx-auto max-w-7xl">
-<div className="grid items-start gap-10 xl:grid-cols-[minmax(0,1.08fr)_minmax(360px,460px)] xl:gap-12 2xl:grid-cols-[minmax(0,1.12fr)_minmax(390px,500px)]">
+<div className="grid items-start gap-10 xl:grid-cols-[minmax(0,1.08fr)_minmax(390px,500px)] xl:gap-14">
 <div className="max-w-4xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
-Business Workflow Inefficiency Scanner
+Business Workflow Intelligence
 </p>
 
 <h1 className="hero-glow mt-5 max-w-4xl text-4xl font-bold leading-[1.02] text-white sm:text-5xl lg:text-6xl xl:text-[4.5rem]">
@@ -138,9 +135,9 @@ and Costs Revenue
 </h1>
 
 <p className="mt-6 max-w-3xl text-base leading-8 text-gray-300 sm:text-lg">
-Ghostlayer helps businesses uncover broken handoffs, approval
-bottlenecks, repeated manual work, and hidden operational drag so
-teams can move faster with less waste.
+Ghostlayer helps businesses uncover broken handoffs, approval bottlenecks,
+repeated manual work, and hidden operational drag so teams can move faster
+with less waste.
 </p>
 
 <div className="mt-8 flex flex-col gap-4 sm:flex-row">
@@ -153,7 +150,7 @@ Book Business Consultation
 
 <Link
 href="/dashboard"
-className="rounded-2xl border border-cyan-400/35 bg-cyan-400/5 px-8 py-4 text-center text-base font-semibold text-cyan-300 transition hover:bg-cyan-400/10 hover:text-white"
+className="rounded-2xl border border-cyan-400/25 bg-cyan-400/8 px-8 py-4 text-center text-base font-semibold text-cyan-200 transition hover:bg-cyan-400/12 hover:text-white"
 >
 See Live Dashboard
 </Link>
@@ -166,24 +163,23 @@ See Live Dashboard
 </div>
 </div>
 
-<div className="w-full xl:-mt-2 2xl:-mt-6">
-<div className="rounded-[2rem] border border-cyan-400/25 bg-white/5 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.03),0_30px_80px_rgba(0,0,0,0.45)] backdrop-blur-sm sm:p-5">
+<div className="w-full xl:-mt-1">
+<div className="rounded-[32px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-4 shadow-[0_20px_70px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-5">
 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-<div className="min-w-0 rounded-3xl border border-cyan-400/20 bg-cyan-400/5 p-5">
-<p className="text-[11px] uppercase tracking-[0.24em] text-cyan-300 sm:text-xs">
+<div className="min-w-0 rounded-3xl border border-cyan-400/15 bg-cyan-400/8 p-5">
+<p className="text-[11px] uppercase tracking-[0.24em] text-cyan-200">
 Workflow Risk
 </p>
 <p className="mt-3 break-words text-[2.2rem] font-bold leading-none text-white sm:text-[2.5rem] lg:text-[2.7rem]">
 68/100
 </p>
-<p className="mt-3 text-sm leading-7 text-gray-300">
-Elevated due to repeated approvals, weak ownership, and
-broken handoffs.
+<p className="mt-3 text-sm leading-7 text-gray-200">
+Elevated due to repeated approvals, weak ownership, and broken handoffs.
 </p>
 </div>
 
-<div className="min-w-0 rounded-3xl border border-red-500/25 bg-red-500/10 p-5">
-<p className="text-[11px] uppercase tracking-[0.24em] text-red-200 sm:text-xs">
+<div className="min-w-0 rounded-3xl border border-red-500/15 bg-red-500/10 p-5">
+<p className="text-[11px] uppercase tracking-[0.24em] text-red-200">
 Estimated Loss
 </p>
 <p className="mt-3 flex items-baseline whitespace-nowrap text-white">
@@ -194,15 +190,14 @@ $3,247
 /mo
 </span>
 </p>
-<p className="mt-3 text-sm leading-7 text-gray-300">
-Estimated productivity drag from process friction and missed
-follow-through.
+<p className="mt-3 text-sm leading-7 text-gray-200">
+Estimated productivity drag from process friction and missed follow-through.
 </p>
 </div>
 </div>
 
-<div className="mt-4 rounded-3xl border border-white/10 bg-black/25 p-5">
-<p className="text-xs uppercase tracking-[0.24em] text-gray-300">
+<div className="mt-4 rounded-3xl border border-white/8 bg-black/25 p-5">
+<p className="text-[11px] uppercase tracking-[0.24em] text-gray-300">
 What Ghostlayer Finds
 </p>
 
@@ -220,7 +215,7 @@ What Ghostlayer Finds
 </section>
 
 <section id="how-it-works" className="relative z-10 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-<div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+<div className="mx-auto max-w-7xl rounded-[32px] border border-white/8 bg-white/[0.03] p-6 backdrop-blur-sm shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-8">
 <div className="max-w-3xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
 How It Works
@@ -229,32 +224,31 @@ How It Works
 A clean workflow intelligence experience for real businesses
 </h2>
 <p className="mt-4 text-base leading-8 text-gray-300">
-Ghostlayer helps you spot where execution is slowing down, where
-handoffs are breaking, and where repeated manual work is costing
-time and revenue.
+Ghostlayer helps you spot where execution is slowing down, where handoffs
+are breaking, and where repeated manual work is costing time and revenue.
 </p>
 </div>
 
 <div className="mt-8 grid grid-cols-1 gap-4 lg:grid-cols-3">
-<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-6">
 <p className="text-sm uppercase tracking-[0.22em] text-cyan-300">1. Capture</p>
 <h3 className="mt-3 text-xl font-semibold">Bring consultations into one view</h3>
 <p className="mt-3 text-sm leading-7 text-gray-400">
-Ghostlayer connects booked business consultations to your workflow
-view so you can see operational demand clearly.
+Ghostlayer connects booked business consultations to your workflow view
+so you can see operational demand clearly.
 </p>
 </div>
 
-<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-6">
 <p className="text-sm uppercase tracking-[0.22em] text-cyan-300">2. Diagnose</p>
 <h3 className="mt-3 text-xl font-semibold">Identify bottlenecks and drag</h3>
 <p className="mt-3 text-sm leading-7 text-gray-400">
-Surface approval delays, broken handoffs, repeated updates, and
-workflow friction that slow delivery.
+Surface approval delays, broken handoffs, repeated updates, and workflow
+friction that slow delivery.
 </p>
 </div>
 
-<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-6">
 <p className="text-sm uppercase tracking-[0.22em] text-cyan-300">3. Improve</p>
 <h3 className="mt-3 text-xl font-semibold">Turn visibility into action</h3>
 <p className="mt-3 text-sm leading-7 text-gray-400">
@@ -267,7 +261,7 @@ business operations without guesswork.
 </section>
 
 <section id="who-it-helps" className="relative z-10 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-<div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+<div className="mx-auto max-w-7xl rounded-[32px] border border-white/8 bg-white/[0.03] p-6 backdrop-blur-sm shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-8">
 <div className="max-w-3xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
 Who It Helps
@@ -276,32 +270,31 @@ Who It Helps
 Built for businesses that need cleaner execution
 </h2>
 <p className="mt-4 text-base leading-8 text-gray-300">
-Best for service businesses, agencies, operators, consultants, and
-growing teams that need better handoffs, less manual waste, and
-stronger operational visibility.
+Best for service businesses, agencies, operators, consultants, and growing teams
+that need better handoffs, less manual waste, and stronger operational visibility.
 </p>
 </div>
 
 <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-6">
 <h3 className="text-xl font-semibold">Agencies</h3>
 <p className="mt-3 text-sm leading-7 text-gray-400">
 Reduce handoff chaos between sales, onboarding, delivery, and support.
 </p>
 </div>
-<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-6">
 <h3 className="text-xl font-semibold">Consulting Firms</h3>
 <p className="mt-3 text-sm leading-7 text-gray-400">
 Improve intake quality, client follow-through, and internal execution.
 </p>
 </div>
-<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-6">
 <h3 className="text-xl font-semibold">Service Businesses</h3>
 <p className="mt-3 text-sm leading-7 text-gray-400">
 Spot where delivery slows down and where repeated admin work hurts margin.
 </p>
 </div>
-<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-6">
 <h3 className="text-xl font-semibold">Operations Leaders</h3>
 <p className="mt-3 text-sm leading-7 text-gray-400">
 Get a simple operational signal without turning the experience into clutter.
@@ -312,7 +305,7 @@ Get a simple operational signal without turning the experience into clutter.
 </section>
 
 <section id="results" className="relative z-10 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-<div className="mx-auto max-w-7xl rounded-[2rem] border border-white/10 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+<div className="mx-auto max-w-7xl rounded-[32px] border border-white/8 bg-white/[0.03] p-6 backdrop-blur-sm shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-8">
 <div className="max-w-3xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
 Results
@@ -323,7 +316,7 @@ See the cost of friction before it compounds
 </div>
 
 <div className="mt-8 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-4">
-<div className="rounded-3xl border border-white/10 bg-black/30 p-6">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-6">
 <p className="text-sm uppercase tracking-[0.2em] text-gray-300">Workflow Health</p>
 <p className="mt-3 text-4xl font-bold">82%</p>
 <p className="mt-3 text-sm text-gray-400">
@@ -331,26 +324,26 @@ Visibility and operational consistency across core business workflows.
 </p>
 </div>
 
-<div className="rounded-3xl border border-cyan-400/30 bg-cyan-400/10 p-6">
-<p className="text-sm uppercase tracking-[0.2em] text-gray-200">Risk Score</p>
+<div className="rounded-3xl border border-cyan-400/20 bg-cyan-400/10 p-6">
+<p className="text-sm uppercase tracking-[0.2em] text-gray-100">Risk Score</p>
 <p className="mt-3 text-4xl font-bold">68/100</p>
-<p className="mt-3 text-sm text-gray-300">
+<p className="mt-3 text-sm text-cyan-50/80">
 Higher scores indicate delays, repeated effort, weak ownership, and broken handoffs.
 </p>
 </div>
 
-<div className="rounded-3xl border border-red-500/30 bg-red-500/10 p-6">
-<p className="text-sm uppercase tracking-[0.2em] text-gray-200">Productivity Loss</p>
+<div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-6">
+<p className="text-sm uppercase tracking-[0.2em] text-gray-100">Productivity Loss</p>
 <p className="mt-3 text-4xl font-bold">$3,247/mo</p>
-<p className="mt-3 text-sm text-gray-300">
+<p className="mt-3 text-sm text-red-50/80">
 Estimated monthly business cost caused by workflow drag and missed execution.
 </p>
 </div>
 
-<div className="rounded-3xl border border-green-500/30 bg-green-500/10 p-6">
-<p className="text-sm uppercase tracking-[0.2em] text-gray-200">Savings Opportunity</p>
+<div className="rounded-3xl border border-green-500/20 bg-green-500/10 p-6">
+<p className="text-sm uppercase tracking-[0.2em] text-gray-100">Savings Opportunity</p>
 <p className="mt-3 text-4xl font-bold">$4,200/mo</p>
-<p className="mt-3 text-sm text-gray-300">
+<p className="mt-3 text-sm text-green-50/80">
 Potential monthly gain if workflow friction and repeated effort are reduced.
 </p>
 </div>
@@ -359,7 +352,7 @@ Potential monthly gain if workflow friction and repeated effort are reduced.
 </section>
 
 <section id="next-step" className="relative z-10 px-4 py-8 pb-16 sm:px-6 md:px-8 lg:px-10 lg:pb-24 xl:px-12">
-<div className="mx-auto max-w-7xl rounded-[2rem] border border-cyan-400/20 bg-white/5 p-6 backdrop-blur-sm sm:p-8">
+<div className="mx-auto max-w-7xl rounded-[32px] border border-cyan-400/15 bg-white/[0.03] p-6 backdrop-blur-sm shadow-[0_10px_40px_rgba(0,0,0,0.2)] sm:p-8">
 <div className="grid items-center gap-8 xl:grid-cols-[minmax(0,1fr)_auto]">
 <div className="max-w-3xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
@@ -369,9 +362,8 @@ Next Step
 Book a consultation and see where your workflow is leaking time and revenue
 </h2>
 <p className="mt-4 text-base leading-8 text-gray-300">
-Ghostlayer is built to make operational friction visible, actionable,
-and expensive to ignore. If the process is slowing growth, you should
-see it immediately.
+Ghostlayer is built to make operational friction visible, actionable, and
+expensive to ignore. If the process is slowing growth, you should see it immediately.
 </p>
 </div>
 
@@ -385,7 +377,7 @@ Book Business Consultation
 
 <Link
 href="/dashboard"
-className="rounded-2xl border border-cyan-400/35 bg-cyan-400/5 px-8 py-4 text-center text-base font-semibold text-cyan-300 transition hover:bg-cyan-400/10 hover:text-white"
+className="rounded-2xl border border-cyan-400/25 bg-cyan-400/8 px-8 py-4 text-center text-base font-semibold text-cyan-200 transition hover:bg-cyan-400/12 hover:text-white"
 >
 Open Live Dashboard
 </Link>
@@ -394,7 +386,7 @@ Open Live Dashboard
 </div>
 </section>
 
-<footer className="relative z-10 border-t border-white/10 bg-black/60 backdrop-blur">
+<footer className="relative z-10 border-t border-white/8 bg-[#04060a]/70 backdrop-blur-xl">
 <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 md:px-8 lg:px-10">
 <div className="flex flex-col gap-8 md:flex-row md:items-start md:justify-between">
 <div className="max-w-md">
@@ -405,8 +397,8 @@ className="inline-block text-[1.28rem] font-bold tracking-[0.14em] text-white [t
 GHOSTLAYER
 </Link>
 <p className="mt-4 text-sm leading-7 text-gray-400">
-Business workflow intelligence for clearer operations, stronger
-follow-through, and faster execution.
+Business workflow intelligence for clearer operations, stronger follow-through,
+and faster execution.
 </p>
 </div>
 
@@ -435,7 +427,7 @@ Book Consultation
 </div>
 </div>
 
-<p className="mt-8 border-t border-white/10 pt-6 text-sm text-gray-500">
+<p className="mt-8 border-t border-white/8 pt-6 text-sm text-gray-500">
 © {currentYear} Ghostlayer. Business workflow intelligence for clearer operations,
 stronger follow-through, and faster execution.
 </p>
@@ -479,7 +471,7 @@ animation-iteration-count: infinite;
 position: absolute;
 border-radius: 9999px;
 filter: blur(80px);
-opacity: 0.7;
+opacity: 0.6;
 }
 
 .orb-cyan {
@@ -487,7 +479,7 @@ left: -10%;
 top: -8%;
 height: 30rem;
 width: 30rem;
-background: rgba(34, 211, 238, 0.12);
+background: rgba(34, 211, 238, 0.1);
 animation: floatSlow 16s ease-in-out infinite;
 }
 
@@ -496,7 +488,7 @@ right: -10%;
 top: 14%;
 height: 28rem;
 width: 28rem;
-background: rgba(59, 130, 246, 0.1);
+background: rgba(59, 130, 246, 0.08);
 animation: floatSlower 19s ease-in-out infinite;
 }
 
@@ -505,7 +497,7 @@ bottom: -12%;
 left: 24%;
 height: 26rem;
 width: 26rem;
-background: rgba(168, 85, 247, 0.1);
+background: rgba(168, 85, 247, 0.08);
 animation: floatSlow 20s ease-in-out infinite;
 }
 
@@ -513,7 +505,7 @@ animation: floatSlow 20s ease-in-out infinite;
 position: absolute;
 border-radius: 9999px;
 filter: blur(120px);
-opacity: 0.16;
+opacity: 0.13;
 mix-blend-mode: screen;
 }
 
@@ -524,8 +516,8 @@ width: 30rem;
 height: 16rem;
 background: linear-gradient(
 90deg,
-rgba(255, 255, 255, 0.05),
-rgba(56, 189, 248, 0.12),
+rgba(255, 255, 255, 0.04),
+rgba(56, 189, 248, 0.1),
 rgba(255, 255, 255, 0.02)
 );
 animation: driftOne 22s ease-in-out infinite;
@@ -538,8 +530,8 @@ width: 32rem;
 height: 18rem;
 background: linear-gradient(
 90deg,
-rgba(168, 85, 247, 0.04),
-rgba(59, 130, 246, 0.12),
+rgba(168, 85, 247, 0.03),
+rgba(59, 130, 246, 0.1),
 rgba(255, 255, 255, 0.03)
 );
 animation: driftTwo 26s ease-in-out infinite;
@@ -553,8 +545,8 @@ height: 14rem;
 background: linear-gradient(
 90deg,
 rgba(255, 255, 255, 0.02),
-rgba(6, 182, 212, 0.12),
-rgba(168, 85, 247, 0.05)
+rgba(6, 182, 212, 0.09),
+rgba(168, 85, 247, 0.04)
 );
 animation: driftThree 24s ease-in-out infinite;
 }
@@ -566,13 +558,13 @@ right: -10%;
 height: 180px;
 border-radius: 9999px;
 filter: blur(90px);
-opacity: 0.12;
+opacity: 0.1;
 mix-blend-mode: screen;
 background: linear-gradient(
 90deg,
 rgba(255, 255, 255, 0),
-rgba(255, 255, 255, 0.08),
-rgba(96, 165, 250, 0.09),
+rgba(255, 255, 255, 0.06),
+rgba(96, 165, 250, 0.07),
 rgba(255, 255, 255, 0.02)
 );
 }
