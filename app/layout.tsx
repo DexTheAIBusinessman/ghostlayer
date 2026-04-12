@@ -16,9 +16,9 @@ keywords: [
 'Ghostlayer',
 ],
 icons: {
-icon: '/globe.svg',
-shortcut: '/globe.svg',
-apple: '/globe.svg',
+icon: '/favicon.png',
+shortcut: '/favicon.png',
+apple: '/favicon.png',
 },
 openGraph: {
 title: 'Ghostlayer | Business Workflow Intelligence',
@@ -26,6 +26,14 @@ description:
 'Find workflow friction before it slows growth, burns time, and costs revenue.',
 url: 'https://ghostlayer-swart.vercel.app',
 siteName: 'Ghostlayer',
+images: [
+{
+url: '/og-image.png',
+width: 1200,
+height: 630,
+alt: 'Ghostlayer Business Workflow Intelligence',
+},
+],
 type: 'website',
 },
 twitter: {
@@ -33,6 +41,7 @@ card: 'summary_large_image',
 title: 'Ghostlayer | Business Workflow Intelligence',
 description:
 'Find workflow friction before it slows growth, burns time, and costs revenue.',
+images: ['/og-image.png'],
 },
 };
 
