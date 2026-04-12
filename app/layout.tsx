@@ -15,6 +15,11 @@ keywords: [
 'operational drag',
 'Ghostlayer',
 ],
+icons: {
+icon: '/globe.svg',
+shortcut: '/globe.svg',
+apple: '/globe.svg',
+},
 openGraph: {
 title: 'Ghostlayer | Business Workflow Intelligence',
 description:
@@ -42,4 +47,3 @@ return (
 </html>
 );
 }
-
