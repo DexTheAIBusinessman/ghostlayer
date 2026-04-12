@@ -79,7 +79,7 @@ className={`inline-block text-[1.06rem] font-bold tracking-[0.16em] text-white s
 GHOSTLAYER
 </Link>
 
-<nav className="hidden items-center gap-8 text-sm text-gray-300 lg:flex">
+<nav className="hidden items-center gap-7 text-sm text-gray-300 lg:flex">
 <a href="#how-it-works" className="transition hover:text-white">
 How It Works
 </a>
@@ -92,7 +92,16 @@ Results
 <a href="#next-step" className="transition hover:text-white">
 Next Step
 </a>
-<Link href="/dashboard" className="font-semibold text-cyan-300 transition hover:text-white">
+<Link href="/privacy" className="transition hover:text-white">
+Privacy
+</Link>
+<Link href="/terms" className="transition hover:text-white">
+Terms
+</Link>
+<Link
+href="/dashboard"
+className="rounded-full border border-cyan-400/18 bg-cyan-400/8 px-4 py-2 font-semibold text-cyan-200 transition hover:bg-cyan-400/12 hover:text-white"
+>
 Live Dashboard
 </Link>
 </nav>
@@ -407,7 +416,7 @@ and faster execution.
 </p>
 </div>
 
-<div className="flex flex-wrap gap-x-6 gap-y-3 text-sm text-gray-400 md:max-w-md md:justify-end">
+<div className="flex max-w-xl flex-wrap items-center gap-x-6 gap-y-3 text-sm text-gray-400 md:justify-end">
 <a href="#how-it-works" className="transition hover:text-white">
 How It Works
 </a>

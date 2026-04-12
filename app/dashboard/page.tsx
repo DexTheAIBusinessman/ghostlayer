@@ -495,6 +495,12 @@ Dashboard
 <span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
 Demo Workspace
 </span>
+<Link href="/privacy" className="text-xs text-gray-400 transition hover:text-white">
+Privacy
+</Link>
+<Link href="/terms" className="text-xs text-gray-400 transition hover:text-white">
+Terms
+</Link>
 </div>
 
 <h2 className="mt-1 text-lg font-semibold text-white sm:text-xl">
@@ -1011,20 +1017,20 @@ className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-black trans
 </section>
 
 <footer className="mt-10 border-t border-white/8 pt-8">
-<div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
-<div className="min-w-0">
+<div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+<div className="min-w-0 max-w-md">
 <Link
 href="/"
 className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.28rem] font-bold leading-none tracking-[0.12em] sm:text-[1.4rem] ${logoGlow}`}
 >
 GHOSTLAYER
 </Link>
-<p className="mt-3 text-sm text-gray-400">
+<p className="mt-3 text-sm leading-7 text-gray-400">
 Business workflow intelligence for faster execution.
 </p>
 </div>
 
-<div className="flex flex-wrap gap-4 text-sm text-gray-400">
+<div className="flex max-w-xl flex-wrap items-center gap-x-5 gap-y-3 text-sm text-gray-400 md:justify-end">
 <button
 type="button"
 onClick={() => scrollToSection('overview')}
@@ -1102,4 +1108,3 @@ filter: brightness(1.22);
 </main>
 );
 }
-
