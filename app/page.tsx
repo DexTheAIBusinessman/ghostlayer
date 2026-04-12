@@ -423,6 +423,12 @@ Next Step
 <Link href="/dashboard" className="transition hover:text-white">
 Live Dashboard
 </Link>
+<Link href="/privacy" className="transition hover:text-white">
+Privacy
+</Link>
+<Link href="/terms" className="transition hover:text-white">
+Terms
+</Link>
 <button
 onClick={() => openCalendly('homepage')}
 className="text-left transition hover:text-white"
