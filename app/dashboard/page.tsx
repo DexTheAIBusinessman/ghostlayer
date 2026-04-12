@@ -1035,6 +1035,12 @@ className="transition hover:text-white"
 >
 Run Scan
 </button>
+<Link href="/privacy" className="transition hover:text-white">
+Privacy
+</Link>
+<Link href="/terms" className="transition hover:text-white">
+Terms
+</Link>
 </div>
 </div>
 
@@ -1085,3 +1091,4 @@ filter: brightness(1.22);
 </main>
 );
 }
+
