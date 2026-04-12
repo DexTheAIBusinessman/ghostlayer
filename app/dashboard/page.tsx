@@ -487,12 +487,23 @@ className={`block overflow-hidden text-ellipsis whitespace-nowrap text-[0.98rem]
 >
 GHOSTLAYER
 </Link>
-<p className="hidden text-[11px] uppercase tracking-[0.28em] text-cyan-300 md:block">
+
+<div className="hidden md:flex md:items-center md:gap-3">
+<p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">
 Dashboard
 </p>
+<span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-cyan-200">
+Demo Workspace
+</span>
+</div>
+
 <h2 className="mt-1 text-lg font-semibold text-white sm:text-xl">
 Workflow Operations Console
 </h2>
+
+<p className="mt-1 text-xs text-gray-400 sm:text-sm">
+Public product demo for workflow visibility, drag detection, and operational signal framing.
+</p>
 </div>
 
 <div className="flex items-center gap-2 sm:gap-3">
