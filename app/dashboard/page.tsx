@@ -672,7 +672,7 @@ Recommended action
 <section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.08fr_0.92fr] xl:items-start">
 <div
 id="bookings"
-className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
+className="self-start rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
 >
 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 <div className="min-w-0">
@@ -717,23 +717,23 @@ No bookings found yet. Use the consultation flow to populate this panel.
 </tr>
 </thead>
 <tbody>
-{bookings.slice(0, 5).map((booking) => (
+{bookings.slice(0, 5).map((booking, index) => (
 <tr key={booking.id} className="text-gray-200">
-<td className="border-b border-white/6 px-3 py-3.5">
+<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 {booking.invitee_name || 'Unknown'}
 </td>
-<td className="border-b border-white/6 px-3 py-3.5">
+<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 <span className="break-all">
 {booking.invitee_email || 'No email'}
 </span>
 </td>
-<td className="border-b border-white/6 px-3 py-3.5">
+<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 {normalizeEventTypeName(booking.event_type_name)}
 </td>
-<td className="border-b border-white/6 px-3 py-3.5">
+<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 {formatDateTime(booking.scheduled_at)}
 </td>
-<td className="border-b border-white/6 px-3 py-3.5">
+<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 <span className="rounded-full border border-cyan-400/15 bg-cyan-400/8 px-3 py-1 text-xs text-cyan-200">
 {booking.source || 'Not tracked'}
 </span>
@@ -889,8 +889,7 @@ Premium view
 </div>
 
 <p className="mt-4 text-sm text-gray-500">
-This summary isolates where drag is forming, where cost exposure is building,
-and where operator attention should concentrate first.
+This summary isolates where drag is forming, where cost exposure is building, and where operator attention should concentrate first.
 </p>
 
 <pre className="mt-4 min-h-[126px] overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/8 bg-[#0a0d14] p-4 text-sm leading-7 text-gray-300">
@@ -987,7 +986,7 @@ className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black tran
 <div className="min-w-0 max-w-md">
 <Link
 href="/"
-className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.24rem] font-bold leading-none tracking-[0.12em] sm:text-[1.34rem] ${logoGlow}`}
+className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.1em] lg:text-[1.1rem] xl:text-[1.16rem] ${logoGlow}`}
 >
 GHOSTLAYER
 </Link>
