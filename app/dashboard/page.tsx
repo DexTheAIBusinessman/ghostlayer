@@ -37,7 +37,7 @@ const [bottleneck, setBottleneck] = useState('');
 const [saasSpend, setSaasSpend] = useState('');
 
 const [analysis, setAnalysis] = useState(
-'Run a business workflow scan to generate a workflow intelligence summary.'
+'Run a workflow scan to generate an operational intelligence summary.'
 );
 const [loading, setLoading] = useState(false);
 const [saveMessage, setSaveMessage] = useState('');
@@ -169,38 +169,38 @@ const savingsOpportunity = Math.round(productivityLoss * 1.28);
 
 const summary = `EXECUTIVE SUMMARY
 
-${companyLabel} is showing workflow friction that may be slowing execution, increasing operational drag, and creating avoidable revenue leakage. The strongest risk signal is tied to ${bottleneckLabel}.
+${companyLabel} is showing operational friction across its workflow layer. The strongest signal is concentrated around ${bottleneckLabel}, where execution velocity is likely being reduced and context continuity is likely degrading.
 
-MAIN RISKS
+PRIMARY SIGNALS
 
-- Delays are building around ${bottleneckLabel}
-- Handoffs are likely losing context between teams
-- Repeated manual updates are increasing duplicate work
-- Visibility drops as work moves from intake to delivery
+- Delay pressure is building around ${bottleneckLabel}
+- Handoffs are likely losing context between intake, execution, and follow-through
+- Repeated manual status work is increasing duplicate effort
+- Visibility is weakening as work moves across stages and owners
 
-ESTIMATED COST IMPACT
+COST EXPOSURE
 
 - Estimated monthly productivity loss: $${productivityLoss.toLocaleString()}
-- Estimated recovery opportunity: $${savingsOpportunity.toLocaleString()}
+- Estimated monthly recovery opportunity: $${savingsOpportunity.toLocaleString()}
 - Workflow health score: ${workflowHealth}%
 - Workflow risk score: ${workflowRisk}/100
 
-NEXT BEST ACTIONS
+OPERATOR RECOMMENDATIONS
 
-1. Assign one owner to each major workflow stage
+1. Assign one accountable owner to each major workflow stage
 2. Remove one repeated manual update step this week
-3. Standardize intake information before handoff
-4. Review approval steps that delay execution
-5. Use booked consultation data to identify demand patterns
+3. Standardize intake data before work is handed downstream
+4. Reduce non-essential approval steps that slow execution
+5. Review consultation demand patterns to identify recurring load points
 
 SCAN INPUTS
 
 Company: ${companyLabel}
 Team Size: ${teamLabel}
-Biggest Bottleneck: ${bottleneckLabel}
+Primary Bottleneck: ${bottleneckLabel}
 Monthly Cost Impacted: $${spendLabel}`;
 
-setAnalysis('Running business workflow scan...');
+setAnalysis('Running workflow scan...');
 
 setTimeout(() => {
 setAnalysis(summary);
@@ -265,7 +265,7 @@ const report = `GHOSTLAYER OPERATIONS DASHBOARD REPORT
 
 Company: ${companyName || 'Unknown Company'}
 Team Size: ${teamSize || 'Not provided'}
-Biggest Workflow Bottleneck: ${bottleneck || 'Not provided'}
+Primary Workflow Bottleneck: ${bottleneck || 'Not provided'}
 Monthly Operational Cost Impacted: $${saasSpend || '0'}
 
 ${analysis}`;
@@ -301,7 +301,7 @@ return value;
 }
 
 function formatRelativeTime(value: string | null) {
-if (!value) return 'Not yet run';
+if (!value) return 'Demo scan ready';
 const then = new Date(value).getTime();
 const now = Date.now();
 const diff = Math.max(0, now - then);
@@ -310,10 +310,10 @@ const mins = Math.floor(diff / 60000);
 const hours = Math.floor(diff / 3600000);
 const days = Math.floor(diff / 86400000);
 
-if (mins < 1) return 'just now';
-if (mins < 60) return `${mins}m ago`;
-if (hours < 24) return `${hours}h ago`;
-return `${days}d ago`;
+if (mins < 1) return 'Updated just now';
+if (mins < 60) return `Updated ${mins}m ago`;
+if (hours < 24) return `Updated ${hours}h ago`;
+return `Updated ${days}d ago`;
 }
 
 const metrics = useMemo(() => {
@@ -358,22 +358,22 @@ return [
 {
 title: 'Execution delay risk',
 severity: 'High',
-impact: `Work is slowing around ${label}. Teams may be waiting too long to move work forward.`,
-action: 'Assign one owner and reduce extra review steps.',
+impact: `Throughput pressure is building around ${label}, increasing wait time before work advances cleanly.`,
+action: 'Reduce approval drag and assign one accountable owner per stage.',
 },
 {
 title: 'Handoff context loss',
 severity: 'Medium',
 impact:
-'Important information may be dropping between intake, delivery, and follow-through.',
-action: 'Standardize the handoff checklist used by all teams.',
+'Critical workflow context is likely degrading between intake, execution, and follow-through.',
+action: 'Standardize the handoff payload used by all teams.',
 },
 {
 title: 'Duplicate manual reporting',
 severity: 'Medium',
 impact:
-'People may be updating the same status in multiple places, increasing drag.',
-action: 'Consolidate progress tracking into one primary workflow.',
+'The same progress signal is likely being captured in multiple places, increasing drag.',
+action: 'Collapse status reporting into one primary operating view.',
 },
 ];
 }, [bottleneck]);
@@ -416,7 +416,7 @@ Workspace
 </p>
 <p className="mt-2 text-sm font-medium text-white">Operations Intelligence</p>
 <p className="mt-1 text-xs leading-6 text-gray-400">
-Premium command view for drag, risk, and execution flow.
+Command surface for workflow drag, risk, and execution clarity.
 </p>
 </div>
 
@@ -452,7 +452,7 @@ Last scan
 Bookings sync
 </p>
 <p className="mt-2 text-sm text-white">
-{bookingsLoading ? 'Syncing...' : 'Active'}
+{bookingsLoading ? 'Refreshing demo feed...' : 'Demo feed active'}
 </p>
 </div>
 <div className="rounded-2xl border border-white/8 bg-black/22 p-3">
@@ -508,7 +508,7 @@ Workflow Operations Console
 </h2>
 
 <p className="mt-1 text-xs text-gray-400 sm:text-sm">
-Public product demo for workflow visibility, drag detection, and operational signal framing.
+Public product demo for workflow visibility, drag detection, and operator framing.
 </p>
 </div>
 
@@ -564,12 +564,12 @@ Operations Overview
 </p>
 
 <h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl lg:text-[2.55rem]">
-Monitor workflow drag, handoff risk, and execution quality
+Detect execution drag before it compounds across the workflow layer
 </h1>
 
 <p className="mt-4 max-w-3xl text-sm leading-7 text-gray-300 sm:text-[15px]">
-Ghostlayer surfaces approval delays, broken handoffs, repeated manual work,
-and operational loss signals in one premium command view.
+Ghostlayer surfaces throughput pressure, weak handoffs, repeated manual work,
+and cost exposure in one operator-grade command view.
 </p>
 </div>
 
@@ -591,9 +591,9 @@ onClick={async () => {
 await trackCtaClick('dashboard');
 setIsCalendlyOpen(true);
 }}
-className="col-span-2 rounded-xl border border-white/10 bg-white/[0.05] px-3.5 py-2.5 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+className="col-span-2 rounded-xl border border-white/10 bg-white/[0.035] px-3.5 py-2.5 text-sm font-semibold text-gray-100 transition hover:bg-white/[0.06]"
 >
-Book Business Consultation
+Schedule Operator Review
 </button>
 </div>
 </div>
@@ -608,7 +608,7 @@ Workflow Health
 </p>
 <p className="mt-3 text-[2.15rem] font-bold">{metrics.workflowHealth}%</p>
 <p className="mt-2 text-sm text-gray-400">
-Operational visibility across active business workflows.
+Operational coherence across active workflow stages.
 </p>
 </div>
 
@@ -618,7 +618,7 @@ Risk Score
 </p>
 <p className="mt-3 text-[2.15rem] font-bold">{metrics.workflowRisk}/100</p>
 <p className="mt-2 text-sm text-cyan-50/80">
-Higher score means more drag, delay, and ownership risk.
+Elevated score signals drag, delay, and ownership instability.
 </p>
 </div>
 
@@ -630,7 +630,7 @@ Est. Monthly Loss
 ${metrics.productivityLoss.toLocaleString()}/mo
 </p>
 <p className="mt-2 text-sm text-red-50/80">
-Productivity and execution cost caused by workflow friction.
+Estimated productivity loss caused by workflow friction.
 </p>
 </div>
 
@@ -642,7 +642,7 @@ Recovery Opportunity
 ${metrics.savingsOpportunity.toLocaleString()}/mo
 </p>
 <p className="mt-2 text-sm text-green-50/80">
-Possible gain if delays and repeated work are reduced.
+Recoverable value if bottlenecks and duplicate effort are reduced.
 </p>
 </div>
 </div>
@@ -656,7 +656,7 @@ className="mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow
 <div>
 <h3 className="text-[1.55rem] font-semibold">Priority Issues</h3>
 <p className="text-sm text-gray-400">
-Highest-value areas to address first based on current workflow inputs.
+Highest-value areas to stabilize first based on current signal conditions.
 </p>
 </div>
 <div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-gray-400">
@@ -703,7 +703,7 @@ className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_1
 <div className="min-w-0">
 <h3 className="text-[1.55rem] font-semibold">Recent Bookings</h3>
 <p className="mt-2 text-sm text-gray-400">
-Consultations captured through the live Ghostlayer workflow.
+Consultation activity entering the Ghostlayer demand layer.
 </p>
 </div>
 
@@ -725,7 +725,7 @@ Refresh
 <p className="mt-5 text-sm text-red-400">{bookingsMessage}</p>
 ) : bookings.length === 0 ? (
 <p className="mt-5 text-sm text-gray-400">
-No bookings found yet. Book a business consultation to populate this panel.
+No bookings found yet. Use the consultation flow to populate this panel.
 </p>
 ) : (
 <>
@@ -818,7 +818,7 @@ className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_1
 <span className="text-sm text-red-400">High</span>
 </div>
 <p className="mt-2 text-sm text-gray-400">
-Multiple review steps are likely delaying work before it moves forward.
+Multi-step review pressure is likely slowing work before throughput resumes.
 </p>
 </div>
 
@@ -828,7 +828,7 @@ Multiple review steps are likely delaying work before it moves forward.
 <span className="text-sm text-yellow-400">Medium</span>
 </div>
 <p className="mt-2 text-sm text-gray-400">
-Missing initial details can create early delays and downstream rework.
+Missing intake signal can create early delay and downstream rework.
 </p>
 </div>
 </div>
@@ -846,7 +846,7 @@ className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_1
 <span className="text-sm text-red-400">Missing context</span>
 </div>
 <p className="mt-2 text-sm text-gray-400">
-Critical information may not be passed cleanly into execution.
+Critical execution context is likely not arriving intact at the next stage.
 </p>
 </div>
 
@@ -856,7 +856,7 @@ Critical information may not be passed cleanly into execution.
 <span className="text-sm text-yellow-400">Weak ownership</span>
 </div>
 <p className="mt-2 text-sm text-gray-400">
-Escalated requests can lose momentum when ownership is unclear.
+Escalated work may be slowing because ownership boundaries are unclear.
 </p>
 </div>
 </div>
@@ -874,7 +874,7 @@ className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_1
 <span className="text-sm text-cyan-300">Repeated effort</span>
 </div>
 <p className="mt-2 text-sm text-gray-400">
-Similar updates may be getting entered in multiple systems.
+Similar progress signal is likely being captured across multiple surfaces.
 </p>
 </div>
 
@@ -884,7 +884,7 @@ Similar updates may be getting entered in multiple systems.
 <span className="text-sm text-cyan-300">Duplicated work</span>
 </div>
 <p className="mt-2 text-sm text-gray-400">
-Teams may be re-entering status data across tools and stages.
+Teams may be re-entering the same status layer across tools and stages.
 </p>
 </div>
 </div>
@@ -912,7 +912,8 @@ Premium view
 </div>
 
 <p className="mt-4 text-sm text-gray-500">
-This summary helps identify workflow drag, cost exposure, and the clearest next actions.
+This summary isolates where drag is forming, where cost exposure is building,
+and where operator attention should concentrate first.
 </p>
 
 <pre className="mt-4 overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/8 bg-[#0a0d14] p-4 text-sm leading-7 text-gray-300">
@@ -926,7 +927,7 @@ className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_1
 >
 <h3 className="text-[1.55rem] font-semibold">Run a New Workflow Scan</h3>
 <p className="mt-2 text-sm text-gray-400">
-Enter business details to generate a workflow intelligence summary and estimate drag.
+Enter business inputs to generate a fresh workflow intelligence summary and cost signal.
 </p>
 
 <div className="mt-5 grid grid-cols-1 gap-3.5 md:grid-cols-2">
@@ -947,7 +948,7 @@ className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text
 <input
 value={bottleneck}
 onChange={(e) => setBottleneck(e.target.value)}
-placeholder="Biggest workflow bottleneck"
+placeholder="Primary workflow bottleneck"
 className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
 />
 
@@ -981,7 +982,7 @@ Save Current Scan
 <section className="mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6">
 <h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
 <p className="mt-2 text-sm text-gray-400">
-What would make this dashboard more useful for your business?
+What would make this console more useful in a real operating environment?
 </p>
 
 <textarea
@@ -1094,4 +1095,3 @@ text-shadow:
 </main>
 );
 }
-
