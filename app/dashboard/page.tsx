@@ -563,7 +563,7 @@ className="overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradi
 Operations Overview
 </p>
 
-<h1 className="mt-3 text-3xl font-bold leading-tight sm:text-4xl lg:text-[2.55rem]">
+<h1 className="dashboardHeadlineGlow mt-3 text-3xl font-bold leading-tight sm:text-4xl lg:text-[2.55rem]">
 Detect execution drag before it compounds across the workflow layer
 </h1>
 
@@ -1089,6 +1089,36 @@ text-shadow:
 0 0 30px rgba(96, 165, 250, 0.56),
 0 0 48px rgba(59, 130, 246, 0.36),
 0 0 72px rgba(147, 51, 234, 0.24);
+}
+}
+
+.dashboardHeadlineGlow {
+animation: dashboardHeadlinePulse 5.8s ease-in-out infinite;
+text-shadow:
+0 0 6px rgba(255, 255, 255, 0.34),
+0 0 12px rgba(255, 255, 255, 0.24),
+0 0 22px rgba(96, 165, 250, 0.2),
+0 0 36px rgba(59, 130, 246, 0.14);
+}
+
+@keyframes dashboardHeadlinePulse {
+0%,
+100% {
+opacity: 0.96;
+text-shadow:
+0 0 4px rgba(255, 255, 255, 0.26),
+0 0 10px rgba(255, 255, 255, 0.18),
+0 0 18px rgba(96, 165, 250, 0.14),
+0 0 28px rgba(59, 130, 246, 0.1);
+}
+50% {
+opacity: 1;
+text-shadow:
+0 0 8px rgba(255, 255, 255, 0.58),
+0 0 16px rgba(255, 255, 255, 0.42),
+0 0 30px rgba(96, 165, 250, 0.34),
+0 0 48px rgba(59, 130, 246, 0.22),
+0 0 70px rgba(147, 51, 234, 0.14);
 }
 }
 `}</style>
