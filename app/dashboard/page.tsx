@@ -391,8 +391,9 @@ const sideNav = [
 
 function severityClasses(severity: IssueSeverity) {
 if (severity === 'High') return 'border-red-500/30 bg-red-500/10 text-red-300';
-if (severity === 'Medium')
+if (severity === 'Medium') {
 return 'border-yellow-500/30 bg-yellow-500/10 text-yellow-300';
+}
 return 'border-cyan-400/30 bg-cyan-400/10 text-cyan-300';
 }
 
@@ -602,7 +603,7 @@ Schedule Operator Review
 </div>
 
 <div className="grid grid-cols-1 gap-3.5 px-5 py-5 sm:px-6 lg:grid-cols-4 lg:px-6">
-<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-4.5">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-[18px]">
 <p className="text-[11px] uppercase tracking-[0.22em] text-gray-400">
 Workflow Health
 </p>
@@ -612,7 +613,7 @@ Operational coherence across active workflow stages.
 </p>
 </div>
 
-<div className="rounded-3xl border border-cyan-400/20 bg-cyan-400/10 p-4.5">
+<div className="rounded-3xl border border-cyan-400/20 bg-cyan-400/10 p-[18px]">
 <p className="text-[11px] uppercase tracking-[0.22em] text-cyan-200">
 Risk Score
 </p>
@@ -622,7 +623,7 @@ Elevated score signals drag, delay, and ownership instability.
 </p>
 </div>
 
-<div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-4.5">
+<div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-[18px]">
 <p className="text-[11px] uppercase tracking-[0.22em] text-red-200">
 Est. Monthly Loss
 </p>
@@ -634,7 +635,7 @@ Estimated productivity loss caused by workflow friction.
 </p>
 </div>
 
-<div className="rounded-3xl border border-green-500/20 bg-green-500/10 p-4.5">
+<div className="rounded-3xl border border-green-500/20 bg-green-500/10 p-[18px]">
 <p className="text-[11px] uppercase tracking-[0.22em] text-green-200">
 Recovery Opportunity
 </p>
@@ -668,7 +669,7 @@ Operator view
 {priorityIssues.map((issue) => (
 <div
 key={issue.title}
-className="rounded-3xl border border-white/8 bg-[#0a0d14] p-4.5"
+className="rounded-3xl border border-white/8 bg-[#0a0d14] p-[18px]"
 >
 <div className="flex items-center justify-between gap-3">
 <h4 className="text-lg font-semibold">{issue.title}</h4>
