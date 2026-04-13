@@ -16,9 +16,9 @@ keywords: [
 'Ghostlayer',
 ],
 icons: {
-icon: '/favicon.png',
-shortcut: '/favicon.png',
-apple: '/favicon.png',
+icon: '/favicon.png?v=3',
+shortcut: '/favicon.png?v=3',
+apple: '/favicon.png?v=3',
 },
 openGraph: {
 title: 'Ghostlayer | Business Workflow Intelligence',
