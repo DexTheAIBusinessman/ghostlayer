@@ -56,7 +56,7 @@ const [activeSection, setActiveSection] = useState('overview');
 const currentYear = new Date().getFullYear();
 
 const logoGlow =
-'animate-[dashboardLogoPulse_3.4s_ease-in-out_infinite] text-white [text-shadow:0_0_6px_rgba(255,255,255,0.72),0_0_14px_rgba(255,255,255,0.6),0_0_26px_rgba(96,165,250,0.42),0_0_44px_rgba(59,130,246,0.26)]';
+'animate-[dashboardLogoPulse_3.4s_ease-in-out_infinite] text-white [text-shadow:0_0_5px_rgba(255,255,255,0.68),0_0_12px_rgba(255,255,255,0.52),0_0_24px_rgba(96,165,250,0.34),0_0_40px_rgba(59,130,246,0.2)]';
 
 useEffect(() => {
 setIsMounted(true);
@@ -206,7 +206,7 @@ setTimeout(() => {
 setAnalysis(summary);
 setLastScanAt(new Date().toISOString());
 setLoading(false);
-}, 1100);
+}, 1050);
 }
 
 async function saveScan() {
@@ -1076,19 +1076,19 @@ rootElement={document.body}
 100% {
 opacity: 0.9;
 text-shadow:
-0 0 4px rgba(255, 255, 255, 0.46),
-0 0 10px rgba(255, 255, 255, 0.38),
-0 0 20px rgba(96, 165, 250, 0.26),
-0 0 32px rgba(59, 130, 246, 0.16);
+0 0 4px rgba(255, 255, 255, 0.44),
+0 0 10px rgba(255, 255, 255, 0.36),
+0 0 20px rgba(96, 165, 250, 0.24),
+0 0 32px rgba(59, 130, 246, 0.14);
 }
 50% {
 opacity: 1;
 text-shadow:
-0 0 8px rgba(255, 255, 255, 0.9),
-0 0 18px rgba(255, 255, 255, 0.76),
-0 0 30px rgba(96, 165, 250, 0.56),
-0 0 48px rgba(59, 130, 246, 0.36),
-0 0 72px rgba(147, 51, 234, 0.24);
+0 0 8px rgba(255, 255, 255, 0.86),
+0 0 18px rgba(255, 255, 255, 0.72),
+0 0 30px rgba(96, 165, 250, 0.5),
+0 0 48px rgba(59, 130, 246, 0.32),
+0 0 70px rgba(147, 51, 234, 0.22);
 }
 }
 
@@ -1125,3 +1125,4 @@ text-shadow:
 </main>
 );
 }
+
