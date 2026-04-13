@@ -55,9 +55,6 @@ const [activeSection, setActiveSection] = useState('overview');
 
 const currentYear = new Date().getFullYear();
 
-const logoGlow =
-'animate-[dashboardLogoPulse_3.4s_ease-in-out_infinite] text-white [text-shadow:0_0_4px_rgba(255,255,255,0.52),0_0_10px_rgba(255,255,255,0.38),0_0_20px_rgba(96,165,250,0.24),0_0_34px_rgba(59,130,246,0.14)]';
-
 useEffect(() => {
 setIsMounted(true);
 loadBookings();
@@ -144,7 +141,10 @@ const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
 const spendLabel = saasSpend || '0';
 const bottleneckLabel = bottleneck || 'unclear workflow stages';
 
-const workflowHealth = Math.max(61, Math.min(94, 88 - Math.floor(teamNumber / 3)));
+const workflowHealth = Math.max(
+61,
+Math.min(94, 88 - Math.floor(teamNumber / 3))
+);
 
 const workflowRisk = Math.max(
 38,
@@ -157,7 +157,11 @@ Math.min(
 )
 );
 
-const productivityLoss = Math.max(1200, Math.round(teamNumber * 420 + spendNumber * 0.35));
+const productivityLoss = Math.max(
+1200,
+Math.round(teamNumber * 420 + spendNumber * 0.35)
+);
+
 const savingsOpportunity = Math.round(productivityLoss * 1.28);
 
 const summary = `EXECUTIVE SUMMARY
@@ -199,7 +203,7 @@ setTimeout(() => {
 setAnalysis(summary);
 setLastScanAt(new Date().toISOString());
 setLoading(false);
-}, 1050);
+}, 1000);
 }
 
 async function saveScan() {
@@ -313,7 +317,10 @@ const metrics = useMemo(() => {
 const teamNumber = Number(teamSize) || 5;
 const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
 
-const workflowHealth = Math.max(61, Math.min(94, 88 - Math.floor(teamNumber / 3)));
+const workflowHealth = Math.max(
+61,
+Math.min(94, 88 - Math.floor(teamNumber / 3))
+);
 
 const workflowRisk = Math.max(
 38,
@@ -326,7 +333,11 @@ Math.min(
 )
 );
 
-const productivityLoss = Math.max(1200, Math.round(teamNumber * 420 + spendNumber * 0.35));
+const productivityLoss = Math.max(
+1200,
+Math.round(teamNumber * 420 + spendNumber * 0.35)
+);
+
 const savingsOpportunity = Math.round(productivityLoss * 1.28);
 
 return {
@@ -381,16 +392,22 @@ if (severity === 'Medium') return 'border-yellow-500/30 bg-yellow-500/10 text-ye
 return 'border-cyan-400/30 bg-cyan-400/10 text-cyan-300';
 }
 
+const topLogoClass =
+'ghostlayerTopLogo inline-block overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.1em] lg:text-[1.1rem] xl:text-[1.16rem]';
+
+const mobileLogoClass =
+'ghostlayerTopLogo inline-block overflow-hidden text-ellipsis whitespace-nowrap text-[0.95rem] font-bold leading-none tracking-[0.1em]';
+
+const footerLogoClass =
+'ghostlayerFooterLogo inline-block overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.1em] lg:text-[1.1rem] xl:text-[1.16rem]';
+
 return (
 <main className="min-h-screen overflow-x-hidden bg-[#05070b] text-white">
 <div className="flex min-h-screen">
 <aside className="hidden w-[236px] shrink-0 border-r border-white/8 bg-[#070a10] md:block lg:w-[248px] xl:w-[260px]">
 <div className="sticky top-0 flex h-screen flex-col overflow-y-auto px-4 py-4">
 <div className="flex items-center justify-between">
-<Link
-href="/"
-className={`block w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.1em] lg:text-[1.1rem] xl:text-[1.16rem] ${logoGlow}`}
->
+<Link href="/" className={topLogoClass}>
 GHOSTLAYER
 </Link>
 </div>
@@ -458,10 +475,7 @@ Book Consultation
 <div className="sticky top-0 z-30 border-b border-white/8 bg-[#05070b]/92 backdrop-blur-xl">
 <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 md:px-8 lg:px-10">
 <div className="min-w-0">
-<Link
-href="/"
-className={`block overflow-hidden text-ellipsis whitespace-nowrap text-[0.95rem] font-bold leading-none tracking-[0.1em] md:hidden ${logoGlow}`}
->
+<Link href="/" className={`md:hidden ${mobileLogoClass}`}>
 GHOSTLAYER
 </Link>
 
@@ -578,9 +592,7 @@ Schedule Operator Review
 
 <div className="grid grid-cols-1 gap-3.5 px-5 py-5 sm:px-6 lg:grid-cols-4 lg:px-6">
 <div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-[18px]">
-<p className="text-[11px] uppercase tracking-[0.22em] text-gray-400">
-Workflow Health
-</p>
+<p className="text-[11px] uppercase tracking-[0.22em] text-gray-400">Workflow Health</p>
 <p className="mt-3 text-[2.15rem] font-bold">{metrics.workflowHealth}%</p>
 <p className="mt-2 text-sm text-gray-400">
 Operational coherence across active workflow stages.
@@ -588,9 +600,7 @@ Operational coherence across active workflow stages.
 </div>
 
 <div className="rounded-3xl border border-cyan-400/20 bg-cyan-400/10 p-[18px]">
-<p className="text-[11px] uppercase tracking-[0.22em] text-cyan-200">
-Risk Score
-</p>
+<p className="text-[11px] uppercase tracking-[0.22em] text-cyan-200">Risk Score</p>
 <p className="mt-3 text-[2.15rem] font-bold">{metrics.workflowRisk}/100</p>
 <p className="mt-2 text-sm text-cyan-50/80">
 Elevated score signals drag, delay, and ownership instability.
@@ -598,9 +608,7 @@ Elevated score signals drag, delay, and ownership instability.
 </div>
 
 <div className="rounded-3xl border border-red-500/20 bg-red-500/10 p-[18px]">
-<p className="text-[11px] uppercase tracking-[0.22em] text-red-200">
-Est. Monthly Loss
-</p>
+<p className="text-[11px] uppercase tracking-[0.22em] text-red-200">Est. Monthly Loss</p>
 <p className="mt-3 break-words text-[2.15rem] font-bold">
 ${metrics.productivityLoss.toLocaleString()}/mo
 </p>
@@ -610,9 +618,7 @@ Estimated productivity loss caused by workflow friction.
 </div>
 
 <div className="rounded-3xl border border-green-500/20 bg-green-500/10 p-[18px]">
-<p className="text-[11px] uppercase tracking-[0.22em] text-green-200">
-Recovery Opportunity
-</p>
+<p className="text-[11px] uppercase tracking-[0.22em] text-green-200">Recovery Opportunity</p>
 <p className="mt-3 break-words text-[2.15rem] font-bold">
 ${metrics.savingsOpportunity.toLocaleString()}/mo
 </p>
@@ -659,9 +665,7 @@ issue.severity
 <p className="mt-3.5 text-sm leading-7 text-gray-300">{issue.impact}</p>
 
 <div className="mt-4 rounded-2xl border border-cyan-400/15 bg-cyan-400/5 p-3.5">
-<p className="text-[10px] uppercase tracking-[0.22em] text-cyan-300">
-Recommended action
-</p>
+<p className="text-[10px] uppercase tracking-[0.22em] text-cyan-300">Recommended action</p>
 <p className="mt-2 text-sm text-gray-200">{issue.action}</p>
 </div>
 </div>
@@ -717,23 +721,23 @@ No bookings found yet. Use the consultation flow to populate this panel.
 </tr>
 </thead>
 <tbody>
-{bookings.slice(0, 5).map((booking, index) => (
+{bookings.slice(0, 5).map((booking, index, arr) => (
 <tr key={booking.id} className="text-gray-200">
-<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
+<td className={`${index !== arr.length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 {booking.invitee_name || 'Unknown'}
 </td>
-<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
+<td className={`${index !== arr.length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 <span className="break-all">
 {booking.invitee_email || 'No email'}
 </span>
 </td>
-<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
+<td className={`${index !== arr.length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 {normalizeEventTypeName(booking.event_type_name)}
 </td>
-<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
+<td className={`${index !== arr.length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 {formatDateTime(booking.scheduled_at)}
 </td>
-<td className={`${index !== bookings.slice(0, 5).length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
+<td className={`${index !== arr.length - 1 ? 'border-b border-white/6' : ''} px-3 py-3.5`}>
 <span className="rounded-full border border-cyan-400/15 bg-cyan-400/8 px-3 py-1 text-xs text-cyan-200">
 {booking.source || 'Not tracked'}
 </span>
@@ -876,12 +880,8 @@ className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_1
 >
 <div className="flex items-center justify-between gap-4">
 <div>
-<h3 className="text-[1.55rem] font-semibold text-cyan-300">
-Workflow Intelligence Summary
-</h3>
-<p className="mt-2 text-sm uppercase tracking-[0.2em] text-gray-500">
-Operational signal
-</p>
+<h3 className="text-[1.55rem] font-semibold text-cyan-300">Workflow Intelligence Summary</h3>
+<p className="mt-2 text-sm uppercase tracking-[0.2em] text-gray-500">Operational signal</p>
 </div>
 <span className="hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-gray-400 sm:block">
 Premium view
@@ -984,10 +984,7 @@ className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black tran
 <footer className="mt-8 border-t border-white/8 pt-8">
 <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
 <div className="min-w-0 max-w-md">
-<Link
-href="/"
-className={`inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.1em] lg:text-[1.1rem] xl:text-[1.16rem] ${logoGlow}`}
->
+<Link href="/" className={footerLogoClass}>
 GHOSTLAYER
 </Link>
 <p className="mt-3 text-sm leading-7 text-gray-400">
@@ -1044,6 +1041,37 @@ rootElement={document.body}
 )}
 
 <style jsx global>{`
+.ghostlayerTopLogo {
+color: #ffffff;
+animation: dashboardLogoPulse 3.4s ease-in-out infinite;
+text-shadow:
+0 0 3px rgba(255, 255, 255, 0.36),
+0 0 8px rgba(255, 255, 255, 0.28),
+0 0 16px rgba(96, 165, 250, 0.16),
+0 0 26px rgba(59, 130, 246, 0.08);
+}
+
+.ghostlayerFooterLogo {
+color: #ffffff;
+background: transparent !important;
+border: 0 !important;
+box-shadow: none !important;
+outline: none !important;
+filter: none !important;
+animation: dashboardLogoPulse 3.4s ease-in-out infinite;
+text-shadow:
+0 0 3px rgba(255, 255, 255, 0.36),
+0 0 8px rgba(255, 255, 255, 0.28),
+0 0 16px rgba(96, 165, 250, 0.16),
+0 0 26px rgba(59, 130, 246, 0.08);
+}
+
+.ghostlayerFooterLogo::before,
+.ghostlayerFooterLogo::after {
+content: none !important;
+display: none !important;
+}
+
 @keyframes dashboardLogoPulse {
 0%,
 100% {
