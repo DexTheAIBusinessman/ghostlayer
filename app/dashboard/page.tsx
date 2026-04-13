@@ -144,10 +144,7 @@ const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
 const spendLabel = saasSpend || '0';
 const bottleneckLabel = bottleneck || 'unclear workflow stages';
 
-const workflowHealth = Math.max(
-61,
-Math.min(94, 88 - Math.floor(teamNumber / 3))
-);
+const workflowHealth = Math.max(61, Math.min(94, 88 - Math.floor(teamNumber / 3)));
 
 const workflowRisk = Math.max(
 38,
@@ -320,10 +317,7 @@ const metrics = useMemo(() => {
 const teamNumber = Number(teamSize) || 5;
 const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
 
-const workflowHealth = Math.max(
-61,
-Math.min(94, 88 - Math.floor(teamNumber / 3))
-);
+const workflowHealth = Math.max(61, Math.min(94, 88 - Math.floor(teamNumber / 3)));
 
 const workflowRisk = Math.max(
 38,

@@ -19,7 +19,7 @@ const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
 const currentYear = new Date().getFullYear();
 
 const logoPulseGlow =
-'animate-[logoPulseGlow_3.2s_ease-in-out_infinite] [text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(255,255,255,0.82),0_0_34px_rgba(96,165,250,0.62),0_0_56px_rgba(59,130,246,0.48)]';
+'animate-[logoPulseGlow_3.2s_ease-in-out_infinite] [text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(255,255,255,0.82),0_0_34px_rgba(96,165,250,0.62),0_0_56px_rgba(59,130,246,0.48)] text-white';
 
 const sparkles = useMemo<Sparkle[]>(
 () => [
@@ -74,7 +74,7 @@ opacity: sparkle.opacity,
 <div className="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-6 md:px-8 lg:px-10">
 <Link
 href="/"
-className={`inline-block text-[1.06rem] font-bold tracking-[0.16em] text-white sm:text-[1.18rem] ${logoPulseGlow}`}
+className={`inline-block text-[1.06rem] font-bold tracking-[0.16em] sm:text-[1.18rem] ${logoPulseGlow}`}
 >
 GHOSTLAYER
 </Link>
@@ -115,15 +115,15 @@ Dashboard
 </div>
 </header>
 
-<section className="relative z-10 px-4 pb-16 pt-12 sm:px-6 sm:pb-20 md:px-8 md:pt-16 lg:px-10 lg:pb-24 xl:px-12">
+<section className="relative z-10 px-4 pb-16 pt-12 sm:px-6 sm:pb-20 md:px-8 md:pt-14 lg:px-10 lg:pb-24 xl:px-12">
 <div className="mx-auto max-w-7xl">
-<div className="grid items-center gap-12 xl:grid-cols-[minmax(0,1.02fr)_minmax(360px,430px)] xl:gap-16">
-<div className="max-w-4xl">
+<div className="grid items-center gap-10 md:gap-12 lg:gap-14 xl:grid-cols-[minmax(0,1.02fr)_minmax(360px,430px)] xl:gap-16">
+<div className="max-w-4xl md:max-w-3xl lg:max-w-4xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
 Business Workflow Intelligence
 </p>
 
-<h1 className="hero-glow mt-5 max-w-4xl text-4xl font-bold leading-[1.04] text-white sm:text-5xl lg:text-6xl xl:text-[4.15rem]">
+<h1 className="hero-glow mt-5 max-w-4xl text-4xl font-bold leading-[1.04] text-white sm:text-5xl md:max-w-3xl md:text-[3.15rem] md:leading-[1.02] lg:max-w-4xl lg:text-6xl xl:text-[4.15rem]">
 Find Workflow Friction
 <br />
 Before It Slows
@@ -161,8 +161,8 @@ Explore Live Dashboard
 </div>
 </div>
 
-<div className="w-full">
-<div className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.34)] backdrop-blur-xl sm:p-5">
+<div className="w-full md:max-w-[620px] md:justify-self-center xl:max-w-none xl:justify-self-auto">
+<div className="rounded-[28px] border border-white/10 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-4 shadow-[0_18px_60px_rgba(0,0,0,0.34)] backdrop-blur-xl sm:p-5 md:p-6">
 <div className="flex items-center justify-between gap-3 rounded-2xl border border-white/8 bg-black/20 px-4 py-3">
 <div>
 <p className="text-[10px] uppercase tracking-[0.24em] text-gray-400">
@@ -232,7 +232,7 @@ Proof Panel
 </section>
 
 <section id="how-it-works" className="relative z-10 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-<div className="mx-auto max-w-7xl rounded-[32px] border border-white/8 bg-white/[0.03] p-6 backdrop-blur-sm shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-8">
+<div className="mx-auto max-w-7xl rounded-[32px] border border-white/8 bg-white/[0.03] p-6 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-8">
 <div className="max-w-3xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
 How It Works
@@ -275,7 +275,7 @@ Prioritize what to fix first, tighten operations, and reduce waste without guess
 </section>
 
 <section id="who-it-helps" className="relative z-10 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-<div className="mx-auto max-w-7xl rounded-[32px] border border-white/8 bg-white/[0.03] p-6 backdrop-blur-sm shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-8">
+<div className="mx-auto max-w-7xl rounded-[32px] border border-white/8 bg-white/[0.03] p-6 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-8">
 <div className="max-w-3xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
 Who It Helps
@@ -319,7 +319,7 @@ Get a simple operational signal without clutter or guesswork.
 </section>
 
 <section id="results" className="relative z-10 px-4 py-8 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-<div className="mx-auto max-w-7xl rounded-[32px] border border-white/8 bg-white/[0.03] p-6 backdrop-blur-sm shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-8">
+<div className="mx-auto max-w-7xl rounded-[32px] border border-white/8 bg-white/[0.03] p-6 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-8">
 <div className="max-w-3xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
 Results
@@ -366,7 +366,7 @@ Potential monthly gain if friction and repeated effort are reduced.
 </section>
 
 <section id="next-step" className="relative z-10 px-4 py-8 pb-16 sm:px-6 md:px-8 lg:px-10 lg:pb-24 xl:px-12">
-<div className="mx-auto max-w-7xl rounded-[32px] border border-cyan-400/12 bg-white/[0.03] p-6 backdrop-blur-sm shadow-[0_10px_40px_rgba(0,0,0,0.18)] sm:p-8">
+<div className="mx-auto max-w-7xl rounded-[32px] border border-cyan-400/12 bg-white/[0.03] p-6 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-8">
 <div className="grid items-center gap-8 xl:grid-cols-[minmax(0,1fr)_auto]">
 <div className="max-w-3xl">
 <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
@@ -406,7 +406,7 @@ Open Live Dashboard
 <div className="max-w-md">
 <Link
 href="/"
-className={`inline-block text-[1.2rem] font-bold tracking-[0.14em] text-white sm:text-[1.3rem] ${logoPulseGlow}`}
+className={`inline-block text-[1.2rem] font-bold tracking-[0.14em] sm:text-[1.3rem] ${logoPulseGlow}`}
 >
 GHOSTLAYER
 </Link>
@@ -635,3 +635,4 @@ transform: translateX(-4%) translateY(8px) scaleX(1.08);
 </main>
 );
 }
+
