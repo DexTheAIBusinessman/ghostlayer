@@ -56,7 +56,7 @@ const [activeSection, setActiveSection] = useState('overview');
 const currentYear = new Date().getFullYear();
 
 const logoGlow =
-'animate-[dashboardLogoPulse_3.4s_ease-in-out_infinite] text-white [text-shadow:0_0_5px_rgba(255,255,255,0.68),0_0_12px_rgba(255,255,255,0.52),0_0_24px_rgba(96,165,250,0.34),0_0_40px_rgba(59,130,246,0.2)]';
+'animate-[dashboardLogoPulse_3.4s_ease-in-out_infinite] text-white [text-shadow:0_0_4px_rgba(255,255,255,0.52),0_0_10px_rgba(255,255,255,0.38),0_0_20px_rgba(96,165,250,0.24),0_0_34px_rgba(59,130,246,0.14)]';
 
 useEffect(() => {
 setIsMounted(true);
@@ -144,10 +144,7 @@ const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
 const spendLabel = saasSpend || '0';
 const bottleneckLabel = bottleneck || 'unclear workflow stages';
 
-const workflowHealth = Math.max(
-61,
-Math.min(94, 88 - Math.floor(teamNumber / 3))
-);
+const workflowHealth = Math.max(61, Math.min(94, 88 - Math.floor(teamNumber / 3)));
 
 const workflowRisk = Math.max(
 38,
@@ -160,11 +157,7 @@ Math.min(
 )
 );
 
-const productivityLoss = Math.max(
-1200,
-Math.round(teamNumber * 420 + spendNumber * 0.35)
-);
-
+const productivityLoss = Math.max(1200, Math.round(teamNumber * 420 + spendNumber * 0.35));
 const savingsOpportunity = Math.round(productivityLoss * 1.28);
 
 const summary = `EXECUTIVE SUMMARY
@@ -320,10 +313,7 @@ const metrics = useMemo(() => {
 const teamNumber = Number(teamSize) || 5;
 const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
 
-const workflowHealth = Math.max(
-61,
-Math.min(94, 88 - Math.floor(teamNumber / 3))
-);
+const workflowHealth = Math.max(61, Math.min(94, 88 - Math.floor(teamNumber / 3)));
 
 const workflowRisk = Math.max(
 38,
@@ -336,11 +326,7 @@ Math.min(
 )
 );
 
-const productivityLoss = Math.max(
-1200,
-Math.round(teamNumber * 420 + spendNumber * 0.35)
-);
-
+const productivityLoss = Math.max(1200, Math.round(teamNumber * 420 + spendNumber * 0.35));
 const savingsOpportunity = Math.round(productivityLoss * 1.28);
 
 return {
@@ -391,9 +377,7 @@ const sideNav = [
 
 function severityClasses(severity: IssueSeverity) {
 if (severity === 'High') return 'border-red-500/30 bg-red-500/10 text-red-300';
-if (severity === 'Medium') {
-return 'border-yellow-500/30 bg-yellow-500/10 text-yellow-300';
-}
+if (severity === 'Medium') return 'border-yellow-500/30 bg-yellow-500/10 text-yellow-300';
 return 'border-cyan-400/30 bg-cyan-400/10 text-cyan-300';
 }
 
@@ -412,9 +396,7 @@ GHOSTLAYER
 </div>
 
 <div className="mt-5 rounded-2xl border border-white/8 bg-white/[0.025] p-3.5">
-<p className="text-[10px] uppercase tracking-[0.24em] text-gray-500">
-Workspace
-</p>
+<p className="text-[10px] uppercase tracking-[0.24em] text-gray-500">Workspace</p>
 <p className="mt-2 text-sm font-medium text-white">Operations Intelligence</p>
 <p className="mt-1 text-xs leading-6 text-gray-400">
 Command surface for workflow drag, risk, and execution clarity.
@@ -443,23 +425,17 @@ isActive
 
 <div className="mt-5 grid gap-3">
 <div className="rounded-2xl border border-white/8 bg-black/22 p-3">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
-Last scan
-</p>
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Last scan</p>
 <p className="mt-2 text-sm text-white">{formatRelativeTime(lastScanAt)}</p>
 </div>
 <div className="rounded-2xl border border-white/8 bg-black/22 p-3">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
-Bookings sync
-</p>
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Bookings sync</p>
 <p className="mt-2 text-sm text-white">
 {bookingsLoading ? 'Refreshing demo feed...' : 'Demo feed active'}
 </p>
 </div>
 <div className="rounded-2xl border border-white/8 bg-black/22 p-3">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
-Environment
-</p>
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Environment</p>
 <p className="mt-2 text-sm text-emerald-300">Live</p>
 </div>
 </div>
@@ -490,9 +466,7 @@ GHOSTLAYER
 </Link>
 
 <div className="hidden md:flex md:items-center md:gap-3">
-<p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">
-Dashboard
-</p>
+<p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">Dashboard</p>
 <span className="rounded-full border border-cyan-400/18 bg-cyan-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-200">
 Demo Workspace
 </span>
@@ -695,7 +669,7 @@ Recommended action
 </div>
 </section>
 
-<section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.12fr_0.88fr]">
+<section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.08fr_0.92fr] xl:items-start">
 <div
 id="bookings"
 className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
@@ -730,7 +704,8 @@ No bookings found yet. Use the consultation flow to populate this panel.
 </p>
 ) : (
 <>
-<div className="mt-5 hidden overflow-x-auto xl:block">
+<div className="mt-5 hidden xl:block">
+<div className="overflow-hidden rounded-2xl border border-white/8 bg-[#0a0d14]">
 <table className="min-w-full border-separate border-spacing-0 text-left text-sm">
 <thead>
 <tr className="text-gray-400">
@@ -742,7 +717,7 @@ No bookings found yet. Use the consultation flow to populate this panel.
 </tr>
 </thead>
 <tbody>
-{bookings.map((booking) => (
+{bookings.slice(0, 5).map((booking) => (
 <tr key={booking.id} className="text-gray-200">
 <td className="border-b border-white/6 px-3 py-3.5">
 {booking.invitee_name || 'Unknown'}
@@ -768,9 +743,10 @@ No bookings found yet. Use the consultation flow to populate this panel.
 </tbody>
 </table>
 </div>
+</div>
 
 <div className="mt-5 grid gap-3.5 xl:hidden">
-{bookings.map((booking) => (
+{bookings.slice(0, 5).map((booking) => (
 <div
 key={booking.id}
 className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4"
@@ -893,7 +869,7 @@ Teams may be re-entering the same status layer across tools and stages.
 </div>
 </section>
 
-<section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[0.96fr_1.04fr]">
+<section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-2 xl:items-start">
 <section
 id="intelligence-summary"
 className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
@@ -917,7 +893,7 @@ This summary isolates where drag is forming, where cost exposure is building,
 and where operator attention should concentrate first.
 </p>
 
-<pre className="mt-4 overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/8 bg-[#0a0d14] p-4 text-sm leading-7 text-gray-300">
+<pre className="mt-4 min-h-[126px] overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/8 bg-[#0a0d14] p-4 text-sm leading-7 text-gray-300">
 {analysis}
 </pre>
 </section>
@@ -967,7 +943,7 @@ onClick={runScan}
 disabled={loading}
 className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
 >
-{loading ? 'Running scan...' : 'Run Business Scan'}
+{loading ? 'Running scan...' : 'Run Workflow Scan'}
 </button>
 
 <button
@@ -1002,9 +978,7 @@ className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black tran
 {feedbackLoading ? 'Submitting...' : 'Submit Feedback'}
 </button>
 
-{feedbackMessage && (
-<p className="text-sm text-cyan-300">{feedbackMessage}</p>
-)}
+{feedbackMessage && <p className="text-sm text-cyan-300">{feedbackMessage}</p>}
 </div>
 </section>
 
@@ -1054,8 +1028,7 @@ Terms
 </div>
 
 <div className="mt-6 border-t border-white/8 pt-6 text-sm text-gray-500">
-© {currentYear} Ghostlayer. Business workflow intelligence for clearer operations
-and faster execution.
+© {currentYear} Ghostlayer. Business workflow intelligence for clearer operations and faster execution.
 </div>
 </footer>
 </div>
@@ -1077,53 +1050,52 @@ rootElement={document.body}
 100% {
 opacity: 0.9;
 text-shadow:
-0 0 4px rgba(255, 255, 255, 0.44),
-0 0 10px rgba(255, 255, 255, 0.36),
-0 0 20px rgba(96, 165, 250, 0.24),
-0 0 32px rgba(59, 130, 246, 0.14);
+0 0 3px rgba(255, 255, 255, 0.36),
+0 0 8px rgba(255, 255, 255, 0.28),
+0 0 16px rgba(96, 165, 250, 0.16),
+0 0 26px rgba(59, 130, 246, 0.08);
 }
 50% {
 opacity: 1;
 text-shadow:
-0 0 8px rgba(255, 255, 255, 0.86),
-0 0 18px rgba(255, 255, 255, 0.72),
-0 0 30px rgba(96, 165, 250, 0.5),
-0 0 48px rgba(59, 130, 246, 0.32),
-0 0 70px rgba(147, 51, 234, 0.22);
+0 0 6px rgba(255, 255, 255, 0.7),
+0 0 14px rgba(255, 255, 255, 0.52),
+0 0 24px rgba(96, 165, 250, 0.34),
+0 0 38px rgba(59, 130, 246, 0.18),
+0 0 54px rgba(147, 51, 234, 0.1);
 }
 }
 
 .dashboardHeadlineGlow {
-animation: dashboardHeadlinePulse 5.8s ease-in-out infinite;
+animation: dashboardHeadlinePulse 6.2s ease-in-out infinite;
 text-shadow:
-0 0 6px rgba(255, 255, 255, 0.34),
-0 0 12px rgba(255, 255, 255, 0.24),
-0 0 22px rgba(96, 165, 250, 0.2),
-0 0 36px rgba(59, 130, 246, 0.14);
+0 0 4px rgba(255, 255, 255, 0.22),
+0 0 10px rgba(255, 255, 255, 0.16),
+0 0 18px rgba(96, 165, 250, 0.12),
+0 0 28px rgba(59, 130, 246, 0.08);
 }
 
 @keyframes dashboardHeadlinePulse {
 0%,
 100% {
-opacity: 0.96;
+opacity: 0.97;
 text-shadow:
-0 0 4px rgba(255, 255, 255, 0.26),
-0 0 10px rgba(255, 255, 255, 0.18),
-0 0 18px rgba(96, 165, 250, 0.14),
-0 0 28px rgba(59, 130, 246, 0.1);
+0 0 3px rgba(255, 255, 255, 0.2),
+0 0 8px rgba(255, 255, 255, 0.14),
+0 0 14px rgba(96, 165, 250, 0.1),
+0 0 22px rgba(59, 130, 246, 0.06);
 }
 50% {
 opacity: 1;
 text-shadow:
-0 0 8px rgba(255, 255, 255, 0.58),
-0 0 16px rgba(255, 255, 255, 0.42),
-0 0 30px rgba(96, 165, 250, 0.34),
-0 0 48px rgba(59, 130, 246, 0.22),
-0 0 70px rgba(147, 51, 234, 0.14);
+0 0 6px rgba(255, 255, 255, 0.44),
+0 0 12px rgba(255, 255, 255, 0.28),
+0 0 22px rgba(96, 165, 250, 0.18),
+0 0 34px rgba(59, 130, 246, 0.1),
+0 0 46px rgba(147, 51, 234, 0.06);
 }
 }
 `}</style>
 </main>
 );
 }
-
