@@ -56,7 +56,7 @@ const [activeSection, setActiveSection] = useState('overview');
 const currentYear = new Date().getFullYear();
 
 const logoGlow =
-'animate-[dashboardGhostGlow_3s_ease-in-out_infinite] text-white [text-shadow:0_0_10px_rgba(255,255,255,0.96),0_0_22px_rgba(255,255,255,0.92),0_0_42px_rgba(96,165,250,0.9),0_0_72px_rgba(59,130,246,0.84),0_0_116px_rgba(147,51,234,0.76)]';
+'animate-[dashboardGhostGlow_3s_ease-in-out_infinite] text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.95)] [text-shadow:0_0_10px_rgba(255,255,255,1),0_0_22px_rgba(255,255,255,0.95),0_0_42px_rgba(96,165,250,0.92),0_0_72px_rgba(59,130,246,0.86),0_0_116px_rgba(147,51,234,0.8)]';
 
 useEffect(() => {
 setIsMounted(true);
@@ -144,10 +144,7 @@ const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
 const spendLabel = saasSpend || '0';
 const bottleneckLabel = bottleneck || 'unclear workflow stages';
 
-const workflowHealth = Math.max(
-61,
-Math.min(94, 88 - Math.floor(teamNumber / 3))
-);
+const workflowHealth = Math.max(61, Math.min(94, 88 - Math.floor(teamNumber / 3)));
 
 const workflowRisk = Math.max(
 38,
@@ -320,10 +317,7 @@ const metrics = useMemo(() => {
 const teamNumber = Number(teamSize) || 5;
 const spendNumber = Number(saasSpend.replace(/[^0-9.]/g, '')) || 0;
 
-const workflowHealth = Math.max(
-61,
-Math.min(94, 88 - Math.floor(teamNumber / 3))
-);
+const workflowHealth = Math.max(61, Math.min(94, 88 - Math.floor(teamNumber / 3)));
 
 const workflowRisk = Math.max(
 38,
@@ -1010,9 +1004,7 @@ className="rounded-2xl bg-white px-5 py-3 text-sm font-semibold text-black trans
 {feedbackLoading ? 'Submitting...' : 'Submit Feedback'}
 </button>
 
-{feedbackMessage && (
-<p className="text-sm text-cyan-300">{feedbackMessage}</p>
-)}
+{feedbackMessage && <p className="text-sm text-cyan-300">{feedbackMessage}</p>}
 </div>
 </section>
 
@@ -1083,25 +1075,27 @@ rootElement={document.body}
 @keyframes dashboardGhostGlow {
 0%,
 100% {
-opacity: 0.9;
+opacity: 0.96;
+color: #ffffff;
 text-shadow:
-0 0 7px rgba(255, 255, 255, 0.62),
-0 0 16px rgba(255, 255, 255, 0.56),
-0 0 30px rgba(96, 165, 250, 0.56),
-0 0 50px rgba(59, 130, 246, 0.44),
-0 0 76px rgba(147, 51, 234, 0.28);
-filter: brightness(1);
+0 0 10px rgba(255, 255, 255, 0.95),
+0 0 22px rgba(255, 255, 255, 0.9),
+0 0 38px rgba(96, 165, 250, 0.78),
+0 0 66px rgba(59, 130, 246, 0.68),
+0 0 104px rgba(147, 51, 234, 0.5);
+filter: brightness(1.02);
 }
 
 50% {
 opacity: 1;
+color: #ffffff;
 text-shadow:
 0 0 14px rgba(255, 255, 255, 1),
 0 0 28px rgba(255, 255, 255, 0.98),
-0 0 52px rgba(96, 165, 250, 1),
-0 0 90px rgba(59, 130, 246, 0.98),
-0 0 138px rgba(147, 51, 234, 0.94);
-filter: brightness(1.22);
+0 0 52px rgba(96, 165, 250, 0.96),
+0 0 90px rgba(59, 130, 246, 0.9),
+0 0 138px rgba(147, 51, 234, 0.72);
+filter: brightness(1.12);
 }
 }
 `}</style>
