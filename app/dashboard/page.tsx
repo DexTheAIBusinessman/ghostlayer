@@ -392,23 +392,14 @@ if (severity === 'Medium') return 'border-yellow-500/30 bg-yellow-500/10 text-ye
 return 'border-cyan-400/30 bg-cyan-400/10 text-cyan-300';
 }
 
-const topLogoClass =
-'ghostlayerTopLogo inline-block overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.1em] lg:text-[1.1rem] xl:text-[1.16rem]';
-
-const mobileLogoClass =
-'ghostlayerTopLogo inline-block overflow-hidden text-ellipsis whitespace-nowrap text-[0.95rem] font-bold leading-none tracking-[0.1em]';
-
-const footerLogoClass =
-'ghostlayerFooterLogo inline-block overflow-hidden text-ellipsis whitespace-nowrap text-[1.02rem] font-bold leading-none tracking-[0.1em] lg:text-[1.1rem] xl:text-[1.16rem]';
-
 return (
 <main className="min-h-screen overflow-x-hidden bg-[#05070b] text-white">
 <div className="flex min-h-screen">
 <aside className="hidden w-[236px] shrink-0 border-r border-white/8 bg-[#070a10] md:block lg:w-[248px] xl:w-[260px]">
 <div className="sticky top-0 flex h-screen flex-col overflow-y-auto px-4 py-4">
 <div className="flex items-center justify-between">
-<Link href="/" className={topLogoClass}>
-GHOSTLAYER
+<Link href="/" className="ghostlayerBrandLink" aria-label="Ghostlayer home">
+<span className="ghostlayerBrandText">GHOSTLAYER</span>
 </Link>
 </div>
 
@@ -475,8 +466,8 @@ Book Consultation
 <div className="sticky top-0 z-30 border-b border-white/8 bg-[#05070b]/92 backdrop-blur-xl">
 <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 md:px-8 lg:px-10">
 <div className="min-w-0">
-<Link href="/" className={`md:hidden ${mobileLogoClass}`}>
-GHOSTLAYER
+<Link href="/" className="ghostlayerBrandLink md:hidden" aria-label="Ghostlayer home">
+<span className="ghostlayerBrandText text-[0.95rem]">GHOSTLAYER</span>
 </Link>
 
 <div className="hidden md:flex md:items-center md:gap-3">
@@ -673,11 +664,12 @@ issue.severity
 </div>
 </section>
 
-<section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.08fr_0.92fr] xl:items-start">
+<section className="mt-6 flex flex-col gap-6 xl:flex-row xl:items-start">
 <div
 id="bookings"
-className="self-start rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
+className="w-full self-start xl:w-[54%]"
 >
+<div className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6">
 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 <div className="min-w-0">
 <h3 className="text-[1.55rem] font-semibold">Recent Bookings</h3>
@@ -785,8 +777,9 @@ className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4"
 </>
 )}
 </div>
+</div>
 
-<div className="grid gap-6">
+<div className="grid w-full gap-6 self-start xl:w-[46%]">
 <section
 id="delay-hotspots"
 className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
@@ -984,8 +977,8 @@ className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black tran
 <footer className="mt-8 border-t border-white/8 pt-8">
 <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
 <div className="min-w-0 max-w-md">
-<Link href="/" className={footerLogoClass}>
-GHOSTLAYER
+<Link href="/" className="ghostlayerFooterLink" aria-label="Ghostlayer home">
+<span className="ghostlayerFooterText">GHOSTLAYER</span>
 </Link>
 <p className="mt-3 text-sm leading-7 text-gray-400">
 Business workflow intelligence for faster execution.
@@ -1041,8 +1034,47 @@ rootElement={document.body}
 )}
 
 <style jsx global>{`
-.ghostlayerTopLogo {
-color: #ffffff;
+.ghostlayerBrandLink,
+.ghostlayerBrandLink:hover,
+.ghostlayerBrandLink:focus,
+.ghostlayerBrandLink:active,
+.ghostlayerFooterLink,
+.ghostlayerFooterLink:hover,
+.ghostlayerFooterLink:focus,
+.ghostlayerFooterLink:active {
+display: inline-flex !important;
+align-items: center !important;
+background: transparent !important;
+border: 0 !important;
+box-shadow: none !important;
+outline: none !important;
+text-decoration: none !important;
+padding: 0 !important;
+border-radius: 0 !important;
+filter: none !important;
+}
+
+.ghostlayerBrandLink::before,
+.ghostlayerBrandLink::after,
+.ghostlayerFooterLink::before,
+.ghostlayerFooterLink::after {
+content: none !important;
+display: none !important;
+}
+
+.ghostlayerBrandText,
+.ghostlayerFooterText {
+color: #ffffff !important;
+display: inline-block !important;
+background: transparent !important;
+border: 0 !important;
+box-shadow: none !important;
+outline: none !important;
+text-decoration: none !important;
+filter: none !important;
+font-weight: 700 !important;
+letter-spacing: 0.1em !important;
+line-height: 1 !important;
 animation: dashboardLogoPulse 3.4s ease-in-out infinite;
 text-shadow:
 0 0 3px rgba(255, 255, 255, 0.36),
@@ -1051,25 +1083,13 @@ text-shadow:
 0 0 26px rgba(59, 130, 246, 0.08);
 }
 
-.ghostlayerFooterLogo {
-color: #ffffff;
+.ghostlayerBrandLink *,
+.ghostlayerFooterLink * {
 background: transparent !important;
 border: 0 !important;
 box-shadow: none !important;
 outline: none !important;
 filter: none !important;
-animation: dashboardLogoPulse 3.4s ease-in-out infinite;
-text-shadow:
-0 0 3px rgba(255, 255, 255, 0.36),
-0 0 8px rgba(255, 255, 255, 0.28),
-0 0 16px rgba(96, 165, 250, 0.16),
-0 0 26px rgba(59, 130, 246, 0.08);
-}
-
-.ghostlayerFooterLogo::before,
-.ghostlayerFooterLogo::after {
-content: none !important;
-display: none !important;
 }
 
 @keyframes dashboardLogoPulse {
