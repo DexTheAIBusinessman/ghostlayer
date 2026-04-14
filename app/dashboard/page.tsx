@@ -12,69 +12,150 @@ type SectionId =
 | 'delay-hotspots'
 | 'broken-handoffs'
 | 'duplicate-work'
-| 'activity-feed'
+| 'activity'
 | 'feedback';
 
 type ActivityItem = {
 id: number;
 time: string;
-title: string;
+label: string;
 detail: string;
-tone: 'cyan' | 'red' | 'yellow' | 'green';
+tone: 'cyan' | 'green' | 'yellow' | 'red';
 };
 
-function AnimatedNumber({
-value,
-duration = 900,
-prefix = '',
-suffix = '',
-}: {
-value: number;
-duration?: number;
-prefix?: string;
-suffix?: string;
-}) {
-const [display, setDisplay] = useState(0);
-
-useEffect(() => {
-let start = 0;
-const startTime = performance.now();
-
-const tick = (now: number) => {
-const progress = Math.min((now - startTime) / duration, 1);
-const eased = 1 - Math.pow(1 - progress, 3);
-const next = Math.round(start + (value - start) * eased);
-setDisplay(next);
-if (progress < 1) requestAnimationFrame(tick);
+type BookingItem = {
+id: number;
+name: string;
+email: string;
+type: string;
+scheduled: string;
+source: string;
+status: 'confirmed' | 'pending';
 };
 
-requestAnimationFrame(tick);
-}, [value, duration]);
+function formatCurrency(value: number) {
+return `$${value.toLocaleString()}/mo`;
+}
 
-return (
-<span>
-{prefix}
-{display.toLocaleString()}
-{suffix}
-</span>
-);
+function formatClock(date: Date) {
+return date.toLocaleTimeString([], {
+hour: 'numeric',
+minute: '2-digit',
+});
+}
+
+function formatShortDate(date: Date) {
+return date.toLocaleString([], {
+month: 'numeric',
+day: 'numeric',
+year: 'numeric',
+hour: 'numeric',
+minute: '2-digit',
+});
 }
 
 export default function DashboardPage() {
 const [activeSection, setActiveSection] = useState<SectionId>('overview');
-const [companyName, setCompanyName] = useState('');
-const [teamSize, setTeamSize] = useState('');
-const [workflowBottleneck, setWorkflowBottleneck] = useState('');
-const [costImpact, setCostImpact] = useState('');
-const [feedback, setFeedback] = useState('');
+
+const [companyName, setCompanyName] = useState('Ghostlayer Demo Co.');
+const [teamSize, setTeamSize] = useState('18');
+const [workflowBottleneck, setWorkflowBottleneck] = useState('Approval and delivery handoff');
+const [costImpact, setCostImpact] = useState('2100');
+
 const [isScanning, setIsScanning] = useState(false);
 const [scanProgress, setScanProgress] = useState(0);
-const [summary, setSummary] = useState(
-'Run a workflow scan to generate an operational intelligence summary.'
-);
-const [lastScanLabel, setLastScanLabel] = useState('Updated just now');
-const [bookingSyncLabel, setBookingSyncLabel] = useState('Demo feed active');
-const [activityIndex, setActivityIndex] = useState(0);
+const [lastScanAt, setLastScanAt] = useState<Date | null>(new Date());
+const [feedback, setFeedback] = useState('');
+
+const [workflowHealth, setWorkflowHealth] = useState(87);
+const [riskScore, setRiskScore] = useState(52);
+const [monthlyLoss, setMonthlyLoss] = useState(2100);
+const [recoveryOpportunity, setRecoveryOpportunity] = useState(2688);
+
+const [bookings, setBookings] = useState<BookingItem[]>([
+{
+id: 1,
+name: 'Dexter Test 5',
+email: 'stevensdexter17@gmail.com',
+type: 'Business Consultation',
+scheduled: '5/22/2026, 1:00 PM',
+source: 'calendly',
+status: 'confirmed',
+},
+{
+id: 2,
+name: 'Ariana Lewis',
+email: 'ops@northbridge.io',
+type: 'Workflow Review',
+scheduled: '5/23/2026, 11:30 AM',
+source: 'website',
+status: 'pending',
+},
+{
+id: 3,
+name: 'Mark Chen',
+email: 'founder@fieldscope.co',
+type: 'Business Consultation',
+scheduled: '5/24/2026, 9:00 AM',
+source: 'calendly',
+status: 'confirmed',
+},
+{
+id: 4,
+name: 'Talia Brooks',
+email: 'team@arcpilot.ai',
+type: 'Business Consultation',
+scheduled: '5/25/2026, 2:15 PM',
+source: 'referral',
+status: 'confirmed',
+},
+]);
+
+const [activity, setActivity] = useState<ActivityItem[]>([
+{
+id: 1,
+time: formatClock(new Date()),
+label: 'Signal recalculated',
+detail: 'Risk score adjusted after approval-lane drift.',
+tone: 'cyan',
+},
+{
+id: 2,
+time: formatClock(new Date(Date.now() - 1000 * 60 * 8)),
+label: 'Booking sync active',
+detail: 'New consultation entered the demand layer.',
+tone: 'green',
+},
+{
+id: 3,
+time: formatClock(new Date(Date.now() - 1000 * 60 * 15)),
+label: 'Context loss flagged',
+detail: 'Sales → Delivery payload missing execution notes.',
+tone: 'red',
+},
+]);
+
+const [summary, setSummary] = useState(`EXECUTIVE SUMMARY
+
+Ghostlayer Demo Co. is showing operational drag across its workflow layer.
+
+PRIMARY SIGNALS
+- Workflow bottleneck: Approval and delivery handoff
+- Team size: 18
+- Monthly operational cost impacted: $2,100/mo
+- Repeated manual reporting is increasing duplicate effort
+- Critical context is degrading between handoff stages
+- Consultation demand remains healthy, but intake-to-execution continuity is under pressure
+
+OPERATOR RECOMMENDATIONS
+1. Reduce approval drag in the primary workflow lane
+2. Standardize handoff payloads between teams
+3. Collapse repeated reporting into one source of truth
+4. Assign one clear owner to each transition stage
+5. Review booking load and intake flow for execution pressure
+
+OUTLOOK
+If current friction is reduced, workflow health, throughput stability, and recovery opportunity should improve.`);
 
 const navItems: { id: SectionId; label: string }[] = [
 { id: 'overview', label: 'Overview' },
@@ -85,42 +166,23 @@ const navItems: { id: SectionId; label: string }[] = [
 { id: 'delay-hotspots', label: 'Delay Hotspots' },
 { id: 'broken-handoffs', label: 'Broken Handoffs' },
 { id: 'duplicate-work', label: 'Duplicate Work' },
-{ id: 'activity-feed', label: 'Activity Feed' },
-];
-
-const activityFeed: ActivityItem[] = [
-{
-id: 1,
-time: '12s ago',
-title: 'Approval queue threshold crossed',
-detail: 'Ghostlayer detected review load increasing across the intake-to-approval lane.',
-tone: 'red',
-},
-{
-id: 2,
-time: '41s ago',
-title: 'Booking sync refreshed',
-detail: 'Latest consultation event entered the dashboard demand layer.',
-tone: 'green',
-},
-{
-id: 3,
-time: '1m ago',
-title: 'Duplicate reporting signal raised',
-detail: 'Status updates appear to be logged across multiple surfaces.',
-tone: 'cyan',
-},
-{
-id: 4,
-time: '2m ago',
-title: 'Handoff context degradation detected',
-detail: 'Execution context appears incomplete between sales and delivery.',
-tone: 'yellow',
-},
+{ id: 'activity', label: 'Live Activity' },
 ];
 
 useEffect(() => {
-const ids = navItems.map((item) => item.id);
+const ids = [
+'overview',
+'priority-issues',
+'intelligence-summary',
+'run-scan',
+'bookings',
+'delay-hotspots',
+'broken-handoffs',
+'duplicate-work',
+'activity',
+'feedback',
+];
+
 const observer = new IntersectionObserver(
 (entries) => {
 const visible = entries
@@ -146,42 +208,84 @@ return () => observer.disconnect();
 }, []);
 
 useEffect(() => {
-const interval = setInterval(() => {
-setActivityIndex((prev) => (prev + 1) % activityFeed.length);
-}, 3200);
+const interval = window.setInterval(() => {
+setWorkflowHealth((v) => Math.max(78, Math.min(92, v + (Math.random() > 0.5 ? 1 : -1))));
+setRiskScore((v) => Math.max(43, Math.min(67, v + (Math.random() > 0.5 ? 1 : -1))));
+setMonthlyLoss((v) =>
+Math.max(1800, Math.min(3400, v + Math.round((Math.random() - 0.5) * 120)))
+);
+setRecoveryOpportunity((v) =>
+Math.max(2200, Math.min(4200, v + Math.round((Math.random() - 0.5) * 160)))
+);
+}, 4500);
 
-return () => clearInterval(interval);
-}, [activityFeed.length]);
+return () => window.clearInterval(interval);
+}, []);
+
+useEffect(() => {
+const interval = window.setInterval(() => {
+const tones: ActivityItem['tone'][] = ['cyan', 'green', 'yellow', 'red'];
+const labels = [
+'Signal recalculated',
+'Operator view refreshed',
+'Booking sync active',
+'Throughput drift detected',
+'Context gap flagged',
+'Status overlap reduced',
+];
+const details = [
+'Risk score adjusted after workflow drift.',
+'Summary cards refreshed with the latest scan state.',
+'New consultation entered the demand layer.',
+'Approval lane wait time ticked up in the current cycle.',
+'Handoff packet is missing execution notes.',
+'Manual progress updates consolidated into one surface.',
+];
+
+setActivity((prev) => [
+{
+id: Date.now(),
+time: formatClock(new Date()),
+label: labels[Math.floor(Math.random() * labels.length)],
+detail: details[Math.floor(Math.random() * details.length)],
+tone: tones[Math.floor(Math.random() * tones.length)],
+},
+...prev.slice(0, 5),
+]);
+}, 7000);
+
+return () => window.clearInterval(interval);
+}, []);
 
 useEffect(() => {
 if (!isScanning) return;
 
-setScanProgress(0);
-const startedAt = Date.now();
+if (scanProgress >= 100) {
+const team = Number(teamSize) || 18;
+const cost = Number(costImpact.replace(/[^0-9]/g, '')) || 2100;
+const risk = Math.max(44, Math.min(81, 42 + Math.floor(team / 2) + (workflowBottleneck ? 8 : 0)));
+const health = Math.max(72, Math.min(93, 94 - Math.floor(team / 4)));
+const loss = Math.max(1400, Math.round(cost || 2100));
+const recovery = Math.round(loss * 1.28);
 
-const interval = setInterval(() => {
-const elapsed = Date.now() - startedAt;
-const progress = Math.min(100, Math.round((elapsed / 2200) * 100));
-setScanProgress(progress);
-
-if (progress >= 100) {
-clearInterval(interval);
-
-const company = companyName || 'Unknown company';
-const team = teamSize || 'Not provided';
-const bottleneck = workflowBottleneck || 'approval and handoff drag';
-const impact = costImpact || '$2,100/mo';
+setWorkflowHealth(health);
+setRiskScore(risk);
+setMonthlyLoss(loss);
+setRecoveryOpportunity(recovery);
+setLastScanAt(new Date());
 
 setSummary(`EXECUTIVE SUMMARY
 
-${company} is showing operational drag across the workflow layer.
+${companyName || 'Unknown company'} is showing operational drag across its workflow layer.
 
 PRIMARY SIGNALS
-- Workflow bottleneck: ${bottleneck}
-- Team size: ${team}
-- Monthly operational cost impacted: ${impact}
+- Workflow bottleneck: ${workflowBottleneck || 'Approval and delivery handoff'}
+- Team size: ${teamSize || 'Not provided'}
+- Monthly operational cost impacted: ${formatCurrency(loss)}
 - Repeated manual reporting is increasing duplicate effort
 - Critical context is degrading between handoff stages
+- Workflow risk is currently elevated to ${risk}/100
+- Demand flow remains healthy, but downstream execution continuity is under pressure
 
 OPERATOR RECOMMENDATIONS
 1. Reduce approval drag in the primary workflow lane
@@ -191,22 +295,32 @@ OPERATOR RECOMMENDATIONS
 5. Review booking load and intake flow for execution pressure
 
 OUTLOOK
-If current friction is reduced, workflow health, throughput stability, and recovery opportunity should improve.`);
+If current friction is reduced, workflow health should move toward ${Math.min(
+97,
+health + 5
+)}% and recovery opportunity can rise toward ${formatCurrency(Math.round(recovery * 1.08))}.`);
 
-setLastScanLabel('Updated just now');
-setBookingSyncLabel('Signal refresh complete');
+setActivity((prev) => [
+{
+id: Date.now(),
+time: formatClock(new Date()),
+label: 'Workflow scan completed',
+detail: `${companyName || 'Unknown company'} refreshed to risk ${risk}/100 and health ${health}%.`,
+tone: 'green',
+},
+...prev.slice(0, 5),
+]);
+
 setIsScanning(false);
+return;
 }
-}, 90);
 
-return () => clearInterval(interval);
-}, [isScanning, companyName, teamSize, workflowBottleneck, costImpact]);
+const timer = window.setTimeout(() => {
+setScanProgress((p) => Math.min(100, p + 10));
+}, 120);
 
-useEffect(() => {
-if (lastScanLabel !== 'Updated just now') return;
-const timer = setTimeout(() => setLastScanLabel('Updated 1m ago'), 7000);
-return () => clearTimeout(timer);
-}, [lastScanLabel]);
+return () => window.clearTimeout(timer);
+}, [isScanning, scanProgress, companyName, teamSize, workflowBottleneck, costImpact]);
 
 function scrollToSection(id: SectionId) {
 document.getElementById(id)?.scrollIntoView({
@@ -216,22 +330,60 @@ block: 'start',
 setActiveSection(id);
 }
 
-const metrics = useMemo(() => {
-const team = Number(teamSize) || 8;
-const spend = Number(costImpact.replace(/[^0-9]/g, '')) || 2100;
-const risk = Math.min(88, 44 + Math.round(team * 0.9) + (workflowBottleneck ? 6 : 0));
-const health = Math.max(61, 92 - Math.round(team * 0.7));
-const recovery = Math.round(spend * 1.28);
+function startWorkflowScan() {
+if (isScanning) return;
+setIsScanning(true);
+setScanProgress(0);
+setActivity((prev) => [
+{
+id: Date.now(),
+time: formatClock(new Date()),
+label: 'Workflow scan started',
+detail: 'Operator-grade refresh running across active signal layers.',
+tone: 'cyan',
+},
+...prev.slice(0, 5),
+]);
+}
+
+function submitFeedback() {
+if (!feedback.trim()) return;
+setActivity((prev) => [
+{
+id: Date.now(),
+time: formatClock(new Date()),
+label: 'Feedback captured',
+detail: feedback.trim().slice(0, 96),
+tone: 'yellow',
+},
+...prev.slice(0, 5),
+]);
+setFeedback('');
+}
+
+const scanStatusText = useMemo(() => {
+if (isScanning) return `Scanning workflow layer... ${scanProgress}%`;
+if (!lastScanAt) return 'No scan yet';
+return `Last scan: ${formatShortDate(lastScanAt)}`;
+}, [isScanning, scanProgress, lastScanAt]);
+
+const demandSnapshot = useMemo(() => {
+const weeklyInbound = bookings.length + 9;
+const consultationRate = 68;
+const topInquiryType = 'Business Consultation';
+const avgDaysToCall = 2.4;
+const confirmedCount = bookings.filter((b) => b.status === 'confirmed').length;
+const nextThree = bookings.slice(0, 3);
 
 return {
-health,
-risk,
-loss: spend,
-recovery,
+weeklyInbound,
+consultationRate,
+topInquiryType,
+avgDaysToCall,
+confirmedCount,
+nextThree,
 };
-}, [teamSize, costImpact, workflowBottleneck]);
-
-const currentActivity = activityFeed[activityIndex];
+}, [bookings]);
 
 return (
 <main className="min-h-screen bg-[#05070b] text-white">
@@ -245,12 +397,8 @@ GHOSTLAYER
 </div>
 
 <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.02] p-3.5">
-<p className="text-[10px] uppercase tracking-[0.24em] text-gray-500">
-Workspace
-</p>
-<p className="mt-2 text-sm font-medium text-white">
-Operations Intelligence
-</p>
+<p className="text-[10px] uppercase tracking-[0.24em] text-gray-500">Workspace</p>
+<p className="mt-2 text-sm font-medium text-white">Operations Intelligence</p>
 <p className="mt-1 text-xs leading-6 text-gray-400">
 Command surface for workflow drag, risk, and execution clarity.
 </p>
@@ -265,7 +413,7 @@ key={item.id}
 onClick={() => scrollToSection(item.id)}
 className={`block w-full rounded-xl px-3 py-2.5 text-left text-[0.93rem] transition ${
 isActive
-? 'border border-cyan-400/20 bg-cyan-400/10 text-white shadow-[0_0_0_1px_rgba(34,211,238,0.08)]'
+? 'border border-cyan-400/20 bg-cyan-400/10 text-white shadow-[0_0_0_1px_rgba(34,211,238,0.08)_inset]'
 : 'text-gray-400 hover:bg-white/[0.04] hover:text-white'
 }`}
 >
@@ -276,30 +424,35 @@ isActive
 </nav>
 
 <div className="mt-5 grid gap-3">
-<div className="rounded-2xl border border-white/10 bg-black/20 p-3 transition duration-300 hover:border-white/15">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
-Last scan
-</p>
-<p className="mt-2 text-sm text-white">{lastScanLabel}</p>
+<div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Last scan</p>
+<p className="mt-2 text-sm text-white">{lastScanAt ? formatClock(lastScanAt) : 'None yet'}</p>
 </div>
 
-<div className="rounded-2xl border border-white/10 bg-black/20 p-3 transition duration-300 hover:border-white/15">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
-Bookings sync
-</p>
-<p className="mt-2 text-sm text-white">{bookingSyncLabel}</p>
+<div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Bookings sync</p>
+<p className="mt-2 text-sm text-white">Demand stream active</p>
 </div>
 
-<div className="rounded-2xl border border-white/10 bg-black/20 p-3 transition duration-300 hover:border-white/15">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
-Environment
-</p>
+<div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Environment</p>
 <p className="mt-2 text-sm font-semibold signal-green">Live</p>
 </div>
 </div>
 
+<div className="mt-5 rounded-2xl border border-cyan-400/15 bg-cyan-400/[0.06] p-3.5">
+<p className="text-[10px] uppercase tracking-[0.2em] text-cyan-300">Console state</p>
+<p className="mt-2 text-sm text-cyan-100">{scanStatusText}</p>
+<div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+<div
+className="h-full rounded-full bg-cyan-300 transition-all duration-300"
+style={{ width: `${isScanning ? scanProgress : 100}%` }}
+/>
+</div>
+</div>
+
 <div className="mt-auto pt-5">
-<button className="w-full rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-3.5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14 hover:shadow-[0_0_24px_rgba(34,211,238,0.12)]">
+<button className="w-full rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-3.5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14">
 Book Consultation
 </button>
 </div>
@@ -311,9 +464,7 @@ Book Consultation
 <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 md:px-8 lg:px-10">
 <div className="min-w-0">
 <div className="hidden md:flex md:items-center md:gap-3">
-<p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">
-Dashboard
-</p>
+<p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">Dashboard</p>
 <span className="rounded-full border border-cyan-400/18 bg-cyan-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-200">
 Demo Workspace
 </span>
@@ -336,11 +487,11 @@ Public product demo for workflow visibility, drag detection, and operator framin
 
 <div className="flex items-center gap-2">
 <button
-onClick={() => setIsScanning(true)}
+onClick={startWorkflowScan}
 disabled={isScanning}
 className="rounded-xl border border-white/10 bg-white px-3.5 py-2 text-xs font-semibold text-black transition hover:opacity-90 disabled:opacity-50 sm:text-sm"
 >
-{isScanning ? 'Scanning...' : 'Run Scan'}
+{isScanning ? `Scanning ${scanProgress}%` : 'Run Scan'}
 </button>
 
 <button className="rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-xs font-semibold text-white transition hover:bg-white/[0.08] sm:text-sm">
@@ -348,12 +499,31 @@ Export
 </button>
 </div>
 </div>
+
+<div className="flex gap-2.5 overflow-x-auto px-4 pb-3 md:hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+{navItems.map((item) => {
+const isActive = activeSection === item.id;
+return (
+<button
+key={item.id}
+onClick={() => scrollToSection(item.id)}
+className={`whitespace-nowrap rounded-full border px-3.5 py-2 text-sm transition ${
+isActive
+? 'border-cyan-400/35 bg-cyan-400/10 text-white'
+: 'border-white/10 bg-white/[0.04] text-gray-300 hover:text-white'
+}`}
+>
+{item.label}
+</button>
+);
+})}
+</div>
 </div>
 
 <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 md:px-8 lg:px-10 md:py-7">
 <section
 id="overview"
-className="revealSection overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] shadow-[0_12px_40px_rgba(0,0,0,0.28)]"
+className="overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] shadow-[0_12px_40px_rgba(0,0,0,0.28)]"
 >
 <div className="border-b border-white/8 px-5 py-5 sm:px-6 lg:px-6">
 <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
@@ -371,24 +541,21 @@ Ghostlayer surfaces throughput pressure, weak handoffs, repeated manual work,
 and cost exposure in one operator-grade command view.
 </p>
 
-{isScanning && (
-<div className="mt-5 max-w-xl">
-<div className="mb-2 flex items-center justify-between text-xs text-gray-400">
-<span>Live scan in progress</span>
-<span>{scanProgress}%</span>
+<div className="mt-5 flex flex-wrap gap-2">
+<span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300">
+Live telemetry feel
+</span>
+<span className="rounded-full border border-cyan-400/18 bg-cyan-400/8 px-3 py-1 text-xs text-cyan-200">
+Dynamic scan state
+</span>
+<span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300">
+Operator-grade hierarchy
+</span>
 </div>
-<div className="h-2 overflow-hidden rounded-full bg-white/8">
-<div
-className="h-full rounded-full bg-cyan-300 transition-all duration-150"
-style={{ width: `${scanProgress}%` }}
-/>
-</div>
-</div>
-)}
 </div>
 
 <div className="grid w-full grid-cols-2 gap-2.5 xl:max-w-[320px]">
-<button className="rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-3.5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14 hover:shadow-[0_0_24px_rgba(34,211,238,0.1)]">
+<button className="rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-3.5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14">
 Save Scan
 </button>
 
@@ -404,39 +571,31 @@ Schedule Operator Review
 </div>
 
 <div className="grid grid-cols-1 gap-3.5 px-5 py-5 sm:px-6 lg:grid-cols-4 lg:px-6">
-<div className="metricCard hoverLift">
+<div className="metricCard hoverCard">
 <p className="metricLabel">Workflow Health</p>
-<p className="metricValue">
-<AnimatedNumber value={metrics.health} suffix="%" />
-</p>
+<p className="metricValue">{workflowHealth}%</p>
 <p className="metricText">Operational coherence across active workflow stages.</p>
 </div>
 
-<div className="metricCard metricBlue hoverLift">
+<div className="metricCard metricBlue hoverCard">
 <p className="metricLabel text-cyan-200">Risk Score</p>
-<p className="metricValue">
-<AnimatedNumber value={metrics.risk} suffix="/100" />
-</p>
+<p className="metricValue">{riskScore}/100</p>
 <p className="metricText text-cyan-50/80">
 Elevated score signals drag, delay, and ownership instability.
 </p>
 </div>
 
-<div className="metricCard metricRed hoverLift">
+<div className="metricCard metricRed hoverCard">
 <p className="metricLabel text-red-200">Est. Monthly Loss</p>
-<p className="metricValue">
-<AnimatedNumber value={metrics.loss} prefix="$" suffix="/mo" />
-</p>
+<p className="metricValue">{formatCurrency(monthlyLoss)}</p>
 <p className="metricText text-red-50/80">
 Estimated productivity loss caused by workflow friction.
 </p>
 </div>
 
-<div className="metricCard metricGreen hoverLift">
+<div className="metricCard metricGreen hoverCard">
 <p className="metricLabel text-green-200">Recovery Opportunity</p>
-<p className="metricValue">
-<AnimatedNumber value={metrics.recovery} prefix="$" suffix="/mo" />
-</p>
+<p className="metricValue">{formatCurrency(recoveryOpportunity)}</p>
 <p className="metricText text-green-50/80">
 Recoverable value if bottlenecks and duplicate effort are reduced.
 </p>
@@ -446,7 +605,7 @@ Recoverable value if bottlenecks and duplicate effort are reduced.
 
 <section
 id="priority-issues"
-className="revealSection mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
+className="mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
 >
 <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
 <div>
@@ -462,7 +621,7 @@ Operator view
 </div>
 
 <div className="mt-5 grid grid-cols-1 gap-3.5 xl:grid-cols-3">
-<div className="issueCard hoverLift">
+<div className="issueCard hoverCard">
 <div className="flex items-center justify-between gap-3">
 <h4 className="text-lg font-semibold">Execution delay risk</h4>
 <span className="signal High">High</span>
@@ -479,7 +638,7 @@ Reduce approval drag and assign one accountable owner per stage.
 </div>
 </div>
 
-<div className="issueCard hoverLift">
+<div className="issueCard hoverCard">
 <div className="flex items-center justify-between gap-3">
 <h4 className="text-lg font-semibold">Handoff context loss</h4>
 <span className="signal Medium">Medium</span>
@@ -496,7 +655,7 @@ Standardize the handoff payload used by all teams.
 </div>
 </div>
 
-<div className="issueCard hoverLift">
+<div className="issueCard hoverCard">
 <div className="flex items-center justify-between gap-3">
 <h4 className="text-lg font-semibold">Duplicate manual reporting</h4>
 <span className="signal Medium">Medium</span>
@@ -517,7 +676,7 @@ Collapse status reporting into one primary operating view.
 
 <section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.04fr_0.96fr]">
 <div className="grid gap-6 self-start">
-<section id="intelligence-summary" className="cardShell revealSection hoverLift">
+<section id="intelligence-summary" className="cardShell hoverCard">
 <div className="flex items-center justify-between gap-4">
 <div>
 <h3 className="text-[1.55rem] font-semibold text-cyan-300">
@@ -538,12 +697,12 @@ This summary isolates where drag is forming, where cost exposure is building,
 and where operator attention should concentrate first.
 </p>
 
-<pre className="mt-4 min-h-[126px] overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/8 bg-[#0a0d14] p-4 text-sm leading-7 text-gray-300">
+<pre className="mt-4 min-h-[180px] overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/8 bg-[#0a0d14] p-4 text-sm leading-7 text-gray-300 transition-all duration-300">
 {summary}
 </pre>
 </section>
 
-<section id="bookings" className="cardShell revealSection hoverLift">
+<section id="bookings" className="cardShell hoverCard">
 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 <div className="min-w-0">
 <h3 className="text-[1.55rem] font-semibold">Recent Bookings</h3>
@@ -552,13 +711,29 @@ Consultation activity entering the Ghostlayer demand layer.
 </p>
 </div>
 
-<button className="rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]">
+<button
+onClick={() =>
+setBookings((prev) => [
+{
+id: Date.now(),
+name: 'New Demo Lead',
+email: `lead${prev.length + 1}@ghostlayer.ai`,
+type: 'Workflow Review',
+scheduled: formatShortDate(new Date(Date.now() + 1000 * 60 * 60 * 24)),
+source: 'website',
+status: 'pending',
+},
+...prev.slice(0, 5),
+])
+}
+className="rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+>
 Refresh
 </button>
 </div>
 
 <div className="mt-5 overflow-hidden rounded-2xl border border-white/8 bg-[#0a0d14]">
-<table className="min-w-full border-separate border-spacing-0 text-left text-sm">
+<table className="min-w-full border-separate border-spacing-0 text-left text-sm hidden lg:table">
 <thead>
 <tr className="text-gray-400">
 <th className="border-b border-white/8 px-3 py-3 font-medium">Name</th>
@@ -569,25 +744,174 @@ Refresh
 </tr>
 </thead>
 <tbody>
-<tr className="text-gray-200 transition hover:bg-white/[0.02]">
-<td className="px-3 py-3.5">Dexter Test 5</td>
-<td className="px-3 py-3.5">stevensdexter17@gmail.com</td>
-<td className="px-3 py-3.5">Business Consultation</td>
-<td className="px-3 py-3.5">5/22/2026, 1:00 PM</td>
-<td className="px-3 py-3.5">
-<span className="rounded-full border border-cyan-400/15 bg-cyan-400/8 px-3 py-1 text-xs text-cyan-200">
-calendly
+{bookings.map((booking) => (
+<tr
+key={booking.id}
+className="text-gray-200 transition-colors duration-200 hover:bg-white/[0.03]"
+>
+<td className="border-b border-white/6 px-3 py-3.5">{booking.name}</td>
+<td className="border-b border-white/6 px-3 py-3.5">{booking.email}</td>
+<td className="border-b border-white/6 px-3 py-3.5">{booking.type}</td>
+<td className="border-b border-white/6 px-3 py-3.5">{booking.scheduled}</td>
+<td className="border-b border-white/6 px-3 py-3.5">
+<span
+className={`rounded-full border px-3 py-1 text-xs ${
+booking.status === 'confirmed'
+? 'border-cyan-400/15 bg-cyan-400/8 text-cyan-200'
+: 'border-yellow-400/15 bg-yellow-400/8 text-yellow-200'
+}`}
+>
+{booking.source}
 </span>
 </td>
 </tr>
+))}
 </tbody>
 </table>
+
+<div className="grid gap-3 p-4 lg:hidden">
+{bookings.map((booking) => (
+<div key={booking.id} className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
+<div className="flex items-start justify-between gap-3">
+<div>
+<p className="font-medium text-white">{booking.name}</p>
+<p className="mt-1 break-all text-sm text-gray-400">{booking.email}</p>
+</div>
+<span
+className={`rounded-full border px-3 py-1 text-xs ${
+booking.status === 'confirmed'
+? 'border-cyan-400/15 bg-cyan-400/8 text-cyan-200'
+: 'border-yellow-400/15 bg-yellow-400/8 text-yellow-200'
+}`}
+>
+{booking.source}
+</span>
+</div>
+<div className="mt-3 grid gap-1 text-sm text-gray-400 sm:grid-cols-2">
+<p>Type: {booking.type}</p>
+<p>Scheduled: {booking.scheduled}</p>
+</div>
+</div>
+))}
+</div>
+</div>
+
+<div className="mt-5 rounded-2xl border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.028),rgba(255,255,255,0.012))] p-4 sm:p-5">
+<div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+<div>
+<p className="text-[11px] uppercase tracking-[0.24em] text-cyan-300">
+Demand Snapshot
+</p>
+<h4 className="mt-2 text-lg font-semibold text-white">
+Inbound demand quality and scheduling momentum
+</h4>
+</div>
+<span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-gray-400">
+Booking intelligence
+</span>
+</div>
+
+<div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Inbound this week</p>
+<p className="mt-2 text-2xl font-bold text-white">{demandSnapshot.weeklyInbound}</p>
+<p className="mt-2 text-sm text-gray-400">Active consult demand entering the pipeline.</p>
+</div>
+
+<div className="rounded-2xl border border-cyan-400/15 bg-cyan-400/[0.05] p-4">
+<p className="text-[10px] uppercase tracking-[0.2em] text-cyan-300">Consult-to-review rate</p>
+<p className="mt-2 text-2xl font-bold text-white">{demandSnapshot.consultationRate}%</p>
+<p className="mt-2 text-sm text-gray-400">Share of inbound interest moving into deeper review.</p>
+</div>
+
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Top inquiry type</p>
+<p className="mt-2 text-base font-semibold text-white">{demandSnapshot.topInquiryType}</p>
+<p className="mt-2 text-sm text-gray-400">Strongest recurring demand category.</p>
+</div>
+
+<div className="rounded-2xl border border-green-500/15 bg-green-500/[0.05] p-4">
+<p className="text-[10px] uppercase tracking-[0.2em] text-green-300">Avg. days to call</p>
+<p className="mt-2 text-2xl font-bold text-white">{demandSnapshot.avgDaysToCall}</p>
+<p className="mt-2 text-sm text-gray-400">Time from inbound to scheduled conversation.</p>
+</div>
+</div>
+
+<div className="mt-4 grid gap-3 xl:grid-cols-[0.95fr_1.05fr]">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Confirmed bookings</p>
+<p className="mt-2 text-2xl font-bold text-white">{demandSnapshot.confirmedCount}</p>
+<p className="mt-2 text-sm text-gray-400">
+Confirmed consultations currently strengthening forward demand visibility.
+</p>
+</div>
+
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Next upcoming calls</p>
+<div className="mt-3 space-y-2">
+{demandSnapshot.nextThree.map((booking) => (
+<div
+key={`snapshot-${booking.id}`}
+className="flex flex-col gap-1 rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
+>
+<div className="min-w-0">
+<p className="truncate text-sm font-medium text-white">{booking.name}</p>
+<p className="truncate text-xs text-gray-400">{booking.type}</p>
+</div>
+<p className="text-xs text-gray-400">{booking.scheduled}</p>
+</div>
+))}
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section id="activity" className="cardShell hoverCard">
+<div className="flex items-center justify-between gap-4">
+<div>
+<h3 className="text-[1.55rem] font-semibold">Live Activity Stream</h3>
+<p className="mt-2 text-sm text-gray-400">
+Console-native activity feed for changing signals and actions.
+</p>
+</div>
+<span className="rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-green-200 signal-green">
+Live
+</span>
+</div>
+
+<div className="mt-5 space-y-3">
+{activity.map((item) => (
+<div
+key={item.id}
+className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition-all duration-300 hover:border-white/14"
+>
+<div className="flex flex-wrap items-center justify-between gap-3">
+<div className="flex items-center gap-3">
+<span
+className={`inline-block h-2.5 w-2.5 rounded-full ${
+item.tone === 'cyan'
+? 'bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.75)]'
+: item.tone === 'green'
+? 'bg-green-300 shadow-[0_0_12px_rgba(34,197,94,0.75)]'
+: item.tone === 'yellow'
+? 'bg-yellow-300 shadow-[0_0_12px_rgba(245,158,11,0.75)]'
+: 'bg-red-300 shadow-[0_0_12px_rgba(239,68,68,0.75)]'
+}`}
+/>
+<p className="font-medium text-white">{item.label}</p>
+</div>
+<p className="text-xs uppercase tracking-[0.18em] text-gray-500">{item.time}</p>
+</div>
+<p className="mt-2 text-sm text-gray-400">{item.detail}</p>
+</div>
+))}
 </div>
 </section>
 </div>
 
 <div className="grid gap-6 self-start">
-<section id="run-scan" className="cardShell revealSection hoverLift">
+<section id="run-scan" className="cardShell hoverCard">
 <h3 className="text-[1.55rem] font-semibold">Run a New Workflow Scan</h3>
 <p className="mt-2 text-sm text-gray-400">
 Enter business inputs to generate a fresh workflow intelligence summary and
@@ -626,24 +950,42 @@ className="scanInput"
 
 <div className="mt-5 flex flex-col gap-3 sm:flex-row">
 <button
-onClick={() => setIsScanning(true)}
+onClick={startWorkflowScan}
 disabled={isScanning}
 className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
 >
-{isScanning ? 'Running scan...' : 'Run Workflow Scan'}
+{isScanning ? `Running ${scanProgress}%` : 'Run Workflow Scan'}
 </button>
 
 <button className="rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14">
 Save Current Scan
 </button>
 </div>
+
+<div className="mt-5 rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<div className="flex items-center justify-between gap-4">
+<p className="text-sm font-medium text-white">Scan progress</p>
+<p className="text-sm text-cyan-200">{isScanning ? `${scanProgress}%` : 'Ready'}</p>
+</div>
+<div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+<div
+className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 transition-all duration-300"
+style={{ width: `${isScanning ? scanProgress : 0}%` }}
+/>
+</div>
+<p className="mt-3 text-sm text-gray-400">
+{isScanning
+? 'Refreshing live signal state across workflow, handoff, and reporting layers.'
+: 'Ready for the next operator-grade scan.'}
+</p>
+</div>
 </section>
 
-<section id="delay-hotspots" className="cardShell revealSection hoverLift">
+<section id="delay-hotspots" className="cardShell hoverCard">
 <h3 className="text-xl font-semibold">Delay Hotspots</h3>
 
 <div className="mt-4 space-y-3.5">
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Approval queue</p>
 <span className="signal High text-sm font-semibold">High</span>
@@ -653,7 +995,7 @@ Multi-step review pressure is likely slowing work before throughput resumes.
 </p>
 </div>
 
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Intake completion</p>
 <span className="signal Medium text-sm font-semibold">Medium</span>
@@ -665,11 +1007,11 @@ Missing intake signal can create early delay and downstream rework.
 </div>
 </section>
 
-<section id="broken-handoffs" className="cardShell revealSection hoverLift">
+<section id="broken-handoffs" className="cardShell hoverCard">
 <h3 className="text-xl font-semibold">Broken Handoffs</h3>
 
 <div className="mt-4 space-y-3.5">
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Sales → Delivery</p>
 <span className="signal-red text-sm font-semibold">Missing context</span>
@@ -679,7 +1021,7 @@ Critical execution context is likely not arriving intact at the next stage.
 </p>
 </div>
 
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Support → Operations</p>
 <span className="signal-yellow text-sm font-semibold">Weak ownership</span>
@@ -691,11 +1033,11 @@ Escalated work may be slowing because ownership boundaries are unclear.
 </div>
 </section>
 
-<section id="duplicate-work" className="cardShell revealSection hoverLift">
+<section id="duplicate-work" className="cardShell hoverCard">
 <h3 className="text-xl font-semibold">Duplicate Work</h3>
 
 <div className="mt-4 space-y-3.5">
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Reporting overlap</p>
 <span className="signal-cyan text-sm font-semibold">Repeated effort</span>
@@ -705,7 +1047,7 @@ Similar progress signal is likely being captured across multiple surfaces.
 </p>
 </div>
 
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Manual progress updates</p>
 <span className="signal-cyan text-sm font-semibold">Duplicate work</span>
@@ -719,71 +1061,7 @@ Teams may be re-entering the same status layer across tools and stages.
 </div>
 </section>
 
-<section
-id="activity-feed"
-className="revealSection mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
->
-<div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-<div>
-<h3 className="text-[1.55rem] font-semibold">Live Activity Feed</h3>
-<p className="text-sm text-gray-400">
-Rotating operational signals and live dashboard motion.
-</p>
-</div>
-
-<div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-gray-400">
-Live stream
-</div>
-</div>
-
-<div className="mt-5 grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
-<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-5">
-<p className="text-[11px] uppercase tracking-[0.22em] text-gray-500">
-Current event
-</p>
-<div className="mt-4">
-<p className={`text-xs font-semibold ${currentActivity.tone === 'red' ? 'signal-red' : currentActivity.tone === 'yellow' ? 'signal-yellow' : currentActivity.tone === 'green' ? 'signal-green' : 'signal-cyan'}`}>
-{currentActivity.time}
-</p>
-<h4 className="mt-2 text-lg font-semibold">{currentActivity.title}</h4>
-<p className="mt-2 text-sm leading-7 text-gray-400">{currentActivity.detail}</p>
-</div>
-</div>
-
-<div className="grid gap-3">
-{activityFeed.map((item, index) => (
-<div
-key={item.id}
-className={`rounded-2xl border bg-[#0a0d14] p-4 transition-all duration-500 ${
-index === activityIndex
-? 'border-cyan-400/20 bg-cyan-400/[0.04] shadow-[0_0_30px_rgba(34,211,238,0.06)]'
-: 'border-white/8'
-}`}
->
-<div className="flex items-center justify-between gap-4">
-<p className="font-medium text-white">{item.title}</p>
-<span
-className={`text-xs font-semibold ${
-item.tone === 'red'
-? 'signal-red'
-: item.tone === 'yellow'
-? 'signal-yellow'
-: item.tone === 'green'
-? 'signal-green'
-: 'signal-cyan'
-}`}
->
-{item.time}
-</span>
-</div>
-<p className="mt-2 text-sm text-gray-400">{item.detail}</p>
-</div>
-))}
-</div>
-</div>
-</section>
-
-<section id="feedback" className="mt-6 cardShell revealSection hoverLift">
+<section id="feedback" className="mt-6 cardShell hoverCard">
 <h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
 <p className="mt-2 text-sm text-gray-400">
 What would make this console more useful in a real operating environment?
@@ -797,7 +1075,10 @@ className="mt-5 min-h-[132px] w-full rounded-2xl border border-white/10 bg-[#0a0
 />
 
 <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-<button className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90">
+<button
+onClick={submitFeedback}
+className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90"
+>
 Submit Feedback
 </button>
 </div>
@@ -854,39 +1135,28 @@ Terms
 </div>
 
 <style jsx global>{`
-.revealSection {
-animation: sectionReveal 0.6s ease both;
-}
-
-@keyframes sectionReveal {
-0% {
-opacity: 0;
-transform: translateY(10px);
-}
-100% {
-opacity: 1;
-transform: translateY(0);
-}
-}
-
-.hoverLift {
-transition:
-transform 0.22s ease,
-box-shadow 0.22s ease,
-border-color 0.22s ease;
-}
-
-.hoverLift:hover {
-transform: translateY(-2px);
-box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
-}
-
 .cardShell {
 border: 1px solid rgba(255, 255, 255, 0.08);
 background: rgba(255, 255, 255, 0.022);
 padding: 20px;
 border-radius: 28px;
 box-shadow: 0 10px 34px rgba(0, 0, 0, 0.2);
+}
+
+.hoverCard {
+transition:
+transform 220ms ease,
+border-color 220ms ease,
+box-shadow 220ms ease,
+background 220ms ease;
+}
+
+.hoverCard:hover {
+transform: translateY(-2px);
+border-color: rgba(255, 255, 255, 0.14);
+box-shadow:
+0 14px 38px rgba(0, 0, 0, 0.24),
+0 0 0 1px rgba(255, 255, 255, 0.02) inset;
 }
 
 .metricCard {
@@ -922,6 +1192,9 @@ color: rgb(156 163 175);
 margin-top: 12px;
 font-size: 2.15rem;
 font-weight: 700;
+transition: transform 260ms ease, opacity 260ms ease;
+line-height: 1.08;
+overflow-wrap: anywhere;
 }
 
 .metricText {
@@ -968,7 +1241,7 @@ transform 0.2s ease;
 
 .scanInput:focus {
 border-color: rgba(34, 211, 238, 0.4);
-box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.08);
+box-shadow: 0 0 0 4px rgba(34, 211, 238, 0.08);
 transform: translateY(-1px);
 }
 
