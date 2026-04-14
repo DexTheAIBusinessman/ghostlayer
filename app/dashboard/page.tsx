@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 type SectionId =
 | 'overview'
@@ -12,7 +12,53 @@ type SectionId =
 | 'delay-hotspots'
 | 'broken-handoffs'
 | 'duplicate-work'
+| 'activity-feed'
 | 'feedback';
+
+type ActivityItem = {
+id: number;
+time: string;
+title: string;
+detail: string;
+tone: 'cyan' | 'red' | 'yellow' | 'green';
+};
+
+function AnimatedNumber({
+value,
+duration = 900,
+prefix = '',
+suffix = '',
+}: {
+value: number;
+duration?: number;
+prefix?: string;
+suffix?: string;
+}) {
+const [display, setDisplay] = useState(0);
+
+useEffect(() => {
+let start = 0;
+const startTime = performance.now();
+
+const tick = (now: number) => {
+const progress = Math.min((now - startTime) / duration, 1);
+const eased = 1 - Math.pow(1 - progress, 3);
+const next = Math.round(start + (value - start) * eased);
+setDisplay(next);
+if (progress < 1) requestAnimationFrame(tick);
+};
+
+requestAnimationFrame(tick);
+}, [value, duration]);
+
+return (
+<span>
+{prefix}
+{display.toLocaleString()}
+{suffix}
+</span>
+);
+}
 
 export default function DashboardPage() {
 const [activeSection, setActiveSection] = useState<SectionId>('overview');
@@ -20,11 +66,15 @@ const [companyName, setCompanyName] = useState('');
 const [teamSize, setTeamSize] = useState('');
 const [workflowBottleneck, setWorkflowBottleneck] = useState('');
 const [costImpact, setCostImpact] = useState('');
+const [feedback, setFeedback] = useState('');
+const [isScanning, setIsScanning] = useState(false);
+const [scanProgress, setScanProgress] = useState(0);
 const [summary, setSummary] = useState(
 'Run a workflow scan to generate an operational intelligence summary.'
 );
-const [isScanning, setIsScanning] = useState(false);
-const [feedback, setFeedback] = useState('');
+const [lastScanLabel, setLastScanLabel] = useState('Updated just now');
+const [bookingSyncLabel, setBookingSyncLabel] = useState('Demo feed active');
+const [activityIndex, setActivityIndex] = useState(0);
 
 const navItems: { id: SectionId; label: string }[] = [
 { id: 'overview', label: 'Overview' },
@@ -35,6 +85,38 @@ const navItems: { id: SectionId; label: string }[] = [
 { id: 'delay-hotspots', label: 'Delay Hotspots' },
 { id: 'broken-handoffs', label: 'Broken Handoffs' },
 { id: 'duplicate-work', label: 'Duplicate Work' },
+{ id: 'activity-feed', label: 'Activity Feed' },
+];
+
+const activityFeed: ActivityItem[] = [
+{
+id: 1,
+time: '12s ago',
+title: 'Approval queue threshold crossed',
+detail: 'Ghostlayer detected review load increasing across the intake-to-approval lane.',
+tone: 'red',
+},
+{
+id: 2,
+time: '41s ago',
+title: 'Booking sync refreshed',
+detail: 'Latest consultation event entered the dashboard demand layer.',
+tone: 'green',
+},
+{
+id: 3,
+time: '1m ago',
+title: 'Duplicate reporting signal raised',
+detail: 'Status updates appear to be logged across multiple surfaces.',
+tone: 'cyan',
+},
+{
+id: 4,
+time: '2m ago',
+title: 'Handoff context degradation detected',
+detail: 'Execution context appears incomplete between sales and delivery.',
+tone: 'yellow',
+},
 ];
 
 useEffect(() => {
@@ -63,23 +145,33 @@ if (el) observer.observe(el);
 return () => observer.disconnect();
 }, []);
 
-function scrollToSection(id: SectionId) {
-document.getElementById(id)?.scrollIntoView({
-behavior: 'smooth',
-block: 'start',
-});
-setActiveSection(id);
-}
+useEffect(() => {
+const interval = setInterval(() => {
+setActivityIndex((prev) => (prev + 1) % activityFeed.length);
+}, 3200);
 
-function runWorkflowScan() {
-setIsScanning(true);
+return () => clearInterval(interval);
+}, [activityFeed.length]);
+
+useEffect(() => {
+if (!isScanning) return;
+
+setScanProgress(0);
+const startedAt = Date.now();
+
+const interval = setInterval(() => {
+const elapsed = Date.now() - startedAt;
+const progress = Math.min(100, Math.round((elapsed / 2200) * 100));
+setScanProgress(progress);
+
+if (progress >= 100) {
+clearInterval(interval);
 
 const company = companyName || 'Unknown company';
 const team = teamSize || 'Not provided';
 const bottleneck = workflowBottleneck || 'approval and handoff drag';
 const impact = costImpact || '$2,100/mo';
 
-window.setTimeout(() => {
 setSummary(`EXECUTIVE SUMMARY
 
 ${company} is showing operational drag across the workflow layer.
@@ -100,9 +192,46 @@ OPERATOR RECOMMENDATIONS
 
 OUTLOOK
 If current friction is reduced, workflow health, throughput stability, and recovery opportunity should improve.`);
+
+setLastScanLabel('Updated just now');
+setBookingSyncLabel('Signal refresh complete');
 setIsScanning(false);
-}, 1000);
 }
+}, 90);
+
+return () => clearInterval(interval);
+}, [isScanning, companyName, teamSize, workflowBottleneck, costImpact]);
+
+useEffect(() => {
+if (lastScanLabel !== 'Updated just now') return;
+const timer = setTimeout(() => setLastScanLabel('Updated 1m ago'), 7000);
+return () => clearTimeout(timer);
+}, [lastScanLabel]);
+
+function scrollToSection(id: SectionId) {
+document.getElementById(id)?.scrollIntoView({
+behavior: 'smooth',
+block: 'start',
+});
+setActiveSection(id);
+}
+
+const metrics = useMemo(() => {
+const team = Number(teamSize) || 8;
+const spend = Number(costImpact.replace(/[^0-9]/g, '')) || 2100;
+const risk = Math.min(88, 44 + Math.round(team * 0.9) + (workflowBottleneck ? 6 : 0));
+const health = Math.max(61, 92 - Math.round(team * 0.7));
+const recovery = Math.round(spend * 1.28);
+
+return {
+health,
+risk,
+loss: spend,
+recovery,
+};
+}, [teamSize, costImpact, workflowBottleneck]);
+
+const currentActivity = activityFeed[activityIndex];
 
 return (
 <main className="min-h-screen bg-[#05070b] text-white">
@@ -136,7 +265,7 @@ key={item.id}
 onClick={() => scrollToSection(item.id)}
 className={`block w-full rounded-xl px-3 py-2.5 text-left text-[0.93rem] transition ${
 isActive
-? 'border border-cyan-400/20 bg-cyan-400/10 text-white'
+? 'border border-cyan-400/20 bg-cyan-400/10 text-white shadow-[0_0_0_1px_rgba(34,211,238,0.08)]'
 : 'text-gray-400 hover:bg-white/[0.04] hover:text-white'
 }`}
 >
@@ -147,21 +276,21 @@ isActive
 </nav>
 
 <div className="mt-5 grid gap-3">
-<div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+<div className="rounded-2xl border border-white/10 bg-black/20 p-3 transition duration-300 hover:border-white/15">
 <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
 Last scan
 </p>
-<p className="mt-2 text-sm text-white">Updated just now</p>
+<p className="mt-2 text-sm text-white">{lastScanLabel}</p>
 </div>
 
-<div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+<div className="rounded-2xl border border-white/10 bg-black/20 p-3 transition duration-300 hover:border-white/15">
 <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
 Bookings sync
 </p>
-<p className="mt-2 text-sm text-white">Demo feed active</p>
+<p className="mt-2 text-sm text-white">{bookingSyncLabel}</p>
 </div>
 
-<div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+<div className="rounded-2xl border border-white/10 bg-black/20 p-3 transition duration-300 hover:border-white/15">
 <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
 Environment
 </p>
@@ -170,7 +299,7 @@ Environment
 </div>
 
 <div className="mt-auto pt-5">
-<button className="w-full rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-3.5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14">
+<button className="w-full rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-3.5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14 hover:shadow-[0_0_24px_rgba(34,211,238,0.12)]">
 Book Consultation
 </button>
 </div>
@@ -207,7 +336,7 @@ Public product demo for workflow visibility, drag detection, and operator framin
 
 <div className="flex items-center gap-2">
 <button
-onClick={runWorkflowScan}
+onClick={() => setIsScanning(true)}
 disabled={isScanning}
 className="rounded-xl border border-white/10 bg-white px-3.5 py-2 text-xs font-semibold text-black transition hover:opacity-90 disabled:opacity-50 sm:text-sm"
 >
@@ -224,7 +353,7 @@ Export
 <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 md:px-8 lg:px-10 md:py-7">
 <section
 id="overview"
-className="overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] shadow-[0_12px_40px_rgba(0,0,0,0.28)]"
+className="revealSection overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] shadow-[0_12px_40px_rgba(0,0,0,0.28)]"
 >
 <div className="border-b border-white/8 px-5 py-5 sm:px-6 lg:px-6">
 <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
@@ -241,10 +370,25 @@ Detect execution drag before it compounds across the workflow layer
 Ghostlayer surfaces throughput pressure, weak handoffs, repeated manual work,
 and cost exposure in one operator-grade command view.
 </p>
+
+{isScanning && (
+<div className="mt-5 max-w-xl">
+<div className="mb-2 flex items-center justify-between text-xs text-gray-400">
+<span>Live scan in progress</span>
+<span>{scanProgress}%</span>
+</div>
+<div className="h-2 overflow-hidden rounded-full bg-white/8">
+<div
+className="h-full rounded-full bg-cyan-300 transition-all duration-150"
+style={{ width: `${scanProgress}%` }}
+/>
+</div>
+</div>
+)}
 </div>
 
 <div className="grid w-full grid-cols-2 gap-2.5 xl:max-w-[320px]">
-<button className="rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-3.5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14">
+<button className="rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-3.5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14 hover:shadow-[0_0_24px_rgba(34,211,238,0.1)]">
 Save Scan
 </button>
 
@@ -260,31 +404,39 @@ Schedule Operator Review
 </div>
 
 <div className="grid grid-cols-1 gap-3.5 px-5 py-5 sm:px-6 lg:grid-cols-4 lg:px-6">
-<div className="metricCard">
+<div className="metricCard hoverLift">
 <p className="metricLabel">Workflow Health</p>
-<p className="metricValue">87%</p>
+<p className="metricValue">
+<AnimatedNumber value={metrics.health} suffix="%" />
+</p>
 <p className="metricText">Operational coherence across active workflow stages.</p>
 </div>
 
-<div className="metricCard metricBlue">
+<div className="metricCard metricBlue hoverLift">
 <p className="metricLabel text-cyan-200">Risk Score</p>
-<p className="metricValue">52/100</p>
+<p className="metricValue">
+<AnimatedNumber value={metrics.risk} suffix="/100" />
+</p>
 <p className="metricText text-cyan-50/80">
 Elevated score signals drag, delay, and ownership instability.
 </p>
 </div>
 
-<div className="metricCard metricRed">
+<div className="metricCard metricRed hoverLift">
 <p className="metricLabel text-red-200">Est. Monthly Loss</p>
-<p className="metricValue">$2,100/mo</p>
+<p className="metricValue">
+<AnimatedNumber value={metrics.loss} prefix="$" suffix="/mo" />
+</p>
 <p className="metricText text-red-50/80">
 Estimated productivity loss caused by workflow friction.
 </p>
 </div>
 
-<div className="metricCard metricGreen">
+<div className="metricCard metricGreen hoverLift">
 <p className="metricLabel text-green-200">Recovery Opportunity</p>
-<p className="metricValue">$2,688/mo</p>
+<p className="metricValue">
+<AnimatedNumber value={metrics.recovery} prefix="$" suffix="/mo" />
+</p>
 <p className="metricText text-green-50/80">
 Recoverable value if bottlenecks and duplicate effort are reduced.
 </p>
@@ -294,7 +446,7 @@ Recoverable value if bottlenecks and duplicate effort are reduced.
 
 <section
 id="priority-issues"
-className="mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
+className="revealSection mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
 >
 <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
 <div>
@@ -310,7 +462,7 @@ Operator view
 </div>
 
 <div className="mt-5 grid grid-cols-1 gap-3.5 xl:grid-cols-3">
-<div className="issueCard">
+<div className="issueCard hoverLift">
 <div className="flex items-center justify-between gap-3">
 <h4 className="text-lg font-semibold">Execution delay risk</h4>
 <span className="signal High">High</span>
@@ -327,7 +479,7 @@ Reduce approval drag and assign one accountable owner per stage.
 </div>
 </div>
 
-<div className="issueCard">
+<div className="issueCard hoverLift">
 <div className="flex items-center justify-between gap-3">
 <h4 className="text-lg font-semibold">Handoff context loss</h4>
 <span className="signal Medium">Medium</span>
@@ -344,7 +496,7 @@ Standardize the handoff payload used by all teams.
 </div>
 </div>
 
-<div className="issueCard">
+<div className="issueCard hoverLift">
 <div className="flex items-center justify-between gap-3">
 <h4 className="text-lg font-semibold">Duplicate manual reporting</h4>
 <span className="signal Medium">Medium</span>
@@ -365,10 +517,7 @@ Collapse status reporting into one primary operating view.
 
 <section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.04fr_0.96fr]">
 <div className="grid gap-6 self-start">
-<section
-id="intelligence-summary"
-className="cardShell"
->
+<section id="intelligence-summary" className="cardShell revealSection hoverLift">
 <div className="flex items-center justify-between gap-4">
 <div>
 <h3 className="text-[1.55rem] font-semibold text-cyan-300">
@@ -394,10 +543,7 @@ and where operator attention should concentrate first.
 </pre>
 </section>
 
-<section
-id="bookings"
-className="cardShell"
->
+<section id="bookings" className="cardShell revealSection hoverLift">
 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 <div className="min-w-0">
 <h3 className="text-[1.55rem] font-semibold">Recent Bookings</h3>
@@ -423,7 +569,7 @@ Refresh
 </tr>
 </thead>
 <tbody>
-<tr className="text-gray-200">
+<tr className="text-gray-200 transition hover:bg-white/[0.02]">
 <td className="px-3 py-3.5">Dexter Test 5</td>
 <td className="px-3 py-3.5">stevensdexter17@gmail.com</td>
 <td className="px-3 py-3.5">Business Consultation</td>
@@ -441,10 +587,7 @@ calendly
 </div>
 
 <div className="grid gap-6 self-start">
-<section
-id="run-scan"
-className="cardShell"
->
+<section id="run-scan" className="cardShell revealSection hoverLift">
 <h3 className="text-[1.55rem] font-semibold">Run a New Workflow Scan</h3>
 <p className="mt-2 text-sm text-gray-400">
 Enter business inputs to generate a fresh workflow intelligence summary and
@@ -483,7 +626,7 @@ className="scanInput"
 
 <div className="mt-5 flex flex-col gap-3 sm:flex-row">
 <button
-onClick={runWorkflowScan}
+onClick={() => setIsScanning(true)}
 disabled={isScanning}
 className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
 >
@@ -496,14 +639,11 @@ Save Current Scan
 </div>
 </section>
 
-<section
-id="delay-hotspots"
-className="cardShell"
->
+<section id="delay-hotspots" className="cardShell revealSection hoverLift">
 <h3 className="text-xl font-semibold">Delay Hotspots</h3>
 
 <div className="mt-4 space-y-3.5">
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Approval queue</p>
 <span className="signal High text-sm font-semibold">High</span>
@@ -513,7 +653,7 @@ Multi-step review pressure is likely slowing work before throughput resumes.
 </p>
 </div>
 
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Intake completion</p>
 <span className="signal Medium text-sm font-semibold">Medium</span>
@@ -525,14 +665,11 @@ Missing intake signal can create early delay and downstream rework.
 </div>
 </section>
 
-<section
-id="broken-handoffs"
-className="cardShell"
->
+<section id="broken-handoffs" className="cardShell revealSection hoverLift">
 <h3 className="text-xl font-semibold">Broken Handoffs</h3>
 
 <div className="mt-4 space-y-3.5">
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Sales → Delivery</p>
 <span className="signal-red text-sm font-semibold">Missing context</span>
@@ -542,7 +679,7 @@ Critical execution context is likely not arriving intact at the next stage.
 </p>
 </div>
 
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Support → Operations</p>
 <span className="signal-yellow text-sm font-semibold">Weak ownership</span>
@@ -554,14 +691,11 @@ Escalated work may be slowing because ownership boundaries are unclear.
 </div>
 </section>
 
-<section
-id="duplicate-work"
-className="cardShell"
->
+<section id="duplicate-work" className="cardShell revealSection hoverLift">
 <h3 className="text-xl font-semibold">Duplicate Work</h3>
 
 <div className="mt-4 space-y-3.5">
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Reporting overlap</p>
 <span className="signal-cyan text-sm font-semibold">Repeated effort</span>
@@ -571,7 +705,7 @@ Similar progress signal is likely being captured across multiple surfaces.
 </p>
 </div>
 
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition hover:border-white/12">
 <div className="flex items-center justify-between gap-4">
 <p className="font-medium">Manual progress updates</p>
 <span className="signal-cyan text-sm font-semibold">Duplicate work</span>
@@ -586,9 +720,70 @@ Teams may be re-entering the same status layer across tools and stages.
 </section>
 
 <section
-id="feedback"
-className="mt-6 cardShell"
+id="activity-feed"
+className="revealSection mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
 >
+<div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+<div>
+<h3 className="text-[1.55rem] font-semibold">Live Activity Feed</h3>
+<p className="text-sm text-gray-400">
+Rotating operational signals and live dashboard motion.
+</p>
+</div>
+
+<div className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-gray-400">
+Live stream
+</div>
+</div>
+
+<div className="mt-5 grid gap-4 xl:grid-cols-[0.9fr_1.1fr]">
+<div className="rounded-3xl border border-white/8 bg-[#0a0d14] p-5">
+<p className="text-[11px] uppercase tracking-[0.22em] text-gray-500">
+Current event
+</p>
+<div className="mt-4">
+<p className={`text-xs font-semibold ${currentActivity.tone === 'red' ? 'signal-red' : currentActivity.tone === 'yellow' ? 'signal-yellow' : currentActivity.tone === 'green' ? 'signal-green' : 'signal-cyan'}`}>
+{currentActivity.time}
+</p>
+<h4 className="mt-2 text-lg font-semibold">{currentActivity.title}</h4>
+<p className="mt-2 text-sm leading-7 text-gray-400">{currentActivity.detail}</p>
+</div>
+</div>
+
+<div className="grid gap-3">
+{activityFeed.map((item, index) => (
+<div
+key={item.id}
+className={`rounded-2xl border bg-[#0a0d14] p-4 transition-all duration-500 ${
+index === activityIndex
+? 'border-cyan-400/20 bg-cyan-400/[0.04] shadow-[0_0_30px_rgba(34,211,238,0.06)]'
+: 'border-white/8'
+}`}
+>
+<div className="flex items-center justify-between gap-4">
+<p className="font-medium text-white">{item.title}</p>
+<span
+className={`text-xs font-semibold ${
+item.tone === 'red'
+? 'signal-red'
+: item.tone === 'yellow'
+? 'signal-yellow'
+: item.tone === 'green'
+? 'signal-green'
+: 'signal-cyan'
+}`}
+>
+{item.time}
+</span>
+</div>
+<p className="mt-2 text-sm text-gray-400">{item.detail}</p>
+</div>
+))}
+</div>
+</div>
+</section>
+
+<section id="feedback" className="mt-6 cardShell revealSection hoverLift">
 <h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
 <p className="mt-2 text-sm text-gray-400">
 What would make this console more useful in a real operating environment?
@@ -659,6 +854,33 @@ Terms
 </div>
 
 <style jsx global>{`
+.revealSection {
+animation: sectionReveal 0.6s ease both;
+}
+
+@keyframes sectionReveal {
+0% {
+opacity: 0;
+transform: translateY(10px);
+}
+100% {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
+.hoverLift {
+transition:
+transform 0.22s ease,
+box-shadow 0.22s ease,
+border-color 0.22s ease;
+}
+
+.hoverLift:hover {
+transform: translateY(-2px);
+box-shadow: 0 16px 40px rgba(0, 0, 0, 0.24);
+}
+
 .cardShell {
 border: 1px solid rgba(255, 255, 255, 0.08);
 background: rgba(255, 255, 255, 0.022);
@@ -738,11 +960,16 @@ background: #0a0d14;
 padding: 12px 16px;
 color: white;
 outline: none;
-transition: border-color 0.2s ease;
+transition:
+border-color 0.2s ease,
+box-shadow 0.2s ease,
+transform 0.2s ease;
 }
 
 .scanInput:focus {
 border-color: rgba(34, 211, 238, 0.4);
+box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.08);
+transform: translateY(-1px);
 }
 
 .ghostlayerSidebarLogo,
