@@ -65,12 +65,12 @@ const ids = [
 'overview',
 'priority-issues',
 'bookings',
+'intelligence-summary',
+'feedback',
 'delay-hotspots',
 'broken-handoffs',
 'duplicate-work',
-'intelligence-summary',
 'run-scan',
-'feedback',
 ];
 
 const observer = new IntersectionObserver(
@@ -398,7 +398,7 @@ return (
 <div className="flex min-h-screen">
 <aside className="hidden w-[236px] shrink-0 border-r border-white/8 bg-[#070a10] md:block lg:w-[248px] xl:w-[260px]">
 <div className="sticky top-0 flex h-screen flex-col overflow-y-auto px-4 py-4">
-<div className="flex items-center justify-center rounded-2xl border border-white/8 bg-white/[0.022] px-4 py-4">
+<div className="px-1 pt-1">
 <Link href="/" className="ghostlayerSidebarLogo" aria-label="Ghostlayer home">
 GHOSTLAYER
 </Link>
@@ -797,6 +797,35 @@ This summary isolates where drag is forming, where cost exposure is building, an
 {analysis}
 </pre>
 </section>
+
+<section
+id="feedback"
+className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
+>
+<h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
+<p className="mt-2 text-sm text-gray-400">
+What would make this console more useful in a real operating environment?
+</p>
+
+<textarea
+value={feedback}
+onChange={(e) => setFeedback(e.target.value)}
+placeholder="Tell us what would make this more useful..."
+className="mt-5 min-h-[132px] w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+/>
+
+<div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+<button
+onClick={submitFeedback}
+disabled={feedbackLoading}
+className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
+>
+{feedbackLoading ? 'Submitting...' : 'Submit Feedback'}
+</button>
+
+{feedbackMessage && <p className="text-sm text-cyan-300">{feedbackMessage}</p>}
+</div>
+</section>
 </div>
 
 <div className="grid gap-6 self-start">
@@ -943,35 +972,6 @@ Save Current Scan
 </div>
 </section>
 
-<section
-id="feedback"
-className="mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
->
-<h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
-<p className="mt-2 text-sm text-gray-400">
-What would make this console more useful in a real operating environment?
-</p>
-
-<textarea
-value={feedback}
-onChange={(e) => setFeedback(e.target.value)}
-placeholder="Tell us what would make this more useful..."
-className="mt-5 min-h-[132px] w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
-/>
-
-<div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
-<button
-onClick={submitFeedback}
-disabled={feedbackLoading}
-className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
->
-{feedbackLoading ? 'Submitting...' : 'Submit Feedback'}
-</button>
-
-{feedbackMessage && <p className="text-sm text-cyan-300">{feedbackMessage}</p>}
-</div>
-</section>
-
 <footer className="mt-8 border-t border-white/8 pt-8">
 <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
 <div className="min-w-0 max-w-md">
@@ -1033,43 +1033,34 @@ rootElement={document.body}
 
 <style jsx global>{`
 .ghostlayerSidebarLogo,
-.ghostlayerSidebarLogo:hover,
-.ghostlayerSidebarLogo:focus,
-.ghostlayerSidebarLogo:active,
-.ghostlayerFooterLogo,
-.ghostlayerFooterLogo:hover,
-.ghostlayerFooterLogo:focus,
-.ghostlayerFooterLogo:active {
-display: inline-flex !important;
-align-items: center !important;
-justify-content: center !important;
+.ghostlayerFooterLogo {
+display: inline-block !important;
 background: transparent !important;
 border: 0 !important;
 box-shadow: none !important;
 outline: none !important;
 text-decoration: none !important;
-padding: 0 !important;
-border-radius: 0 !important;
 filter: none !important;
 color: #ffffff !important;
 font-weight: 700 !important;
 letter-spacing: 0.1em !important;
 line-height: 1 !important;
+animation: dashboardLogoPulse 3.1s ease-in-out infinite !important;
 text-shadow:
-0 0 3px rgba(255, 255, 255, 0.36),
-0 0 8px rgba(255, 255, 255, 0.28),
-0 0 16px rgba(96, 165, 250, 0.16),
-0 0 26px rgba(59, 130, 246, 0.08) !important;
-animation: dashboardLogoPulse 3.4s ease-in-out infinite;
+0 0 5px rgba(255, 255, 255, 0.72),
+0 0 12px rgba(255, 255, 255, 0.48),
+0 0 24px rgba(96, 165, 250, 0.32),
+0 0 40px rgba(59, 130, 246, 0.18) !important;
 }
 
 .ghostlayerSidebarLogo {
 width: 100%;
-font-size: 1.28rem !important;
+text-align: left;
+font-size: 1.22rem !important;
 }
 
 .ghostlayerFooterLogo {
-font-size: 1.12rem !important;
+font-size: 1.08rem !important;
 }
 
 .ghostlayerSidebarLogo::before,
@@ -1083,21 +1074,21 @@ display: none !important;
 @keyframes dashboardLogoPulse {
 0%,
 100% {
-opacity: 0.9;
+opacity: 0.88;
 text-shadow:
-0 0 3px rgba(255, 255, 255, 0.36),
-0 0 8px rgba(255, 255, 255, 0.28),
-0 0 16px rgba(96, 165, 250, 0.16),
-0 0 26px rgba(59, 130, 246, 0.08);
+0 0 4px rgba(255, 255, 255, 0.56),
+0 0 10px rgba(255, 255, 255, 0.38),
+0 0 22px rgba(96, 165, 250, 0.22),
+0 0 34px rgba(59, 130, 246, 0.12);
 }
 50% {
 opacity: 1;
 text-shadow:
-0 0 6px rgba(255, 255, 255, 0.7),
-0 0 14px rgba(255, 255, 255, 0.52),
-0 0 24px rgba(96, 165, 250, 0.34),
-0 0 38px rgba(59, 130, 246, 0.18),
-0 0 54px rgba(147, 51, 234, 0.1);
+0 0 7px rgba(255, 255, 255, 0.92),
+0 0 18px rgba(255, 255, 255, 0.68),
+0 0 30px rgba(96, 165, 250, 0.42),
+0 0 48px rgba(59, 130, 246, 0.24),
+0 0 68px rgba(147, 51, 234, 0.12);
 }
 }
 
