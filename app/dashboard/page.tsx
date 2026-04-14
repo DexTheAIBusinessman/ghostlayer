@@ -65,12 +65,12 @@ const ids = [
 'overview',
 'priority-issues',
 'bookings',
+'run-scan',
 'intelligence-summary',
-'feedback',
 'delay-hotspots',
 'broken-handoffs',
 'duplicate-work',
-'run-scan',
+'feedback',
 ];
 
 const observer = new IntersectionObserver(
@@ -380,11 +380,11 @@ const sideNav = [
 { label: 'Overview', id: 'overview' },
 { label: 'Priority Issues', id: 'priority-issues' },
 { label: 'Bookings', id: 'bookings' },
+{ label: 'Run Scan', id: 'run-scan' },
+{ label: 'Intelligence Summary', id: 'intelligence-summary' },
 { label: 'Delay Hotspots', id: 'delay-hotspots' },
 { label: 'Broken Handoffs', id: 'broken-handoffs' },
 { label: 'Duplicate Work', id: 'duplicate-work' },
-{ label: 'Intelligence Summary', id: 'intelligence-summary' },
-{ label: 'Run Scan', id: 'run-scan' },
 ];
 
 function severityClasses(severity: IssueSeverity) {
@@ -661,7 +661,7 @@ issue.severity
 </div>
 </section>
 
-<section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.06fr_0.94fr]">
+<section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.02fr_0.98fr]">
 <div className="grid gap-6 self-start">
 <section
 id="bookings"
@@ -773,6 +773,63 @@ className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4"
 </div>
 </>
 )}
+</section>
+
+<section
+id="run-scan"
+className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
+>
+<h3 className="text-[1.55rem] font-semibold">Run a New Workflow Scan</h3>
+<p className="mt-2 text-sm text-gray-400">
+Enter business inputs to generate a fresh workflow intelligence summary and cost signal.
+</p>
+
+<div className="mt-5 grid grid-cols-1 gap-3.5 md:grid-cols-2">
+<input
+value={companyName}
+onChange={(e) => setCompanyName(e.target.value)}
+placeholder="Company name"
+className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+/>
+
+<input
+value={teamSize}
+onChange={(e) => setTeamSize(e.target.value)}
+placeholder="Team size"
+className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+/>
+
+<input
+value={bottleneck}
+onChange={(e) => setBottleneck(e.target.value)}
+placeholder="Primary workflow bottleneck"
+className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+/>
+
+<input
+value={saasSpend}
+onChange={(e) => setSaasSpend(e.target.value)}
+placeholder="Monthly operational cost impacted"
+className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+/>
+</div>
+
+<div className="mt-5 flex flex-col gap-3 sm:flex-row">
+<button
+onClick={runScan}
+disabled={loading}
+className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
+>
+{loading ? 'Running scan...' : 'Run Workflow Scan'}
+</button>
+
+<button
+onClick={saveScan}
+className="rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14"
+>
+Save Current Scan
+</button>
+</div>
 </section>
 
 <section
@@ -912,63 +969,6 @@ Teams may be re-entering the same status layer across tools and stages.
 </div>
 </div>
 </section>
-
-<section
-id="run-scan"
-className="rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
->
-<h3 className="text-[1.55rem] font-semibold">Run a New Workflow Scan</h3>
-<p className="mt-2 text-sm text-gray-400">
-Enter business inputs to generate a fresh workflow intelligence summary and cost signal.
-</p>
-
-<div className="mt-5 grid grid-cols-1 gap-3.5 md:grid-cols-2">
-<input
-value={companyName}
-onChange={(e) => setCompanyName(e.target.value)}
-placeholder="Company name"
-className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
-/>
-
-<input
-value={teamSize}
-onChange={(e) => setTeamSize(e.target.value)}
-placeholder="Team size"
-className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
-/>
-
-<input
-value={bottleneck}
-onChange={(e) => setBottleneck(e.target.value)}
-placeholder="Primary workflow bottleneck"
-className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
-/>
-
-<input
-value={saasSpend}
-onChange={(e) => setSaasSpend(e.target.value)}
-placeholder="Monthly operational cost impacted"
-className="w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
-/>
-</div>
-
-<div className="mt-5 flex flex-col gap-3 sm:flex-row">
-<button
-onClick={runScan}
-disabled={loading}
-className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
->
-{loading ? 'Running scan...' : 'Run Workflow Scan'}
-</button>
-
-<button
-onClick={saveScan}
-className="rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-4 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14"
->
-Save Current Scan
-</button>
-</div>
-</section>
 </div>
 </section>
 
@@ -1045,7 +1045,7 @@ color: #ffffff !important;
 font-weight: 700 !important;
 letter-spacing: 0.1em !important;
 line-height: 1 !important;
-animation: dashboardLogoPulse 3.1s ease-in-out infinite !important;
+animation: dashboardLogoPulse 2.8s ease-in-out infinite !important;
 text-shadow:
 0 0 5px rgba(255, 255, 255, 0.72),
 0 0 12px rgba(255, 255, 255, 0.48),
@@ -1056,7 +1056,7 @@ text-shadow:
 .ghostlayerSidebarLogo {
 width: 100%;
 text-align: left;
-font-size: 1.22rem !important;
+font-size: 1.2rem !important;
 }
 
 .ghostlayerFooterLogo {
@@ -1074,21 +1074,21 @@ display: none !important;
 @keyframes dashboardLogoPulse {
 0%,
 100% {
-opacity: 0.88;
+opacity: 0.86;
 text-shadow:
-0 0 4px rgba(255, 255, 255, 0.56),
-0 0 10px rgba(255, 255, 255, 0.38),
-0 0 22px rgba(96, 165, 250, 0.22),
-0 0 34px rgba(59, 130, 246, 0.12);
+0 0 4px rgba(255, 255, 255, 0.5),
+0 0 10px rgba(255, 255, 255, 0.34),
+0 0 22px rgba(96, 165, 250, 0.2),
+0 0 34px rgba(59, 130, 246, 0.1);
 }
 50% {
 opacity: 1;
 text-shadow:
-0 0 7px rgba(255, 255, 255, 0.92),
-0 0 18px rgba(255, 255, 255, 0.68),
-0 0 30px rgba(96, 165, 250, 0.42),
-0 0 48px rgba(59, 130, 246, 0.24),
-0 0 68px rgba(147, 51, 234, 0.12);
+0 0 8px rgba(255, 255, 255, 0.96),
+0 0 20px rgba(255, 255, 255, 0.74),
+0 0 34px rgba(96, 165, 250, 0.48),
+0 0 52px rgba(59, 130, 246, 0.28),
+0 0 74px rgba(147, 51, 234, 0.14);
 }
 }
 
