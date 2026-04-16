@@ -60,17 +60,17 @@ const [activeSection, setActiveSection] = useState<SectionId>('overview');
 const [companyName, setCompanyName] = useState('Ghostlayer Demo Co.');
 const [teamSize, setTeamSize] = useState('18');
 const [workflowBottleneck, setWorkflowBottleneck] = useState('Approval and delivery handoff');
-const [costImpact, setCostImpact] = useState('2100');
+const [costImpact, setCostImpact] = useState('2840');
 
 const [isScanning, setIsScanning] = useState(false);
 const [scanProgress, setScanProgress] = useState(0);
 const [lastScanAt, setLastScanAt] = useState<Date | null>(new Date());
 const [feedback, setFeedback] = useState('');
 
-const [workflowHealth, setWorkflowHealth] = useState(87);
-const [riskScore, setRiskScore] = useState(52);
-const [monthlyLoss, setMonthlyLoss] = useState(2100);
-const [recoveryOpportunity, setRecoveryOpportunity] = useState(2688);
+const [workflowHealth, setWorkflowHealth] = useState(91);
+const [riskScore, setRiskScore] = useState(58);
+const [monthlyLoss, setMonthlyLoss] = useState(2840);
+const [recoveryOpportunity, setRecoveryOpportunity] = useState(3975);
 
 const [bookings, setBookings] = useState<BookingItem[]>([
 {
@@ -130,7 +130,7 @@ tone: 'green',
 id: 3,
 time: formatClock(new Date(Date.now() - 1000 * 60 * 15)),
 label: 'Context loss flagged',
-detail: 'Sales → Delivery payload missing execution notes.',
+detail: 'Sales to Delivery payload missing execution notes.',
 tone: 'red',
 },
 ]);
@@ -142,10 +142,9 @@ Ghostlayer Demo Co. is showing operational drag across its workflow layer.
 PRIMARY SIGNALS
 - Workflow bottleneck: Approval and delivery handoff
 - Team size: 18
-- Monthly operational cost impacted: $2,100/mo
+- Monthly operational cost impacted: $2,840/mo
 - Repeated manual reporting is increasing duplicate effort
 - Critical context is degrading between handoff stages
-- Consultation demand remains healthy, but intake-to-execution continuity is under pressure
 
 OPERATOR RECOMMENDATIONS
 1. Reduce approval drag in the primary workflow lane
@@ -209,13 +208,11 @@ return () => observer.disconnect();
 
 useEffect(() => {
 const interval = window.setInterval(() => {
-setWorkflowHealth((v) => Math.max(78, Math.min(92, v + (Math.random() > 0.5 ? 1 : -1))));
-setRiskScore((v) => Math.max(43, Math.min(67, v + (Math.random() > 0.5 ? 1 : -1))));
-setMonthlyLoss((v) =>
-Math.max(1800, Math.min(3400, v + Math.round((Math.random() - 0.5) * 120)))
-);
+setWorkflowHealth((v) => Math.max(84, Math.min(95, v + (Math.random() > 0.5 ? 1 : -1))));
+setRiskScore((v) => Math.max(49, Math.min(69, v + (Math.random() > 0.5 ? 1 : -1))));
+setMonthlyLoss((v) => Math.max(2200, Math.min(3600, v + Math.round((Math.random() - 0.5) * 120))));
 setRecoveryOpportunity((v) =>
-Math.max(2200, Math.min(4200, v + Math.round((Math.random() - 0.5) * 160)))
+Math.max(3000, Math.min(4700, v + Math.round((Math.random() - 0.5) * 160)))
 );
 }, 4500);
 
@@ -262,11 +259,11 @@ if (!isScanning) return;
 
 if (scanProgress >= 100) {
 const team = Number(teamSize) || 18;
-const cost = Number(costImpact.replace(/[^0-9]/g, '')) || 2100;
-const risk = Math.max(44, Math.min(81, 42 + Math.floor(team / 2) + (workflowBottleneck ? 8 : 0)));
-const health = Math.max(72, Math.min(93, 94 - Math.floor(team / 4)));
-const loss = Math.max(1400, Math.round(cost || 2100));
-const recovery = Math.round(loss * 1.28);
+const cost = Number(costImpact.replace(/[^0-9]/g, '')) || 2840;
+const risk = Math.max(50, Math.min(82, 44 + Math.floor(team / 2) + (workflowBottleneck ? 8 : 0)));
+const health = Math.max(82, Math.min(96, 96 - Math.floor(team / 5)));
+const loss = Math.max(2000, Math.round(cost || 2840));
+const recovery = Math.round(loss * 1.4);
 
 setWorkflowHealth(health);
 setRiskScore(risk);
@@ -285,7 +282,6 @@ PRIMARY SIGNALS
 - Repeated manual reporting is increasing duplicate effort
 - Critical context is degrading between handoff stages
 - Workflow risk is currently elevated to ${risk}/100
-- Demand flow remains healthy, but downstream execution continuity is under pressure
 
 OPERATOR RECOMMENDATIONS
 1. Reduce approval drag in the primary workflow lane
@@ -296,8 +292,8 @@ OPERATOR RECOMMENDATIONS
 
 OUTLOOK
 If current friction is reduced, workflow health should move toward ${Math.min(
-97,
-health + 5
+98,
+health + 4
 )}% and recovery opportunity can rise toward ${formatCurrency(Math.round(recovery * 1.08))}.`);
 
 setActivity((prev) => [
@@ -368,20 +364,23 @@ return `Last scan: ${formatShortDate(lastScanAt)}`;
 }, [isScanning, scanProgress, lastScanAt]);
 
 const demandSnapshot = useMemo(() => {
-const weeklyInbound = bookings.length + 9;
-const consultationRate = 68;
-const topInquiryType = 'Business Consultation';
-const avgDaysToCall = 2.4;
-const confirmedCount = bookings.filter((b) => b.status === 'confirmed').length;
-const nextThree = bookings.slice(0, 3);
+const confirmed = bookings.filter((b) => b.status === 'confirmed').length;
+const pending = bookings.filter((b) => b.status === 'pending').length;
+const nextBooking = bookings[0];
+const inquiryMix = bookings.reduce<Record<string, number>>((acc, booking) => {
+acc[booking.type] = (acc[booking.type] || 0) + 1;
+return acc;
+}, {});
+const topInquiryType =
+Object.entries(inquiryMix).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Business Consultation';
 
 return {
-weeklyInbound,
-consultationRate,
+inboundThisWeek: bookings.length + 7,
+confirmedRate: Math.round((confirmed / Math.max(bookings.length, 1)) * 100),
+nextUp: nextBooking?.name || 'No upcoming booking',
 topInquiryType,
-avgDaysToCall,
-confirmedCount,
-nextThree,
+avgDaysToCall: 2.1,
+pending,
 };
 }, [bookings]);
 
@@ -431,7 +430,7 @@ isActive
 
 <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
 <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Bookings sync</p>
-<p className="mt-2 text-sm text-white">Demand stream active</p>
+<p className="mt-2 text-sm text-white">Demand layer active</p>
 </div>
 
 <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
@@ -570,7 +569,7 @@ Schedule Operator Review
 </div>
 </div>
 
-<div className="grid grid-cols-1 gap-3.5 px-5 py-5 sm:px-6 lg:grid-cols-4 lg:px-6">
+<div className="grid grid-cols-1 gap-3.5 px-5 py-5 sm:px-6 md:grid-cols-2 xl:grid-cols-4 lg:px-6">
 <div className="metricCard hoverCard">
 <p className="metricLabel">Workflow Health</p>
 <p className="metricValue">{workflowHealth}%</p>
@@ -674,7 +673,7 @@ Collapse status reporting into one primary operating view.
 </div>
 </section>
 
-<section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.04fr_0.96fr]">
+<section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.08fr_0.92fr]">
 <div className="grid gap-6 self-start">
 <section id="intelligence-summary" className="cardShell hoverCard">
 <div className="flex items-center justify-between gap-4">
@@ -723,7 +722,7 @@ scheduled: formatShortDate(new Date(Date.now() + 1000 * 60 * 60 * 24)),
 source: 'website',
 status: 'pending',
 },
-...prev.slice(0, 5),
+...prev.slice(0, 4),
 ])
 }
 className="rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
@@ -733,7 +732,8 @@ Refresh
 </div>
 
 <div className="mt-5 overflow-hidden rounded-2xl border border-white/8 bg-[#0a0d14]">
-<table className="min-w-full border-separate border-spacing-0 text-left text-sm hidden lg:table">
+<div className="hidden lg:block">
+<table className="min-w-full border-separate border-spacing-0 text-left text-sm">
 <thead>
 <tr className="text-gray-400">
 <th className="border-b border-white/8 px-3 py-3 font-medium">Name</th>
@@ -768,17 +768,18 @@ booking.status === 'confirmed'
 ))}
 </tbody>
 </table>
+</div>
 
-<div className="grid gap-3 p-4 lg:hidden">
+<div className="grid gap-3 p-3 lg:hidden">
 {bookings.map((booking) => (
 <div key={booking.id} className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
 <div className="flex items-start justify-between gap-3">
-<div>
+<div className="min-w-0">
 <p className="font-medium text-white">{booking.name}</p>
 <p className="mt-1 break-all text-sm text-gray-400">{booking.email}</p>
 </div>
 <span
-className={`rounded-full border px-3 py-1 text-xs ${
+className={`shrink-0 rounded-full border px-3 py-1 text-xs ${
 booking.status === 'confirmed'
 ? 'border-cyan-400/15 bg-cyan-400/8 text-cyan-200'
 : 'border-yellow-400/15 bg-yellow-400/8 text-yellow-200'
@@ -787,7 +788,7 @@ booking.status === 'confirmed'
 {booking.source}
 </span>
 </div>
-<div className="mt-3 grid gap-1 text-sm text-gray-400 sm:grid-cols-2">
+<div className="mt-3 grid gap-2 text-sm text-gray-300">
 <p>Type: {booking.type}</p>
 <p>Scheduled: {booking.scheduled}</p>
 </div>
@@ -796,116 +797,42 @@ booking.status === 'confirmed'
 </div>
 </div>
 
-<div className="mt-5 rounded-2xl border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.028),rgba(255,255,255,0.012))] p-4 sm:p-5">
-<div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-<div>
-<p className="text-[11px] uppercase tracking-[0.24em] text-cyan-300">
-Demand Snapshot
-</p>
-<h4 className="mt-2 text-lg font-semibold text-white">
-Inbound demand quality and scheduling momentum
-</h4>
-</div>
-<span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-gray-400">
-Booking intelligence
-</span>
-</div>
-
-<div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+<div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
 <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Inbound this week</p>
-<p className="mt-2 text-2xl font-bold text-white">{demandSnapshot.weeklyInbound}</p>
-<p className="mt-2 text-sm text-gray-400">Active consult demand entering the pipeline.</p>
-</div>
-
-<div className="rounded-2xl border border-cyan-400/15 bg-cyan-400/[0.05] p-4">
-<p className="text-[10px] uppercase tracking-[0.2em] text-cyan-300">Consult-to-review rate</p>
-<p className="mt-2 text-2xl font-bold text-white">{demandSnapshot.consultationRate}%</p>
-<p className="mt-2 text-sm text-gray-400">Share of inbound interest moving into deeper review.</p>
+<p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Inbound this week</p>
+<p className="mt-2 text-2xl font-semibold text-white">{demandSnapshot.inboundThisWeek}</p>
+<p className="mt-2 text-sm text-gray-400">Total consultation demand entering the current week.</p>
 </div>
 
 <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Top inquiry type</p>
-<p className="mt-2 text-base font-semibold text-white">{demandSnapshot.topInquiryType}</p>
-<p className="mt-2 text-sm text-gray-400">Strongest recurring demand category.</p>
-</div>
-
-<div className="rounded-2xl border border-green-500/15 bg-green-500/[0.05] p-4">
-<p className="text-[10px] uppercase tracking-[0.2em] text-green-300">Avg. days to call</p>
-<p className="mt-2 text-2xl font-bold text-white">{demandSnapshot.avgDaysToCall}</p>
-<p className="mt-2 text-sm text-gray-400">Time from inbound to scheduled conversation.</p>
-</div>
-</div>
-
-<div className="mt-4 grid gap-3 xl:grid-cols-[0.95fr_1.05fr]">
-<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Confirmed bookings</p>
-<p className="mt-2 text-2xl font-bold text-white">{demandSnapshot.confirmedCount}</p>
-<p className="mt-2 text-sm text-gray-400">
-Confirmed consultations currently strengthening forward demand visibility.
-</p>
+<p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Confirmed rate</p>
+<p className="mt-2 text-2xl font-semibold text-cyan-200">{demandSnapshot.confirmedRate}%</p>
+<p className="mt-2 text-sm text-gray-400">Share of scheduled demand already locked in.</p>
 </div>
 
 <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-<p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Next upcoming calls</p>
-<div className="mt-3 space-y-2">
-{demandSnapshot.nextThree.map((booking) => (
-<div
-key={`snapshot-${booking.id}`}
-className="flex flex-col gap-1 rounded-xl border border-white/6 bg-white/[0.02] px-3 py-2 sm:flex-row sm:items-center sm:justify-between"
->
-<div className="min-w-0">
-<p className="truncate text-sm font-medium text-white">{booking.name}</p>
-<p className="truncate text-xs text-gray-400">{booking.type}</p>
-</div>
-<p className="text-xs text-gray-400">{booking.scheduled}</p>
-</div>
-))}
-</div>
-</div>
-</div>
-</div>
-</section>
-
-<section id="activity" className="cardShell hoverCard">
-<div className="flex items-center justify-between gap-4">
-<div>
-<h3 className="text-[1.55rem] font-semibold">Live Activity Stream</h3>
-<p className="mt-2 text-sm text-gray-400">
-Console-native activity feed for changing signals and actions.
-</p>
-</div>
-<span className="rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-green-200 signal-green">
-Live
-</span>
+<p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Top inquiry type</p>
+<p className="mt-2 text-lg font-semibold text-white">{demandSnapshot.topInquiryType}</p>
+<p className="mt-2 text-sm text-gray-400">Most common operator entry point right now.</p>
 </div>
 
-<div className="mt-5 space-y-3">
-{activity.map((item) => (
-<div
-key={item.id}
-className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition-all duration-300 hover:border-white/14"
->
-<div className="flex flex-wrap items-center justify-between gap-3">
-<div className="flex items-center gap-3">
-<span
-className={`inline-block h-2.5 w-2.5 rounded-full ${
-item.tone === 'cyan'
-? 'bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.75)]'
-: item.tone === 'green'
-? 'bg-green-300 shadow-[0_0_12px_rgba(34,197,94,0.75)]'
-: item.tone === 'yellow'
-? 'bg-yellow-300 shadow-[0_0_12px_rgba(245,158,11,0.75)]'
-: 'bg-red-300 shadow-[0_0_12px_rgba(239,68,68,0.75)]'
-}`}
-/>
-<p className="font-medium text-white">{item.label}</p>
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Next up</p>
+<p className="mt-2 text-lg font-semibold text-white">{demandSnapshot.nextUp}</p>
+<p className="mt-2 text-sm text-gray-400">Closest demand event requiring operator attention.</p>
 </div>
-<p className="text-xs uppercase tracking-[0.18em] text-gray-500">{item.time}</p>
+
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Avg. days to call</p>
+<p className="mt-2 text-2xl font-semibold text-white">{demandSnapshot.avgDaysToCall}</p>
+<p className="mt-2 text-sm text-gray-400">Typical lag from inquiry to scheduled conversation.</p>
 </div>
-<p className="mt-2 text-sm text-gray-400">{item.detail}</p>
+
+<div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
+<p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Pending demand</p>
+<p className="mt-2 text-2xl font-semibold text-yellow-200">{demandSnapshot.pending}</p>
+<p className="mt-2 text-sm text-gray-400">Active opportunities not yet fully confirmed.</p>
 </div>
-))}
 </div>
 </section>
 </div>
@@ -965,7 +892,11 @@ Save Current Scan
 <div className="mt-5 rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
 <div className="flex items-center justify-between gap-4">
 <p className="text-sm font-medium text-white">Scan progress</p>
-<p className="text-sm text-cyan-200">{isScanning ? `${scanProgress}%` : 'Ready'}</p>
+{isScanning ? (
+<p className="text-sm text-cyan-200">{`${scanProgress}%`}</p>
+) : (
+<p className="text-sm font-semibold signal-green">Ready</p>
+)}
 </div>
 <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
 <div
@@ -1013,7 +944,7 @@ Missing intake signal can create early delay and downstream rework.
 <div className="mt-4 space-y-3.5">
 <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
 <div className="flex items-center justify-between gap-4">
-<p className="font-medium">Sales → Delivery</p>
+<p className="font-medium">Sales to Delivery</p>
 <span className="signal-red text-sm font-semibold">Missing context</span>
 </div>
 <p className="mt-2 text-sm text-gray-400">
@@ -1023,7 +954,7 @@ Critical execution context is likely not arriving intact at the next stage.
 
 <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
 <div className="flex items-center justify-between gap-4">
-<p className="font-medium">Support → Operations</p>
+<p className="font-medium">Support to Operations</p>
 <span className="signal-yellow text-sm font-semibold">Weak ownership</span>
 </div>
 <p className="mt-2 text-sm text-gray-400">
@@ -1056,6 +987,48 @@ Similar progress signal is likely being captured across multiple surfaces.
 Teams may be re-entering the same status layer across tools and stages.
 </p>
 </div>
+</div>
+</section>
+
+<section id="activity" className="cardShell hoverCard">
+<div className="flex items-center justify-between gap-4">
+<div>
+<h3 className="text-[1.55rem] font-semibold">Live Activity</h3>
+<p className="mt-2 text-sm text-gray-400">
+Console-native signal and action updates.
+</p>
+</div>
+<span className="rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-green-200 signal-green">
+Live
+</span>
+</div>
+
+<div className="mt-5 space-y-3">
+{activity.map((item) => (
+<div
+key={item.id}
+className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4 transition-all duration-300 hover:border-white/14"
+>
+<div className="flex flex-wrap items-center justify-between gap-3">
+<div className="flex items-center gap-3">
+<span
+className={`inline-block h-2.5 w-2.5 rounded-full ${
+item.tone === 'cyan'
+? 'bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.75)]'
+: item.tone === 'green'
+? 'bg-green-300 shadow-[0_0_12px_rgba(34,197,94,0.75)]'
+: item.tone === 'yellow'
+? 'bg-yellow-300 shadow-[0_0_12px_rgba(245,158,11,0.75)]'
+: 'bg-red-300 shadow-[0_0_12px_rgba(239,68,68,0.75)]'
+}`}
+/>
+<p className="font-medium text-white">{item.label}</p>
+</div>
+<p className="text-xs uppercase tracking-[0.18em] text-gray-500">{item.time}</p>
+</div>
+<p className="mt-2 text-sm text-gray-400">{item.detail}</p>
+</div>
+))}
 </div>
 </section>
 </div>
@@ -1137,10 +1110,12 @@ Terms
 <style jsx global>{`
 .cardShell {
 border: 1px solid rgba(255, 255, 255, 0.08);
-background: rgba(255, 255, 255, 0.022);
+background: rgba(255, 255, 255, 0.02);
 padding: 20px;
-border-radius: 28px;
+border-radius: 24px;
 box-shadow: 0 10px 34px rgba(0, 0, 0, 0.2);
+height: auto !important;
+min-height: 0 !important;
 }
 
 .hoverCard {
@@ -1192,9 +1167,8 @@ color: rgb(156 163 175);
 margin-top: 12px;
 font-size: 2.15rem;
 font-weight: 700;
-transition: transform 260ms ease, opacity 260ms ease;
-line-height: 1.08;
-overflow-wrap: anywhere;
+line-height: 1.05;
+word-break: break-word;
 }
 
 .metricText {
@@ -1309,94 +1283,7 @@ text-shadow:
 0 0 10px rgba(255, 255, 255, 0.08);
 }
 50% {
-text-shadow:
-0 0 16px rgba(255, 255, 255, 0.45),
-0 0 30px rgba(96, 165, 250, 0.26);
-}
-}
+text-sh
+...
 
-.signal {
-font-weight: 600;
-}
-
-.signal.High {
-color: #f87171;
-animation: pulseRed 2s infinite;
-}
-
-.signal.Medium {
-color: #fde68a;
-animation: pulseYellow 2s infinite;
-}
-
-.signal-red {
-color: #f87171;
-animation: pulseRed 2s infinite;
-}
-
-.signal-yellow {
-color: #fde68a;
-animation: pulseYellow 2s infinite;
-}
-
-.signal-cyan {
-color: #7dd3fc;
-animation: pulseCyan 2s infinite;
-}
-
-.signal-green {
-color: #86efac;
-animation: pulseGreen 2s infinite;
-}
-
-@keyframes pulseRed {
-0%,
-100% {
-text-shadow: 0 0 4px rgba(239, 68, 68, 0.3);
-}
-50% {
-text-shadow:
-0 0 9px rgba(248, 113, 113, 0.9),
-0 0 20px rgba(239, 68, 68, 0.55);
-}
-}
-
-@keyframes pulseYellow {
-0%,
-100% {
-text-shadow: 0 0 4px rgba(245, 158, 11, 0.3);
-}
-50% {
-text-shadow:
-0 0 9px rgba(253, 224, 71, 0.9),
-0 0 20px rgba(245, 158, 11, 0.55);
-}
-}
-
-@keyframes pulseCyan {
-0%,
-100% {
-text-shadow: 0 0 4px rgba(34, 211, 238, 0.3);
-}
-50% {
-text-shadow:
-0 0 9px rgba(103, 232, 249, 0.9),
-0 0 20px rgba(34, 211, 238, 0.55);
-}
-}
-
-@keyframes pulseGreen {
-0%,
-100% {
-text-shadow: 0 0 4px rgba(34, 197, 94, 0.3);
-}
-50% {
-text-shadow:
-0 0 9px rgba(134, 239, 172, 0.95),
-0 0 20px rgba(34, 197, 94, 0.55);
-}
-}
-`}</style>
-</main>
-);
-}
+[Message clipped]  View entire message
