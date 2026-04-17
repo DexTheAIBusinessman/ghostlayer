@@ -6,21 +6,24 @@ import { useEffect, useMemo, useState } from 'react';
 type SectionId =
 | 'overview'
 | 'priority-issues'
+| 'health-chart'
 | 'intelligence-summary'
-| 'run-scan'
 | 'bookings'
+| 'run-scan'
 | 'delay-hotspots'
 | 'broken-handoffs'
 | 'duplicate-work'
 | 'activity'
 | 'feedback';
 
+type Tone = 'cyan' | 'green' | 'yellow' | 'red';
+
 type ActivityItem = {
 id: number;
 time: string;
 label: string;
 detail: string;
-tone: 'cyan' | 'green' | 'yellow' | 'red';
+tone: Tone;
 };
 
 type BookingItem = {
@@ -54,6 +57,163 @@ minute: '2-digit',
 });
 }
 
+function AnimatedNumber({
+value,
+prefix = '',
+suffix = '',
+decimals = 0,
+duration = 900,
+}: {
+value: number;
+prefix?: string;
+suffix?: string;
+decimals?: number;
+duration?: number;
+}) {
+const [display, setDisplay] = useState(value);
+
+useEffect(() => {
+const start = display;
+const end = value;
+const startTime = performance.now();
+let frame = 0;
+
+const tick = (now: number) => {
+const progress = Math.min((now - startTime) / duration, 1);
+const eased = 1 - Math.pow(1 - progress, 3);
+setDisplay(start + (end - start) * eased);
+if (progress < 1) frame = requestAnimationFrame(tick);
+};
+
+frame = requestAnimationFrame(tick);
+return () => cancelAnimationFrame(frame);
+}, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+
+return (
+<span>
+{prefix}
+{display.toFixed(decimals)}
+{suffix}
+</span>
+);
+}
+
+function TrendChart({
+healthSeries,
+riskSeries,
+lossSeries,
+}: {
+healthSeries: number[];
+riskSeries: number[];
+lossSeries: number[];
+}) {
+const width = 720;
+const height = 240;
+const pad = 20;
+
+const scaledLoss = lossSeries.map((v) => v / 45);
+const all = [...healthSeries, ...riskSeries, ...scaledLoss];
+const min = Math.min(...all) - 3;
+const max = Math.max(...all) + 3;
+
+const points = (series: number[]) => {
+const w = width - pad * 2;
+const h = height - pad * 2;
+
+return series
+.map((value, i) => {
+const x = pad + (i / Math.max(series.length - 1, 1)) * w;
+const y = pad + (1 - (value - min) / Math.max(max - min, 1)) * h;
+return `${x},${y}`;
+})
+.join(' ');
+};
+
+return (
+<div className="rounded-[22px] border border-white/8 bg-[#0a0d14] p-4">
+<div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+<div>
+<p className="text-[10px] uppercase tracking-[0.24em] text-gray-500">Trend intelligence</p>
+<h3 className="mt-2 text-lg font-semibold text-white">
+Workflow health, risk, and loss trend
+</h3>
+</div>
+
+<div className="flex flex-wrap gap-2 text-xs">
+<span className="rounded-full border border-green-400/20 bg-green-400/10 px-3 py-1 text-green-200">
+Health
+</span>
+<span className="rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-cyan-200">
+Risk
+</span>
+<span className="rounded-full border border-red-400/20 bg-red-400/10 px-3 py-1 text-red-200">
+Loss
+</span>
+</div>
+</div>
+
+<div className="overflow-hidden rounded-2xl border border-white/6 bg-[linear-gradient(180deg,rgba(255,255,255,0.02),rgba(255,255,255,0.01))]">
+<svg viewBox={`0 0 ${width} ${height}`} className="h-[220px] w-full" preserveAspectRatio="none">
+{[0, 1, 2, 3].map((row) => {
+const y = pad + (row / 3) * (height - pad * 2);
+return (
+<line
+key={`h-${row}`}
+x1={pad}
+x2={width - pad}
+y1={y}
+y2={y}
+stroke="rgba(255,255,255,0.08)"
+strokeWidth="1"
+/>
+);
+})}
+
+{[0, 1, 2, 3, 4, 5, 6].map((col) => {
+const x = pad + (col / 6) * (width - pad * 2);
+return (
+<line
+key={`v-${col}`}
+x1={x}
+x2={x}
+y1={pad}
+y2={height - pad}
+stroke="rgba(255,255,255,0.05)"
+strokeWidth="1"
+/>
+);
+})}
+
+<polyline
+points={points(healthSeries)}
+fill="none"
+stroke="rgba(134,239,172,0.95)"
+strokeWidth="3"
+strokeLinecap="round"
+strokeLinejoin="round"
+/>
+<polyline
+points={points(riskSeries)}
+fill="none"
+stroke="rgba(125,211,252,0.95)"
+strokeWidth="3"
+strokeLinecap="round"
+strokeLinejoin="round"
+/>
+<polyline
+points={points(scaledLoss)}
+fill="none"
+stroke="rgba(248,113,113,0.95)"
+strokeWidth="3"
+strokeLinecap="round"
+strokeLinejoin="round"
+/>
+</svg>
+</div>
+</div>
+);
+}
+
 export default function DashboardPage() {
 const [activeSection, setActiveSection] = useState<SectionId>('overview');
 
@@ -66,11 +226,16 @@ const [isScanning, setIsScanning] = useState(false);
 const [scanProgress, setScanProgress] = useState(0);
 const [lastScanAt, setLastScanAt] = useState<Date | null>(new Date());
 const [feedback, setFeedback] = useState('');
+const [scanFlash, setScanFlash] = useState(false);
 
 const [workflowHealth, setWorkflowHealth] = useState(91);
 const [riskScore, setRiskScore] = useState(58);
 const [monthlyLoss, setMonthlyLoss] = useState(2840);
 const [recoveryOpportunity, setRecoveryOpportunity] = useState(3975);
+
+const [healthSeries, setHealthSeries] = useState([87, 88, 89, 90, 90, 91, 91]);
+const [riskSeries, setRiskSeries] = useState([61, 60, 60, 59, 58, 58, 58]);
+const [lossSeries, setLossSeries] = useState([3180, 3120, 3040, 2980, 2920, 2880, 2840]);
 
 const [bookings, setBookings] = useState<BookingItem[]>([
 {
@@ -159,9 +324,10 @@ If current friction is reduced, workflow health, throughput stability, and recov
 const navItems: { id: SectionId; label: string }[] = [
 { id: 'overview', label: 'Overview' },
 { id: 'priority-issues', label: 'Priority Issues' },
+{ id: 'health-chart', label: 'Trend Chart' },
 { id: 'intelligence-summary', label: 'Intelligence Summary' },
-{ id: 'run-scan', label: 'Run Scan' },
 { id: 'bookings', label: 'Bookings' },
+{ id: 'run-scan', label: 'Run Scan' },
 { id: 'delay-hotspots', label: 'Delay Hotspots' },
 { id: 'broken-handoffs', label: 'Broken Handoffs' },
 { id: 'duplicate-work', label: 'Duplicate Work' },
@@ -169,18 +335,7 @@ const navItems: { id: SectionId; label: string }[] = [
 ];
 
 useEffect(() => {
-const ids = [
-'overview',
-'priority-issues',
-'intelligence-summary',
-'run-scan',
-'bookings',
-'delay-hotspots',
-'broken-handoffs',
-'duplicate-work',
-'activity',
-'feedback',
-];
+const ids = navItems.map((item) => item.id).concat('feedback');
 
 const observer = new IntersectionObserver(
 (entries) => {
@@ -204,13 +359,28 @@ if (el) observer.observe(el);
 });
 
 return () => observer.disconnect();
-}, []);
+}, []); // eslint-disable-line react-hooks/exhaustive-deps
 
 useEffect(() => {
 const interval = window.setInterval(() => {
-setWorkflowHealth((v) => Math.max(84, Math.min(95, v + (Math.random() > 0.5 ? 1 : -1))));
-setRiskScore((v) => Math.max(49, Math.min(69, v + (Math.random() > 0.5 ? 1 : -1))));
-setMonthlyLoss((v) => Math.max(2200, Math.min(3600, v + Math.round((Math.random() - 0.5) * 120))));
+setWorkflowHealth((v) => {
+const next = Math.max(84, Math.min(95, v + (Math.random() > 0.5 ? 1 : -1)));
+setHealthSeries((series) => [...series.slice(1), next]);
+return next;
+});
+
+setRiskScore((v) => {
+const next = Math.max(49, Math.min(69, v + (Math.random() > 0.5 ? 1 : -1)));
+setRiskSeries((series) => [...series.slice(1), next]);
+return next;
+});
+
+setMonthlyLoss((v) => {
+const next = Math.max(2200, Math.min(3600, v + Math.round((Math.random() - 0.5) * 120)));
+setLossSeries((series) => [...series.slice(1), next]);
+return next;
+});
+
 setRecoveryOpportunity((v) =>
 Math.max(3000, Math.min(4700, v + Math.round((Math.random() - 0.5) * 160)))
 );
@@ -221,7 +391,7 @@ return () => window.clearInterval(interval);
 
 useEffect(() => {
 const interval = window.setInterval(() => {
-const tones: ActivityItem['tone'][] = ['cyan', 'green', 'yellow', 'red'];
+const tones: Tone[] = ['cyan', 'green', 'yellow', 'red'];
 const labels = [
 'Signal recalculated',
 'Operator view refreshed',
@@ -269,7 +439,13 @@ setWorkflowHealth(health);
 setRiskScore(risk);
 setMonthlyLoss(loss);
 setRecoveryOpportunity(recovery);
+setHealthSeries((series) => [...series.slice(1), health]);
+setRiskSeries((series) => [...series.slice(1), risk]);
+setLossSeries((series) => [...series.slice(1), loss]);
+
 setLastScanAt(new Date());
+setScanFlash(true);
+window.setTimeout(() => setScanFlash(false), 1100);
 
 setSummary(`EXECUTIVE SUMMARY
 
@@ -339,6 +515,21 @@ detail: 'Operator-grade refresh running across active signal layers.',
 tone: 'cyan',
 },
 ...prev.slice(0, 5),
+]);
+}
+
+function refreshBookings() {
+setBookings((prev) => [
+{
+id: Date.now(),
+name: 'New Demo Lead',
+email: `lead${prev.length + 1}@ghostlayer.ai`,
+type: 'Workflow Review',
+scheduled: formatShortDate(new Date(Date.now() + 1000 * 60 * 60 * 24)),
+source: 'website',
+status: 'pending',
+},
+...prev.slice(0, 4),
 ]);
 }
 
@@ -423,7 +614,7 @@ isActive
 </nav>
 
 <div className="mt-5 grid gap-3">
-<div className="rounded-2xl border border-white/10 bg-black/20 p-3">
+<div className={`rounded-2xl border p-3 transition-all duration-500 ${scanFlash ? 'border-cyan-300/25 bg-cyan-400/[0.08]' : 'border-white/10 bg-black/20'}`}>
 <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Last scan</p>
 <p className="mt-2 text-sm text-white">{lastScanAt ? formatClock(lastScanAt) : 'None yet'}</p>
 </div>
@@ -522,7 +713,7 @@ isActive
 <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 md:px-8 lg:px-10 md:py-7">
 <section
 id="overview"
-className="overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] shadow-[0_12px_40px_rgba(0,0,0,0.28)]"
+className={`panelReveal overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] shadow-[0_12px_40px_rgba(0,0,0,0.28)] ${scanFlash ? 'scanPulse' : ''}`}
 >
 <div className="border-b border-white/8 px-5 py-5 sm:px-6 lg:px-6">
 <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
@@ -570,31 +761,39 @@ Schedule Operator Review
 </div>
 
 <div className="grid grid-cols-1 gap-3.5 px-5 py-5 sm:px-6 md:grid-cols-2 xl:grid-cols-4 lg:px-6">
-<div className="metricCard hoverCard">
+<div className={`metricCard hoverCard ${scanFlash ? 'metricFlash' : ''}`}>
 <p className="metricLabel">Workflow Health</p>
-<p className="metricValue">{workflowHealth}%</p>
+<p className="metricValue">
+<AnimatedNumber value={workflowHealth} suffix="%" />
+</p>
 <p className="metricText">Operational coherence across active workflow stages.</p>
 </div>
 
-<div className="metricCard metricBlue hoverCard">
+<div className={`metricCard metricBlue hoverCard ${scanFlash ? 'metricFlash' : ''}`}>
 <p className="metricLabel text-cyan-200">Risk Score</p>
-<p className="metricValue">{riskScore}/100</p>
+<p className="metricValue">
+<AnimatedNumber value={riskScore} suffix="/100" />
+</p>
 <p className="metricText text-cyan-50/80">
 Elevated score signals drag, delay, and ownership instability.
 </p>
 </div>
 
-<div className="metricCard metricRed hoverCard">
+<div className={`metricCard metricRed hoverCard ${scanFlash ? 'metricFlash' : ''}`}>
 <p className="metricLabel text-red-200">Est. Monthly Loss</p>
-<p className="metricValue">{formatCurrency(monthlyLoss)}</p>
+<p className="metricValue">
+<AnimatedNumber value={monthlyLoss} prefix="$" suffix="/mo" />
+</p>
 <p className="metricText text-red-50/80">
 Estimated productivity loss caused by workflow friction.
 </p>
 </div>
 
-<div className="metricCard metricGreen hoverCard">
+<div className={`metricCard metricGreen hoverCard ${scanFlash ? 'metricFlash' : ''}`}>
 <p className="metricLabel text-green-200">Recovery Opportunity</p>
-<p className="metricValue">{formatCurrency(recoveryOpportunity)}</p>
+<p className="metricValue">
+<AnimatedNumber value={recoveryOpportunity} prefix="$" suffix="/mo" />
+</p>
 <p className="metricText text-green-50/80">
 Recoverable value if bottlenecks and duplicate effort are reduced.
 </p>
@@ -604,7 +803,7 @@ Recoverable value if bottlenecks and duplicate effort are reduced.
 
 <section
 id="priority-issues"
-className="mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
+className="panelReveal mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
 >
 <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
 <div>
@@ -673,9 +872,17 @@ Collapse status reporting into one primary operating view.
 </div>
 </section>
 
+<section id="health-chart" className="panelReveal mt-6">
+<TrendChart
+healthSeries={healthSeries}
+riskSeries={riskSeries}
+lossSeries={lossSeries}
+/>
+</section>
+
 <section className="mt-6 grid grid-cols-1 gap-6 xl:grid-cols-[1.08fr_0.92fr]">
 <div className="grid gap-6 self-start">
-<section id="intelligence-summary" className="cardShell hoverCard">
+<section id="intelligence-summary" className="cardShell hoverCard panelReveal">
 <div className="flex items-center justify-between gap-4">
 <div>
 <h3 className="text-[1.55rem] font-semibold text-cyan-300">
@@ -696,12 +903,12 @@ This summary isolates where drag is forming, where cost exposure is building,
 and where operator attention should concentrate first.
 </p>
 
-<pre className="mt-4 min-h-[180px] overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/8 bg-[#0a0d14] p-4 text-sm leading-7 text-gray-300 transition-all duration-300">
+<pre className="mt-4 min-h-[180px] overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/8 bg-[#0a0d14] p-4 text-sm leading-7 text-gray-300">
 {summary}
 </pre>
 </section>
 
-<section id="bookings" className="cardShell hoverCard">
+<section id="bookings" className="cardShell hoverCard panelReveal">
 <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
 <div className="min-w-0">
 <h3 className="text-[1.55rem] font-semibold">Recent Bookings</h3>
@@ -711,20 +918,7 @@ Consultation activity entering the Ghostlayer demand layer.
 </div>
 
 <button
-onClick={() =>
-setBookings((prev) => [
-{
-id: Date.now(),
-name: 'New Demo Lead',
-email: `lead${prev.length + 1}@ghostlayer.ai`,
-type: 'Workflow Review',
-scheduled: formatShortDate(new Date(Date.now() + 1000 * 60 * 60 * 24)),
-source: 'website',
-status: 'pending',
-},
-...prev.slice(0, 4),
-])
-}
+onClick={refreshBookings}
 className="rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
 >
 Refresh
@@ -788,6 +982,7 @@ booking.status === 'confirmed'
 {booking.source}
 </span>
 </div>
+
 <div className="mt-3 grid gap-2 text-sm text-gray-300">
 <p>Type: {booking.type}</p>
 <p>Scheduled: {booking.scheduled}</p>
@@ -838,7 +1033,7 @@ booking.status === 'confirmed'
 </div>
 
 <div className="grid gap-6 self-start">
-<section id="run-scan" className="cardShell hoverCard">
+<section id="run-scan" className={`cardShell hoverCard panelReveal ${scanFlash ? 'scanPulse' : ''}`}>
 <h3 className="text-[1.55rem] font-semibold">Run a New Workflow Scan</h3>
 <p className="mt-2 text-sm text-gray-400">
 Enter business inputs to generate a fresh workflow intelligence summary and
@@ -898,12 +1093,14 @@ Save Current Scan
 <p className="text-sm font-semibold signal-green">Ready</p>
 )}
 </div>
+
 <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
 <div
 className="h-full rounded-full bg-gradient-to-r from-cyan-300 via-blue-400 to-purple-400 transition-all duration-300"
 style={{ width: `${isScanning ? scanProgress : 0}%` }}
 />
 </div>
+
 <p className="mt-3 text-sm text-gray-400">
 {isScanning
 ? 'Refreshing live signal state across workflow, handoff, and reporting layers.'
@@ -912,7 +1109,7 @@ style={{ width: `${isScanning ? scanProgress : 0}%` }}
 </div>
 </section>
 
-<section id="delay-hotspots" className="cardShell hoverCard">
+<section id="delay-hotspots" className="cardShell hoverCard panelReveal">
 <h3 className="text-xl font-semibold">Delay Hotspots</h3>
 
 <div className="mt-4 space-y-3.5">
@@ -938,7 +1135,7 @@ Missing intake signal can create early delay and downstream rework.
 </div>
 </section>
 
-<section id="broken-handoffs" className="cardShell hoverCard">
+<section id="broken-handoffs" className="cardShell hoverCard panelReveal">
 <h3 className="text-xl font-semibold">Broken Handoffs</h3>
 
 <div className="mt-4 space-y-3.5">
@@ -964,7 +1161,7 @@ Escalated work may be slowing because ownership boundaries are unclear.
 </div>
 </section>
 
-<section id="duplicate-work" className="cardShell hoverCard">
+<section id="duplicate-work" className="cardShell hoverCard panelReveal">
 <h3 className="text-xl font-semibold">Duplicate Work</h3>
 
 <div className="mt-4 space-y-3.5">
@@ -990,7 +1187,7 @@ Teams may be re-entering the same status layer across tools and stages.
 </div>
 </section>
 
-<section id="activity" className="cardShell hoverCard">
+<section id="activity" className="cardShell hoverCard panelReveal">
 <div className="flex items-center justify-between gap-4">
 <div>
 <h3 className="text-[1.55rem] font-semibold">Live Activity</h3>
@@ -998,6 +1195,7 @@ Teams may be re-entering the same status layer across tools and stages.
 Console-native signal and action updates.
 </p>
 </div>
+
 <span className="rounded-full border border-green-500/20 bg-green-500/10 px-3 py-1 text-xs uppercase tracking-[0.18em] text-green-200 signal-green">
 Live
 </span>
@@ -1024,8 +1222,10 @@ item.tone === 'cyan'
 />
 <p className="font-medium text-white">{item.label}</p>
 </div>
+
 <p className="text-xs uppercase tracking-[0.18em] text-gray-500">{item.time}</p>
 </div>
+
 <p className="mt-2 text-sm text-gray-400">{item.detail}</p>
 </div>
 ))}
@@ -1034,7 +1234,7 @@ item.tone === 'cyan'
 </div>
 </section>
 
-<section id="feedback" className="mt-6 cardShell hoverCard">
+<section id="feedback" className="cardShell hoverCard panelReveal mt-6">
 <h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
 <p className="mt-2 text-sm text-gray-400">
 What would make this console more useful in a real operating environment?
@@ -1108,6 +1308,21 @@ Terms
 </div>
 
 <style jsx global>{`
+.panelReveal {
+animation: panelReveal 520ms ease both;
+}
+
+@keyframes panelReveal {
+from {
+opacity: 0;
+transform: translateY(12px);
+}
+to {
+opacity: 1;
+transform: translateY(0);
+}
+}
+
 .cardShell {
 border: 1px solid rgba(255, 255, 255, 0.08);
 background: rgba(255, 255, 255, 0.02);
@@ -1116,6 +1331,7 @@ border-radius: 24px;
 box-shadow: 0 10px 34px rgba(0, 0, 0, 0.2);
 height: auto !important;
 min-height: 0 !important;
+align-self: start !important;
 }
 
 .hoverCard {
@@ -1139,6 +1355,17 @@ border: 1px solid rgba(255, 255, 255, 0.08);
 background: #0a0d14;
 padding: 18px;
 border-radius: 24px;
+transition:
+transform 220ms ease,
+border-color 220ms ease,
+box-shadow 220ms ease,
+background 220ms ease;
+}
+
+.metricFlash {
+box-shadow:
+0 0 0 1px rgba(103, 232, 249, 0.1) inset,
+0 0 22px rgba(103, 232, 249, 0.12);
 }
 
 .metricBlue {
@@ -1283,7 +1510,112 @@ text-shadow:
 0 0 10px rgba(255, 255, 255, 0.08);
 }
 50% {
-text-sh
-...
+text-shadow:
+0 0 16px rgba(255, 255, 255, 0.45),
+0 0 30px rgba(96, 165, 250, 0.26);
+}
+}
 
-[Message clipped]  View entire message
+.signal {
+font-weight: 600;
+}
+
+.signal.High {
+color: #f87171;
+animation: pulseRed 2s infinite;
+}
+
+.signal.Medium {
+color: #fde68a;
+animation: pulseYellow 2s infinite;
+}
+
+.signal-red {
+color: #f87171;
+animation: pulseRed 2s infinite;
+}
+
+.signal-yellow {
+color: #fde68a;
+animation: pulseYellow 2s infinite;
+}
+
+.signal-cyan {
+color: #7dd3fc;
+animation: pulseCyan 2s infinite;
+}
+
+.signal-green {
+color: #86efac;
+animation: pulseGreen 2s infinite;
+}
+
+.scanPulse {
+animation: scanPulse 1.05s ease;
+}
+
+@keyframes scanPulse {
+0% {
+box-shadow: 0 0 0 rgba(103, 232, 249, 0);
+}
+50% {
+box-shadow:
+0 0 0 1px rgba(103, 232, 249, 0.16) inset,
+0 0 32px rgba(103, 232, 249, 0.12);
+}
+100% {
+box-shadow: 0 0 0 rgba(103, 232, 249, 0);
+}
+}
+
+@keyframes pulseRed {
+0%,
+100% {
+text-shadow: 0 0 4px rgba(239, 68, 68, 0.3);
+}
+50% {
+text-shadow:
+0 0 9px rgba(248, 113, 113, 0.9),
+0 0 20px rgba(239, 68, 68, 0.55);
+}
+}
+
+@keyframes pulseYellow {
+0%,
+100% {
+text-shadow: 0 0 4px rgba(245, 158, 11, 0.3);
+}
+50% {
+text-shadow:
+0 0 9px rgba(253, 224, 71, 0.9),
+0 0 20px rgba(245, 158, 11, 0.55);
+}
+}
+
+@keyframes pulseCyan {
+0%,
+100% {
+text-shadow: 0 0 4px rgba(34, 211, 238, 0.3);
+}
+50% {
+text-shadow:
+0 0 9px rgba(103, 232, 249, 0.9),
+0 0 20px rgba(34, 211, 238, 0.55);
+}
+}
+
+@keyframes pulseGreen {
+0%,
+100% {
+text-shadow: 0 0 4px rgba(34, 197, 94, 0.3);
+}
+50% {
+text-shadow:
+0 0 9px rgba(134, 239, 172, 0.95),
+0 0 20px rgba(34, 197, 94, 0.55);
+}
+}
+`}</style>
+</main>
+);
+}
