@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 
 type SectionId =
   | 'overview'
@@ -40,7 +40,7 @@ type ScanSnapshot = {
   companyName: string;
   teamSize: string;
   workflowBottleneck: string;
-  costImpact: string;
+  costImpact: number;
   workflowHealth: number;
   riskScore: number;
   monthlyLoss: number;
@@ -57,6 +57,8 @@ type Toast = {
 
 const STORAGE_KEY = 'ghostlayer_dashboard_saved_scans';
 const HOMEPAGE_URL = 'https://ghostlayer-swart.vercel.app/';
+const MAX_SAVED_SCANS = 10;
+const MAX_ACTIVITY_ITEMS = 6;
 
 function AppLink({
   href,
@@ -69,10 +71,14 @@ function AppLink({
   children: ReactNode;
   onClick?: () => void;
 }) {
+  const isExternal = /^https?:\/\//.test(href);
+
   return (
     <a
       href={href}
       className={className}
+      target={isExternal ? '_blank' : undefined}
+      rel={isExternal ? 'noreferrer noopener' : undefined}
       onClick={(e) => {
         if (href.startsWith('#')) {
           e.preventDefault();
@@ -104,6 +110,12 @@ function formatShortDate(date: Date) {
     hour: 'numeric',
     minute: '2-digit',
   });
+}
+
+function parsePositiveNumber(value: string, fallback: number) {
+  const cleaned = value.replace(/[^0-9.]/g, '');
+  const parsed = Number(cleaned);
+  return Number.isFinite(parsed) && parsed > 0 ? parsed : fallback;
 }
 
 function downloadTextFile(
@@ -138,10 +150,10 @@ function AnimatedNumber({
   const [display, setDisplay] = useState(value);
 
   useEffect(() => {
+    let frame = 0;
     const start = display;
     const end = value;
     const startTime = performance.now();
-    let frame = 0;
 
     const tick = (now: number) => {
       const progress = Math.min((now - startTime) / duration, 1);
@@ -152,7 +164,7 @@ function AnimatedNumber({
 
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [value]);
+  }, [display, duration, value]);
 
   return (
     <span>
@@ -214,15 +226,15 @@ function TrendChart({
 
         <div className="flex flex-wrap gap-2 text-xs">
           <span className="legendPill">
-            <span className="legendDot legendDotGreen" />
+            <span className="legendDot legendDotGreen legendDotPulse" />
             Health
           </span>
           <span className="legendPill">
-            <span className="legendDot legendDotCyan" />
+            <span className="legendDot legendDotCyan legendDotPulse" />
             Risk
           </span>
           <span className="legendPill">
-            <span className="legendDot legendDotRed" />
+            <span className="legendDot legendDotRed legendDotPulse" />
             Loss
           </span>
         </div>
@@ -233,6 +245,8 @@ function TrendChart({
           viewBox={`0 0 ${width} ${height}`}
           className="h-[220px] w-full"
           preserveAspectRatio="none"
+          role="img"
+          aria-label="Workflow health, risk, and loss trend chart"
         >
           {[0, 1, 2, 3].map((row) => {
             const y = pad + (row / 3) * (height - pad * 2);
@@ -428,33 +442,37 @@ If current friction is reduced, workflow health, throughput stability, and recov
     { id: 'broken-handoffs', label: 'Broken Handoffs' },
     { id: 'duplicate-work', label: 'Duplicate Work' },
     { id: 'activity', label: 'Live Activity' },
+    { id: 'feedback', label: 'Feedback' },
   ];
 
   const timeoutRefs = useRef<number[]>([]);
 
-  function addTimeout(callback: () => void, delay: number) {
+  const addTimeout = useCallback((callback: () => void, delay: number) => {
     const id = window.setTimeout(callback, delay);
     timeoutRefs.current.push(id);
     return id;
-  }
+  }, []);
 
-  function removeToast(id: number) {
+  const removeToast = useCallback((id: number) => {
     setToasts((prev) => prev.filter((toast) => toast.id !== id));
-  }
+  }, []);
 
-  function pushToast(title: string, message: string, tone: Tone = 'cyan') {
-    const id = Date.now() + Math.floor(Math.random() * 1000);
-    setToasts((prev) => [...prev, { id, title, message, tone }]);
-    addTimeout(() => removeToast(id), 3200);
-  }
+  const pushToast = useCallback(
+    (title: string, message: string, tone: Tone = 'cyan') => {
+      const id = Date.now() + Math.floor(Math.random() * 1000);
+      setToasts((prev) => [...prev, { id, title, message, tone }]);
+      addTimeout(() => removeToast(id), 3200);
+    },
+    [addTimeout, removeToast]
+  );
 
-  function scrollToSection(id: SectionId) {
+  const scrollToSection = useCallback((id: SectionId) => {
     document.getElementById(id)?.scrollIntoView({
       behavior: 'smooth',
       block: 'start',
     });
     setActiveSection(id);
-  }
+  }, []);
 
   function buildSnapshot(): ScanSnapshot {
     return {
@@ -462,7 +480,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
       companyName,
       teamSize,
       workflowBottleneck,
-      costImpact,
+      costImpact: parsePositiveNumber(costImpact, monthlyLoss),
       workflowHealth,
       riskScore,
       monthlyLoss,
@@ -471,24 +489,25 @@ If current friction is reduced, workflow health, throughput stability, and recov
     };
   }
 
+  function addActivityItem(item: ActivityItem) {
+    setActivity((prev) => [item, ...prev.slice(0, MAX_ACTIVITY_ITEMS - 1)]);
+  }
+
   function saveCurrentScan() {
     const snapshot = buildSnapshot();
-    const next = [snapshot, ...savedScans].slice(0, 10);
+    const next = [snapshot, ...savedScans].slice(0, MAX_SAVED_SCANS);
     setSavedScans(next);
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
     setLastScanAt(new Date());
     setScanFlash(true);
     addTimeout(() => setScanFlash(false), 1100);
-    setActivity((prev) => [
-      {
-        id: Date.now(),
-        time: formatClock(new Date()),
-        label: 'Scan saved',
-        detail: `${snapshot.companyName} snapshot stored locally for quick export and review.`,
-        tone: 'green',
-      },
-      ...prev.slice(0, 5),
-    ]);
+    addActivityItem({
+      id: Date.now(),
+      time: formatClock(new Date()),
+      label: 'Scan saved',
+      detail: `${snapshot.companyName} snapshot stored locally for quick export and review.`,
+      tone: 'green',
+    });
     pushToast(
       'Scan saved',
       'Current dashboard state was saved locally in this browser.',
@@ -502,7 +521,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
       summary,
       snapshot: buildSnapshot(),
       bookings,
-      activity: activity.slice(0, 6),
+      activity: activity.slice(0, MAX_ACTIVITY_ITEMS),
     };
     downloadTextFile(
       'ghostlayer-dashboard-export.json',
@@ -533,17 +552,14 @@ If current friction is reduced, workflow health, throughput stability, and recov
 
   function bookConsultation() {
     scrollToSection('bookings');
-    setActivity((prev) => [
-      {
-        id: Date.now(),
-        time: formatClock(new Date()),
-        label: 'Consultation CTA clicked',
-        detail:
-          'User moved to the bookings section to review demand and next conversations.',
-        tone: 'cyan',
-      },
-      ...prev.slice(0, 5),
-    ]);
+    addActivityItem({
+      id: Date.now(),
+      time: formatClock(new Date()),
+      label: 'Consultation CTA clicked',
+      detail:
+        'User moved to the bookings section to review demand and next conversations.',
+      tone: 'cyan',
+    });
     pushToast(
       'Bookings section opened',
       'Review recent bookings and next-up consultation demand.',
@@ -553,20 +569,27 @@ If current friction is reduced, workflow health, throughput stability, and recov
 
   function startWorkflowScan() {
     if (isScanning) return;
+
+    if (!companyName.trim()) {
+      pushToast(
+        'Company name required',
+        'Add a company name before running a scan.',
+        'yellow'
+      );
+      scrollToSection('run-scan');
+      return;
+    }
+
     setIsScanning(true);
     setScanProgress(0);
     setScanMode('running');
-
-    setActivity((prev) => [
-      {
-        id: Date.now(),
-        time: formatClock(new Date()),
-        label: 'Workflow scan started',
-        detail: 'Operator-grade refresh running across active signal layers.',
-        tone: 'cyan',
-      },
-      ...prev.slice(0, 5),
-    ]);
+    addActivityItem({
+      id: Date.now(),
+      time: formatClock(new Date()),
+      label: 'Workflow scan started',
+      detail: 'Operator-grade refresh running across active signal layers.',
+      tone: 'cyan',
+    });
   }
 
   function refreshBookings() {
@@ -590,17 +613,19 @@ If current friction is reduced, workflow health, throughput stability, and recov
   }
 
   function submitFeedback() {
-    if (!feedback.trim()) return;
-    setActivity((prev) => [
-      {
-        id: Date.now(),
-        time: formatClock(new Date()),
-        label: 'Feedback captured',
-        detail: feedback.trim().slice(0, 96),
-        tone: 'yellow',
-      },
-      ...prev.slice(0, 5),
-    ]);
+    const trimmed = feedback.trim();
+    if (!trimmed) {
+      pushToast('Feedback is empty', 'Type feedback before submitting.', 'yellow');
+      return;
+    }
+
+    addActivityItem({
+      id: Date.now(),
+      time: formatClock(new Date()),
+      label: 'Feedback captured',
+      detail: trimmed.slice(0, 96),
+      tone: 'yellow',
+    });
     setFeedback('');
     pushToast(
       'Feedback submitted',
@@ -612,6 +637,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
     if (!stored) return;
+
     try {
       const parsed = JSON.parse(stored) as ScanSnapshot[];
       if (Array.isArray(parsed)) setSavedScans(parsed);
@@ -621,7 +647,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
   }, []);
 
   useEffect(() => {
-    const ids = navItems.map((item) => item.id).concat('feedback');
+    const ids = navItems.map((item) => item.id);
     const observer = new IntersectionObserver(
       (entries) => {
         const visible = entries
@@ -644,7 +670,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
     });
 
     return () => observer.disconnect();
-  }, []);
+  }, [navItems]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -697,16 +723,13 @@ If current friction is reduced, workflow health, throughput stability, and recov
         'Manual progress updates consolidated into one surface.',
       ];
 
-      setActivity((prev) => [
-        {
-          id: Date.now(),
-          time: formatClock(new Date()),
-          label: labels[Math.floor(Math.random() * labels.length)],
-          detail: details[Math.floor(Math.random() * details.length)],
-          tone: tones[Math.floor(Math.random() * tones.length)],
-        },
-        ...prev.slice(0, 5),
-      ]);
+      addActivityItem({
+        id: Date.now(),
+        time: formatClock(new Date()),
+        label: labels[Math.floor(Math.random() * labels.length)],
+        detail: details[Math.floor(Math.random() * details.length)],
+        tone: tones[Math.floor(Math.random() * tones.length)],
+      });
     }, 7000);
 
     return () => window.clearInterval(interval);
@@ -723,13 +746,13 @@ If current friction is reduced, workflow health, throughput stability, and recov
 
     if (scanProgress >= 100) {
       const team = Number(teamSize) || 18;
-      const cost = Number(costImpact.replace(/[^0-9]/g, '')) || 2840;
+      const cost = parsePositiveNumber(costImpact, 2840);
       const risk = Math.max(
         50,
         Math.min(82, 44 + Math.floor(team / 2) + (workflowBottleneck ? 8 : 0))
       );
       const health = Math.max(82, Math.min(96, 96 - Math.floor(team / 5)));
-      const loss = Math.max(2000, Math.round(cost || 2840));
+      const loss = Math.max(2000, Math.round(cost));
       const recovery = Math.round(loss * 1.4);
 
       setWorkflowHealth(health);
@@ -773,16 +796,13 @@ If current friction is reduced, workflow health should move toward ${Math.min(
         Math.round(recovery * 1.08)
       )}.`);
 
-      setActivity((prev) => [
-        {
-          id: Date.now(),
-          time: formatClock(new Date()),
-          label: 'Workflow scan completed',
-          detail: `${companyName || 'Unknown company'} refreshed to risk ${risk}/100 and health ${health}%.`,
-          tone: 'green',
-        },
-        ...prev.slice(0, 5),
-      ]);
+      addActivityItem({
+        id: Date.now(),
+        time: formatClock(new Date()),
+        label: 'Workflow scan completed',
+        detail: `${companyName || 'Unknown company'} refreshed to risk ${risk}/100 and health ${health}%.`,
+        tone: 'green',
+      });
 
       setIsScanning(false);
       setScanMode('complete');
@@ -805,13 +825,25 @@ If current friction is reduced, workflow health should move toward ${Math.min(
     }, 120);
 
     return () => window.clearTimeout(timer);
-  }, [isScanning, scanProgress, companyName, teamSize, workflowBottleneck, costImpact]);
+  }, [
+    addTimeout,
+    companyName,
+    costImpact,
+    isScanning,
+    pushToast,
+    scanProgress,
+    teamSize,
+    workflowBottleneck,
+  ]);
 
   const scanStatusText = useMemo(() => {
     if (isScanning) return `Scanning workflow layer... ${scanProgress}%`;
     if (!lastScanAt) return 'No scan yet';
     return `Last scan: ${formatShortDate(lastScanAt)}`;
   }, [isScanning, scanProgress, lastScanAt]);
+
+  const progressBarWidth = isScanning ? scanProgress : lastScanAt ? 100 : 0;
+  const isFeedbackDisabled = !feedback.trim();
 
   const demandSnapshot = useMemo(() => {
     const confirmed = bookings.filter((b) => b.status === 'confirmed').length;
@@ -850,6 +882,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                 ? 'border-yellow-400/20'
                 : 'border-cyan-400/20'
             }`}
+            role="status"
+            aria-live="polite"
           >
             <div className="flex items-start justify-between gap-3">
               <div>
@@ -860,6 +894,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                 type="button"
                 onClick={() => removeToast(toast.id)}
                 className="rounded-md px-2 py-1 text-xs text-gray-400 transition hover:bg-white/5 hover:text-white"
+                aria-label={`Close ${toast.title} notification`}
               >
                 Close
               </button>
@@ -878,14 +913,18 @@ If current friction is reduced, workflow health should move toward ${Math.min(
             </div>
 
             <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.02] p-3.5">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-gray-500">Workspace</p>
-              <p className="mt-2 text-sm font-medium text-white">Operations Intelligence</p>
+              <p className="text-[10px] uppercase tracking-[0.24em] text-gray-500">
+                Workspace
+              </p>
+              <p className="mt-2 text-[0.95rem] font-medium text-white">
+                Operations Intelligence
+              </p>
               <p className="mt-1 text-xs leading-6 text-gray-400">
                 Command surface for workflow drag, risk, and execution clarity.
               </p>
             </div>
 
-            <nav className="mt-5 space-y-1.5">
+            <nav className="mt-5 space-y-1.5" aria-label="Dashboard sections">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -893,6 +932,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                     type="button"
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
+                    aria-current={isActive ? 'page' : undefined}
                     className={`block w-full rounded-xl px-3 py-2.5 text-left text-[0.93rem] transition ${
                       isActive
                         ? 'border border-cyan-400/20 bg-cyan-400/10 text-white shadow-[0_0_0_1px_rgba(34,211,238,0.08)_inset]'
@@ -908,31 +948,45 @@ If current friction is reduced, workflow health should move toward ${Math.min(
             <div className="mt-5 grid gap-3">
               <div
                 className={`rounded-2xl border p-3 transition-all duration-500 ${
-                  scanFlash ? 'border-cyan-300/25 bg-cyan-400/[0.08]' : 'border-white/10 bg-black/20'
+                  scanFlash
+                    ? 'border-cyan-300/25 bg-cyan-400/[0.08]'
+                    : 'border-white/10 bg-black/20'
                 }`}
               >
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Last scan</p>
-                <p className="mt-2 text-sm text-white">{lastScanAt ? formatClock(lastScanAt) : 'None yet'}</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                  Last scan
+                </p>
+                <p className="mt-2 text-sm text-white">
+                  {lastScanAt ? formatClock(lastScanAt) : 'None yet'}
+                </p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Bookings sync</p>
-                <p className="mt-2 text-sm text-white">Demand layer active</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                  Bookings sync
+                </p>
+                <p className="mt-2 text-[0.95rem] text-white">Demand layer active</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Environment</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                  Environment
+                </p>
                 <p className="mt-2 text-sm font-semibold signal-green">Live</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Saved scans</p>
-                <p className="mt-2 text-sm text-white">{savedScans.length}</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                  Saved scans
+                </p>
+                <p className="mt-2 text-[0.95rem] text-white">{savedScans.length}</p>
               </div>
             </div>
 
             <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Signal rail</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                Signal rail
+              </p>
               <div className="mt-3 flex items-center gap-2">
                 <span className="railDot railDotGreen" />
                 <span className="railDot railDotCyan" />
@@ -942,12 +996,14 @@ If current friction is reduced, workflow health should move toward ${Math.min(
             </div>
 
             <div className="mt-5 rounded-2xl border border-cyan-400/15 bg-cyan-400/[0.06] p-3.5">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-cyan-300">Console state</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-cyan-300">
+                Console state
+              </p>
               <p className="mt-2 text-sm text-cyan-100">{scanStatusText}</p>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
                 <div
                   className="h-full rounded-full bg-cyan-300 transition-all duration-300"
-                  style={{ width: `${isScanning ? scanProgress : 100}%` }}
+                  style={{ width: `${progressBarWidth}%` }}
                 />
               </div>
             </div>
@@ -969,7 +1025,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 md:px-8 lg:px-10">
               <div className="min-w-0">
                 <div className="hidden md:flex md:items-center md:gap-3">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">Dashboard</p>
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">
+                    Dashboard
+                  </p>
                   <span className="rounded-full border border-cyan-400/18 bg-cyan-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-200">
                     Demo Workspace
                   </span>
@@ -992,7 +1050,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                 </h2>
 
                 <p className="mt-1 text-xs text-gray-400 sm:text-sm">
-                  Public product demo for workflow visibility, drag detection, and operator framing.
+                  Public product demo for workflow visibility, drag detection, and operator
+                  framing.
                 </p>
               </div>
 
@@ -1001,7 +1060,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                   type="button"
                   onClick={startWorkflowScan}
                   disabled={isScanning}
-                  className="rounded-xl border border-white/10 bg-white px-3.5 py-2 text-xs font-semibold text-black transition hover:opacity-90 disabled:opacity-50 sm:text-sm"
+                  className="rounded-xl border border-white/10 bg-white px-3.5 py-2 text-xs font-semibold text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50 sm:text-sm"
+                  aria-busy={isScanning}
                 >
                   {isScanning ? `Scanning ${scanProgress}%` : 'Run Scan'}
                 </button>
@@ -1024,6 +1084,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                     type="button"
                     key={item.id}
                     onClick={() => scrollToSection(item.id)}
+                    aria-current={isActive ? 'page' : undefined}
                     className={`whitespace-nowrap rounded-full border px-3.5 py-2 text-sm transition ${
                       isActive
                         ? 'border-cyan-400/35 bg-cyan-400/10 text-white'
@@ -1104,18 +1165,24 @@ If current friction is reduced, workflow health should move toward ${Math.min(
               </div>
 
               <div className="grid grid-cols-1 gap-3.5 px-5 py-5 sm:px-6 md:grid-cols-2 xl:grid-cols-4 lg:px-6">
-                <div className={`metricCard hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}>
+                <div
+                  className={`metricCard hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}
+                >
                   <p className="metricLabel">Workflow Health</p>
                   <p className="metricValue">
                     <AnimatedNumber value={workflowHealth} suffix="%" />
                   </p>
-                  <p className="metricText">Operational coherence across active workflow stages.</p>
+                  <p className="metricText">
+                    Operational coherence across active workflow stages.
+                  </p>
                   <div className="mt-3">
                     <span className="deltaPill deltaPillGreen">{healthDelta}</span>
                   </div>
                 </div>
 
-                <div className={`metricCard metricBlue hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}>
+                <div
+                  className={`metricCard metricBlue hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}
+                >
                   <p className="metricLabel text-cyan-200">Risk Score</p>
                   <p className="metricValue">
                     <AnimatedNumber value={riskScore} suffix="/100" />
@@ -1128,7 +1195,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                   </div>
                 </div>
 
-                <div className={`metricCard metricRed hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}>
+                <div
+                  className={`metricCard metricRed hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}
+                >
                   <p className="metricLabel text-red-200">Est. Monthly Loss</p>
                   <p className="metricValue">
                     <AnimatedNumber value={monthlyLoss} prefix="$" suffix="/mo" />
@@ -1141,7 +1210,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                   </div>
                 </div>
 
-                <div className={`metricCard metricGreen hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}>
+                <div
+                  className={`metricCard metricGreen hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}
+                >
                   <p className="metricLabel text-green-200">Recovery Opportunity</p>
                   <p className="metricValue">
                     <AnimatedNumber value={recoveryOpportunity} prefix="$" suffix="/mo" />
@@ -1211,8 +1282,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                     <span className="signal Medium">Medium</span>
                   </div>
                   <p className="mt-3.5 text-sm leading-7 text-gray-300">
-                    The same progress signal is likely being captured in multiple places, increasing
-                    drag.
+                    The same progress signal is likely being captured in multiple places,
+                    increasing drag.
                   </p>
                   <div className="actionCard">
                     <p className="actionLabel">Recommended action</p>
@@ -1284,11 +1355,21 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                       <table className="min-w-full border-separate border-spacing-0 text-left text-sm">
                         <thead>
                           <tr className="text-gray-400">
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Name</th>
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Email</th>
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Type</th>
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Scheduled</th>
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Source</th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Name
+                            </th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Email
+                            </th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Type
+                            </th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Scheduled
+                            </th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Source
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1297,10 +1378,18 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                               key={booking.id}
                               className="text-gray-200 transition-colors duration-200 hover:bg-white/[0.03]"
                             >
-                              <td className="border-b border-white/6 px-3 py-3.5">{booking.name}</td>
-                              <td className="border-b border-white/6 px-3 py-3.5">{booking.email}</td>
-                              <td className="border-b border-white/6 px-3 py-3.5">{booking.type}</td>
-                              <td className="border-b border-white/6 px-3 py-3.5">{booking.scheduled}</td>
+                              <td className="border-b border-white/6 px-3 py-3.5">
+                                {booking.name}
+                              </td>
+                              <td className="border-b border-white/6 px-3 py-3.5">
+                                {booking.email}
+                              </td>
+                              <td className="border-b border-white/6 px-3 py-3.5">
+                                {booking.type}
+                              </td>
+                              <td className="border-b border-white/6 px-3 py-3.5">
+                                {booking.scheduled}
+                              </td>
                               <td className="border-b border-white/6 px-3 py-3.5">
                                 <span
                                   className={`rounded-full border px-3 py-1 text-xs ${
@@ -1309,7 +1398,16 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                                       : 'border-yellow-400/15 bg-yellow-400/8 text-yellow-200'
                                   }`}
                                 >
-                                  {booking.source}
+                                  <span className="inline-flex items-center gap-2">
+                                    <span
+                                      className={`bookingSignalDot ${
+                                        booking.status === 'confirmed'
+                                          ? 'bookingSignalDotCyan'
+                                          : 'bookingSignalDotYellow'
+                                      }`}
+                                    />
+                                    {booking.source}
+                                  </span>
                                 </span>
                               </td>
                             </tr>
@@ -1320,11 +1418,16 @@ If current friction is reduced, workflow health should move toward ${Math.min(
 
                     <div className="grid gap-3 p-3 lg:hidden">
                       {bookings.map((booking) => (
-                        <div key={booking.id} className="rounded-2xl border border-white/8 bg-white/[0.02] p-4">
+                        <div
+                          key={booking.id}
+                          className="rounded-2xl border border-white/8 bg-white/[0.02] p-4"
+                        >
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
                               <p className="font-medium text-white">{booking.name}</p>
-                              <p className="mt-1 break-all text-sm text-gray-400">{booking.email}</p>
+                              <p className="mt-1 break-all text-sm text-gray-400">
+                                {booking.email}
+                              </p>
                             </div>
                             <span
                               className={`shrink-0 rounded-full border px-3 py-1 text-xs ${
@@ -1333,7 +1436,16 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                                   : 'border-yellow-400/15 bg-yellow-400/8 text-yellow-200'
                               }`}
                             >
-                              {booking.source}
+                              <span className="inline-flex items-center gap-2">
+                                <span
+                                  className={`bookingSignalDot ${
+                                    booking.status === 'confirmed'
+                                      ? 'bookingSignalDotCyan'
+                                      : 'bookingSignalDotYellow'
+                                  }`}
+                                />
+                                {booking.source}
+                              </span>
                             </span>
                           </div>
 
@@ -1348,39 +1460,75 @@ If current friction is reduced, workflow health should move toward ${Math.min(
 
                   <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Inbound this week</p>
-                      <p className="mt-2 text-2xl font-semibold text-white">{demandSnapshot.inboundThisWeek}</p>
-                      <p className="mt-2 text-sm text-gray-400">Total consultation demand entering the current week.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Inbound this week
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-white">
+                        {demandSnapshot.inboundThisWeek}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Total consultation demand entering the current week.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Confirmed rate</p>
-                      <p className="mt-2 text-2xl font-semibold text-cyan-200">{demandSnapshot.confirmedRate}%</p>
-                      <p className="mt-2 text-sm text-gray-400">Share of scheduled demand already locked in.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Confirmed rate
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-cyan-200">
+                        {demandSnapshot.confirmedRate}%
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Share of scheduled demand already locked in.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Top inquiry type</p>
-                      <p className="mt-2 text-lg font-semibold text-white">{demandSnapshot.topInquiryType}</p>
-                      <p className="mt-2 text-sm text-gray-400">Most common operator entry point right now.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Top inquiry type
+                      </p>
+                      <p className="mt-2 text-lg font-semibold text-white">
+                        {demandSnapshot.topInquiryType}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Most common operator entry point right now.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Next up</p>
-                      <p className="mt-2 text-lg font-semibold text-white">{demandSnapshot.nextUp}</p>
-                      <p className="mt-2 text-sm text-gray-400">Closest demand event requiring operator attention.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Next up
+                      </p>
+                      <p className="mt-2 text-lg font-semibold text-white">
+                        {demandSnapshot.nextUp}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Closest demand event requiring operator attention.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Avg. days to call</p>
-                      <p className="mt-2 text-2xl font-semibold text-white">{demandSnapshot.avgDaysToCall}</p>
-                      <p className="mt-2 text-sm text-gray-400">Typical lag from inquiry to scheduled conversation.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Avg. days to call
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-white">
+                        {demandSnapshot.avgDaysToCall}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Typical lag from inquiry to scheduled conversation.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Pending demand</p>
-                      <p className="mt-2 text-2xl font-semibold text-yellow-200">{demandSnapshot.pending}</p>
-                      <p className="mt-2 text-sm text-gray-400">Active opportunities not yet fully confirmed.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Pending demand
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-yellow-200">
+                        {demandSnapshot.pending}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Active opportunities not yet fully confirmed.
+                      </p>
                     </div>
                   </div>
                 </section>
@@ -1405,13 +1553,16 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                       onChange={(e) => setCompanyName(e.target.value)}
                       placeholder="Company name"
                       className="scanInput"
+                      aria-label="Company name"
                     />
 
                     <input
                       value={teamSize}
-                      onChange={(e) => setTeamSize(e.target.value)}
+                      onChange={(e) => setTeamSize(e.target.value.replace(/[^0-9]/g, ''))}
                       placeholder="Team size"
+                      inputMode="numeric"
                       className="scanInput"
+                      aria-label="Team size"
                     />
 
                     <input
@@ -1419,13 +1570,16 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                       onChange={(e) => setWorkflowBottleneck(e.target.value)}
                       placeholder="Primary workflow bottleneck"
                       className="scanInput"
+                      aria-label="Primary workflow bottleneck"
                     />
 
                     <input
                       value={costImpact}
-                      onChange={(e) => setCostImpact(e.target.value)}
+                      onChange={(e) => setCostImpact(e.target.value.replace(/[^0-9.]/g, ''))}
                       placeholder="Monthly operational cost impacted"
+                      inputMode="decimal"
                       className="scanInput"
+                      aria-label="Monthly operational cost impacted"
                     />
                   </div>
 
@@ -1434,7 +1588,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                       type="button"
                       onClick={startWorkflowScan}
                       disabled={isScanning}
-                      className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:opacity-50"
+                      className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       {isScanning ? `Running ${scanProgress}%` : 'Run Workflow Scan'}
                     </button>
@@ -1474,7 +1628,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                 </section>
 
                 <section id="delay-hotspots" className="cardShell hoverCard panelReveal">
-                  <h3 className="text-xl font-semibold">Delay Hotspots</h3>
+                  <h3 className="sectionTitleCompact">Delay Hotspots</h3>
 
                   <div className="mt-4 space-y-3.5">
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
@@ -1483,7 +1637,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                         <span className="signal High text-sm font-semibold">High</span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
-                        Multi-step review pressure is likely slowing work before throughput resumes.
+                        Multi-step review pressure is likely slowing work before throughput
+                        resumes.
                       </p>
                     </div>
 
@@ -1500,13 +1655,15 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                 </section>
 
                 <section id="broken-handoffs" className="cardShell hoverCard panelReveal">
-                  <h3 className="text-xl font-semibold">Broken Handoffs</h3>
+                  <h3 className="sectionTitleCompact">Broken Handoffs</h3>
 
                   <div className="mt-4 space-y-3.5">
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-medium">Sales to Delivery</p>
-                        <span className="signal-red text-sm font-semibold">Missing context</span>
+                        <span className="signal-red text-sm font-semibold">
+                          Missing context
+                        </span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
                         Critical execution context is likely not arriving intact at the next stage.
@@ -1516,7 +1673,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-medium">Support to Operations</p>
-                        <span className="signal-yellow text-sm font-semibold">Weak ownership</span>
+                        <span className="signal-yellow text-sm font-semibold">
+                          Weak ownership
+                        </span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
                         Escalated work may be slowing because ownership boundaries are unclear.
@@ -1526,13 +1685,15 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                 </section>
 
                 <section id="duplicate-work" className="cardShell hoverCard panelReveal">
-                  <h3 className="text-xl font-semibold">Duplicate Work</h3>
+                  <h3 className="sectionTitleCompact">Duplicate Work</h3>
 
                   <div className="mt-4 space-y-3.5">
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-medium">Reporting overlap</p>
-                        <span className="signal-cyan text-sm font-semibold">Repeated effort</span>
+                        <span className="signal-cyan text-sm font-semibold">
+                          Repeated effort
+                        </span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
                         Similar progress signal is likely being captured across multiple surfaces.
@@ -1542,7 +1703,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-medium">Manual progress updates</p>
-                        <span className="signal-cyan text-sm font-semibold">Duplicate work</span>
+                        <span className="signal-cyan text-sm font-semibold">
+                          Duplicate work
+                        </span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
                         Teams may be re-entering the same status layer across tools and stages.
@@ -1574,14 +1737,14 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                         <div className="flex flex-wrap items-center justify-between gap-3">
                           <div className="flex items-center gap-3">
                             <span
-                              className={`inline-block h-2.5 w-2.5 rounded-full ${
+                              className={`activitySignalDot ${
                                 item.tone === 'cyan'
-                                  ? 'bg-cyan-300 shadow-[0_0_12px_rgba(34,211,238,0.75)]'
+                                  ? 'activitySignalDotCyan'
                                   : item.tone === 'green'
-                                  ? 'bg-green-300 shadow-[0_0_12px_rgba(34,197,94,0.75)]'
+                                  ? 'activitySignalDotGreen'
                                   : item.tone === 'yellow'
-                                  ? 'bg-yellow-300 shadow-[0_0_12px_rgba(245,158,11,0.75)]'
-                                  : 'bg-red-300 shadow-[0_0_12px_rgba(239,68,68,0.75)]'
+                                  ? 'activitySignalDotYellow'
+                                  : 'activitySignalDotRed'
                               }`}
                             />
                             <p className="font-medium text-white">{item.label}</p>
@@ -1601,7 +1764,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
             </section>
 
             <section id="feedback" className="cardShell hoverCard panelReveal mt-6">
-              <h3 className="text-xl font-semibold">Help improve Ghostlayer</h3>
+              <h3 className="sectionTitleCompact">Help improve Ghostlayer</h3>
               <p className="mt-2 text-sm text-gray-400">
                 What would make this console more useful in a real operating environment?
               </p>
@@ -1609,18 +1772,27 @@ If current friction is reduced, workflow health should move toward ${Math.min(
               <textarea
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
+                onKeyDown={(e) => {
+                  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+                    e.preventDefault();
+                    submitFeedback();
+                  }
+                }}
                 placeholder="Tell us what would make this more useful..."
                 className="mt-5 min-h-[132px] w-full rounded-2xl border border-white/10 bg-[#0a0d14] px-4 py-3 text-white outline-none transition focus:border-cyan-400/40"
+                aria-label="Feedback input"
               />
 
               <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
                 <button
                   type="button"
                   onClick={submitFeedback}
-                  className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90"
+                  disabled={isFeedbackDisabled}
+                  className="rounded-xl bg-white px-4 py-2.5 text-sm font-semibold text-black transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   Submit Feedback
                 </button>
+                <p className="text-xs text-gray-500">Press Ctrl/Cmd + Enter to submit.</p>
               </div>
             </section>
 
@@ -2145,16 +2317,98 @@ If current friction is reduced, workflow health should move toward ${Math.min(
           border-radius: 9999px;
         }
 
+        .legendDotPulse {
+          animation: legendSignalPulse 1.9s ease-in-out infinite;
+        }
+
+        .activitySignalDot {
+          display: inline-block;
+          width: 10px;
+          height: 10px;
+          border-radius: 9999px;
+          animation: legendSignalPulse 1.7s ease-in-out infinite;
+        }
+
+        .activitySignalDotCyan {
+          background: #67e8f9;
+          box-shadow:
+            0 0 14px rgba(34, 211, 238, 0.88),
+            0 0 26px rgba(34, 211, 238, 0.45);
+        }
+
+        .activitySignalDotGreen {
+          background: #86efac;
+          box-shadow:
+            0 0 14px rgba(34, 197, 94, 0.88),
+            0 0 26px rgba(34, 197, 94, 0.45);
+        }
+
+        .activitySignalDotYellow {
+          background: #fde68a;
+          box-shadow:
+            0 0 14px rgba(245, 158, 11, 0.88),
+            0 0 26px rgba(245, 158, 11, 0.45);
+        }
+
+        .activitySignalDotRed {
+          background: #fca5a5;
+          box-shadow:
+            0 0 14px rgba(239, 68, 68, 0.88),
+            0 0 26px rgba(239, 68, 68, 0.45);
+        }
+
         .legendDotGreen {
           background: rgba(134, 239, 172, 0.95);
+          box-shadow: 0 0 12px rgba(134, 239, 172, 0.5);
         }
 
         .legendDotCyan {
           background: rgba(125, 211, 252, 0.95);
+          box-shadow: 0 0 12px rgba(125, 211, 252, 0.5);
         }
 
         .legendDotRed {
           background: rgba(248, 113, 113, 0.95);
+          box-shadow: 0 0 12px rgba(248, 113, 113, 0.5);
+        }
+
+        .bookingSignalDot {
+          display: inline-block;
+          width: 8px;
+          height: 8px;
+          border-radius: 9999px;
+          animation: legendSignalPulse 1.9s ease-in-out infinite;
+        }
+
+        .bookingSignalDotCyan {
+          background: #7dd3fc;
+          box-shadow: 0 0 12px rgba(125, 211, 252, 0.7);
+        }
+
+        .bookingSignalDotYellow {
+          background: #fde68a;
+          box-shadow: 0 0 12px rgba(253, 230, 138, 0.7);
+        }
+
+        @keyframes legendSignalPulse {
+          0%,
+          100% {
+            transform: scale(0.94);
+            opacity: 0.85;
+            filter: brightness(1);
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 1;
+            filter: brightness(1.18);
+          }
+        }
+
+        .sectionTitleCompact {
+          font-size: 1.3rem;
+          line-height: 1.2;
+          font-weight: 600;
+          letter-spacing: -0.01em;
         }
 
         @media (max-width: 1023px) {
@@ -2175,6 +2429,10 @@ If current friction is reduced, workflow health should move toward ${Math.min(
         }
 
         @media (max-width: 767px) {
+          .sectionTitleCompact {
+            font-size: 1.18rem;
+          }
+
           .cardShell {
             padding: 16px;
             border-radius: 20px;
