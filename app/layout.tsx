@@ -2,57 +2,60 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-metadataBase: new URL('https://ghostlayer-swart.vercel.app'),
-title: 'Ghostlayer | Business Workflow Intelligence',
-description:
-'Ghostlayer helps businesses uncover workflow friction, broken handoffs, approval bottlenecks, and hidden operational drag before it slows growth and costs revenue.',
-keywords: [
-'workflow intelligence',
-'operations dashboard',
-'business workflow scanner',
-'approval bottlenecks',
-'handoff issues',
-'operational drag',
-'Ghostlayer',
-],
-icons: {
-icon: '/favicon.png?v=4',
-shortcut: '/favicon.png?v=4',
-apple: '/favicon.png?v=4',
-},
-openGraph: {
-title: 'Ghostlayer | Business Workflow Intelligence',
-description:
-'Find workflow friction before it slows growth, burns time, and costs revenue.',
-url: 'https://ghostlayer-swart.vercel.app',
-siteName: 'Ghostlayer',
-images: [
-{
-url: '/og-image.png',
-width: 1200,
-height: 630,
-alt: 'Ghostlayer Business Workflow Intelligence',
-},
-],
-type: 'website',
-},
-twitter: {
-card: 'summary_large_image',
-title: 'Ghostlayer | Business Workflow Intelligence',
-description:
-'Find workflow friction before it slows growth, burns time, and costs revenue.',
-images: ['/og-image.png'],
-},
+  metadataBase: new URL('https://ghostlayer-swart.vercel.app'),
+  title: 'Ghostlayer | Business Workflow Intelligence',
+  description:
+    'Ghostlayer helps businesses uncover workflow friction, broken handoffs, approval bottlenecks, and hidden operational drag before it slows growth and costs revenue.',
+  keywords: [
+    'workflow intelligence',
+    'operations dashboard',
+    'business workflow scanner',
+    'approval bottlenecks',
+    'handoff issues',
+    'operational drag',
+    'Ghostlayer',
+  ],
+  icons: {
+    icon: [
+      { url: '/favicon.ico' },
+      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+    ],
+    shortcut: ['/favicon.ico'],
+    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
+  },
+  openGraph: {
+    title: 'Ghostlayer | Business Workflow Intelligence',
+    description:
+      'Find workflow friction before it slows growth, burns time, and costs revenue.',
+    url: 'https://ghostlayer-swart.vercel.app',
+    siteName: 'Ghostlayer',
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Ghostlayer Business Workflow Intelligence',
+      },
+    ],
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Ghostlayer | Business Workflow Intelligence',
+    description:
+      'Find workflow friction before it slows growth, burns time, and costs revenue.',
+    images: ['/og-image.png'],
+  },
 };
 
 export default function RootLayout({
-children,
-}: {
-children: React.ReactNode;
-}) {
-return (
-<html lang="en">
-<body>{children}</body>
-</html>
-);
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body>{children}</body>
+    </html>
+  );
 }

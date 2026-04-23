@@ -1,0 +1,651 @@
+use client';
+
+import Link from 'next/link';
+import { useEffect, useMemo, useState } from 'react';
+
+type MetricKey = 'health' | 'risk' | 'loss' | 'recovery';
+
+function AnimatedNumber({
+value,
+prefix = '',
+suffix = '',
+decimals = 0,
+duration = 900,
+}: {
+value: number;
+prefix?: string;
+suffix?: string;
+decimals?: number;
+duration?: number;
+}) {
+const [display, setDisplay] = useState(value);
+
+useEffect(() => {
+const start = display;
+const end = value;
+const startTime = performance.now();
+let frame = 0;
+
+const tick = (now: number) => {
+const progress = Math.min((now - startTime) / duration, 1);
+const eased = 1 - Math.pow(1 - progress, 3);
+setDisplay(start + (end - start) * eased);
+if (progress < 1) frame = requestAnimationFrame(tick);
+};
+
+frame = requestAnimationFrame(tick);
+return () => cancelAnimationFrame(frame);
+}, [value]); // eslint-disable-line react-hooks/exhaustive-deps
+
+return (
+<span>
+{prefix}
+{display.toFixed(decimals)}
+{suffix}
+</span>
+);
+}
+
+export default function HomePage() {
+const [workflowHealth, setWorkflowHealth] = useState(87);
+const [riskScore, setRiskScore] = useState(58);
+const [monthlyLoss, setMonthlyLoss] = useState(2840);
+const [recoveryOpportunity, setRecoveryOpportunity] = useState(3975);
+
+const [activeMetric, setActiveMetric] = useState<MetricKey>('health');
+
+useEffect(() => {
+const interval = window.setInterval(() => {
+setWorkflowHealth((v) => Math.max(82, Math.min(93, v + (Math.random() > 0.5 ? 1 : -1))));
+setRiskScore((v) => Math.max(51, Math.min(67, v + (Math.random() > 0.5 ? 1 : -1))));
+setMonthlyLoss((v) =>
+Math.max(2400, Math.min(3400, v + Math.round((Math.random() - 0.5) * 90)))
+);
+setRecoveryOpportunity((v) =>
+Math.max(3300, Math.min(4700, v + Math.round((Math.random() - 0.5) * 110)))
+);
+}, 4200);
+
+return () => window.clearInterval(interval);
+}, []);
+
+const heroInsight = useMemo(() => {
+switch (activeMetric) {
+case 'health':
+return 'Operational coherence is holding, but instability is still visible across approvals, handoffs, and status reporting.';
+case 'risk':
+return 'Risk remains elevated where execution depends on repeated review cycles and weak ownership transitions.';
+case 'loss':
+return 'Productivity loss is building through delay, duplicate work, and context degradation between stages.';
+case 'recovery':
+return 'The upside is recoverable if approval drag, repeated reporting, and broken handoff context are reduced.';
+default:
+return '';
+}
+}, [activeMetric]);
+
+return (
+<main className="min-h-screen bg-[#05070b] text-white">
+<div className="relative overflow-hidden">
+<div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(59,130,246,0.16),transparent_36%),radial-gradient(circle_at_80%_20%,rgba(34,197,94,0.10),transparent_22%),linear-gradient(180deg,#05070b_0%,#070b12_100%)]" />
+<div className="relative mx-auto max-w-7xl px-4 pb-16 pt-6 sm:px-6 lg:px-8">
+<header className="flex items-center justify-between gap-4">
+<Link href="/" className="homepageLogo">
+GHOSTLAYER
+</Link>
+
+<nav className="hidden items-center gap-6 md:flex">
+<a href="#results" className="navLink">
+Results
+</a>
+<a href="#signals" className="navLink">
+Signals
+</a>
+<a href="#process" className="navLink">
+Process
+</a>
+<Link href="/dashboard" className="navCtaSecondary">
+Demo Workspace
+</Link>
+</nav>
+</header>
+
+<section className="grid gap-12 pb-8 pt-14 lg:grid-cols-[1.08fr_0.92fr] lg:items-center">
+<div>
+<div className="inline-flex items-center gap-2 rounded-full border border-cyan-400/20 bg-cyan-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">
+Workflow intelligence
+</div>
+
+<h1 className="heroHeadline mt-6 max-w-4xl text-4xl font-bold leading-tight sm:text-5xl lg:text-[4.15rem]">
+Find workflow friction before it slows growth, burns time, and costs revenue.
+</h1>
+
+<p className="mt-6 max-w-2xl text-base leading-8 text-gray-300 sm:text-lg">
+Ghostlayer surfaces approval drag, broken handoffs, repeated manual work, and
+hidden operational loss so teams can fix friction before it compounds.
+</p>
+
+<div className="mt-8 flex flex-col gap-3 sm:flex-row">
+<Link href="/dashboard" className="navCtaPrimary">
+Open Demo Workspace
+</Link>
+<a href="#results" className="navCtaSecondary">
+See Sample Results
+</a>
+</div>
+
+<div className="mt-8 max-w-2xl rounded-[24px] border border-white/8 bg-white/[0.03] p-5 shadow-[0_12px_34px_rgba(0,0,0,0.22)]">
+<div className="flex items-center justify-between gap-3">
+<p className="text-[11px] uppercase tracking-[0.24em] text-gray-500">
+Live preview signal
+</p>
+<span className="homepageLivePill">Live</span>
+</div>
+
+<p className="mt-4 text-lg font-semibold text-white sm:text-xl">
+{heroInsight}
+</p>
+
+<p className="mt-3 text-sm leading-7 text-gray-400">
+A workflow health view should feel alive, not static. These numbers move
+continuously to show how Ghostlayer frames operational visibility in real time.
+</p>
+</div>
+</div>
+
+<div className="relative">
+<div className="absolute inset-0 rounded-[32px] bg-[radial-gradient(circle_at_top,rgba(125,211,252,0.18),transparent_40%)] blur-2xl" />
+<div className="relative rounded-[30px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.05),rgba(255,255,255,0.02))] p-5 shadow-[0_14px_44px_rgba(0,0,0,0.28)] sm:p-6">
+<div className="flex items-center justify-between gap-3">
+<div>
+<p className="text-[10px] uppercase tracking-[0.24em] text-cyan-300">
+Workflow signal board
+</p>
+<h2 className="mt-2 text-xl font-semibold sm:text-2xl">
+Operational drag preview
+</h2>
+</div>
+
+<Link href="/dashboard" className="rounded-xl border border-white/10 bg-white/[0.04] px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-white/[0.08]">
+Open
+</Link>
+</div>
+
+<div className="mt-5 homepageMetricsGrid">
+<button
+type="button"
+onMouseEnter={() => setActiveMetric('health')}
+onFocus={() => setActiveMetric('health')}
+className="homepageMetricCard homepageMetricCardPrimary text-left"
+>
+<div className="homepageMetricTopRow">
+<p className="homepageMetricLabel">Workflow Health</p>
+<span className="homepageLivePill">Live</span>
+</div>
+<p className="homepageMetricValue">
+<AnimatedNumber value={workflowHealth} suffix="%" />
+</p>
+<p className="homepageMetricCopy">
+Operational coherence across active workflow stages.
+</p>
+</button>
+
+<button
+type="button"
+onMouseEnter={() => setActiveMetric('risk')}
+onFocus={() => setActiveMetric('risk')}
+className="homepageMetricCard text-left"
+>
+<p className="homepageMetricLabel">Risk Score</p>
+<p className="homepageMetricValue">
+<AnimatedNumber value={riskScore} suffix="/100" />
+</p>
+<p className="homepageMetricCopy">
+Elevated due to repeated approvals, weak ownership, and handoff instability.
+</p>
+</button>
+
+<button
+type="button"
+onMouseEnter={() => setActiveMetric('loss')}
+onFocus={() => setActiveMetric('loss')}
+className="homepageMetricCard text-left"
+>
+<p className="homepageMetricLabel">Est. Monthly Loss</p>
+<p className="homepageMetricValue">
+<AnimatedNumber value={monthlyLoss} prefix="$" suffix="/mo" />
+</p>
+<p className="homepageMetricCopy">
+Estimated productivity drag from friction, rework, and operator delay.
+</p>
+</button>
+
+<button
+type="button"
+onMouseEnter={() => setActiveMetric('recovery')}
+onFocus={() => setActiveMetric('recovery')}
+className="homepageMetricCard text-left"
+>
+<p className="homepageMetricLabel">Recovery Opportunity</p>
+<p className="homepageMetricValue">
+<AnimatedNumber value={recoveryOpportunity} prefix="$" suffix="/mo" />
+</p>
+<p className="homepageMetricCopy">
+Potential monthly gain if bottlenecks and repeated effort are reduced.
+</p>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</div>
+
+<section id="results" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+<div className="max-w-3xl">
+<p className="text-[11px] uppercase tracking-[0.26em] text-cyan-300">Results</p>
+<h2 className="mt-3 text-3xl font-bold sm:text-4xl">
+Turn hidden workflow drag into visible operating signals.
+</h2>
+<p className="mt-4 text-base leading-8 text-gray-400">
+Ghostlayer translates workflow friction into concrete visibility: where execution slows,
+where cost accumulates, and where recovery is available.
+</p>
+</div>
+
+<div className="mt-10 grid gap-5 md:grid-cols-2 xl:grid-cols-4">
+<div className="sectionCard">
+<p className="sectionCardLabel">Workflow Health</p>
+<h3 className="sectionCardTitle">See execution stability clearly.</h3>
+<p className="sectionCardCopy">
+Surface whether active workflow stages are operating coherently or quietly degrading.
+</p>
+</div>
+
+<div className="sectionCard">
+<p className="sectionCardLabel">Risk Score</p>
+<h3 className="sectionCardTitle">Quantify drag before it compounds.</h3>
+<p className="sectionCardCopy">
+Frame approval cycles, handoff gaps, and ownership instability as an operator-grade risk signal.
+</p>
+</div>
+
+<div className="sectionCard">
+<p className="sectionCardLabel">Est. Monthly Loss</p>
+<h3 className="sectionCardTitle">Translate friction into cost exposure.</h3>
+<p className="sectionCardCopy">
+Show the financial impact of delay, repeated reporting, manual work, and missed follow-through.
+</p>
+</div>
+
+<div className="sectionCard">
+<p className="sectionCardLabel">Recovery Opportunity</p>
+<h3 className="sectionCardTitle">Show the upside of fixing the workflow.</h3>
+<p className="sectionCardCopy">
+Make the value of improved execution visible before teams commit to operational changes.
+</p>
+</div>
+</div>
+</section>
+
+<section id="signals" className="border-y border-white/8 bg-white/[0.02]">
+<div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+<div className="grid gap-6 lg:grid-cols-3">
+<div className="sectionCard">
+<p className="sectionCardLabel">Approval drag</p>
+<h3 className="sectionCardTitle">Spot where work stalls before it moves.</h3>
+<p className="sectionCardCopy">
+Approval queue pressure creates hidden wait time that slows throughput and distorts planning.
+</p>
+</div>
+
+<div className="sectionCard">
+<p className="sectionCardLabel">Broken handoffs</p>
+<h3 className="sectionCardTitle">Catch missing context between teams.</h3>
+<p className="sectionCardCopy">
+Weak transitions create rework, delay, and inconsistent execution quality across the workflow.
+</p>
+</div>
+
+<div className="sectionCard">
+<p className="sectionCardLabel">Duplicate work</p>
+<h3 className="sectionCardTitle">Collapse repeated reporting into one view.</h3>
+<p className="sectionCardCopy">
+When the same signal is tracked in multiple places, operators spend time updating instead of moving work forward.
+</p>
+</div>
+</div>
+</div>
+</section>
+
+<section id="process" className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+<div className="max-w-3xl">
+<p className="text-[11px] uppercase tracking-[0.26em] text-cyan-300">Process</p>
+<h2 className="mt-3 text-3xl font-bold sm:text-4xl">
+One workflow review. Clear signals. Faster execution.
+</h2>
+<p className="mt-4 text-base leading-8 text-gray-400">
+Ghostlayer helps teams see where drag forms, where ownership weakens, and where the highest recovery leverage sits first.
+</p>
+</div>
+
+<div className="mt-10 grid gap-5 lg:grid-cols-3">
+<div className="sectionCard">
+<p className="sectionCardStep">01</p>
+<h3 className="sectionCardTitle">Review the workflow</h3>
+<p className="sectionCardCopy">
+Capture the operating flow, pressure points, approvals, and current handoff structure.
+</p>
+</div>
+
+<div className="sectionCard">
+<p className="sectionCardStep">02</p>
+<h3 className="sectionCardTitle">Surface signal conditions</h3>
+<p className="sectionCardCopy">
+Translate friction into health, risk, loss, and recovery signals teams can actually act on.
+</p>
+</div>
+
+<div className="sectionCard">
+<p className="sectionCardStep">03</p>
+<h3 className="sectionCardTitle">Focus operator attention</h3>
+<p className="sectionCardCopy">
+Prioritize the changes most likely to reduce drag and improve execution across the workflow layer.
+</p>
+</div>
+</div>
+</section>
+
+<footer className="border-t border-white/8">
+<div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-8 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:px-8">
+<div>
+<Link href="/" className="homepageLogo">
+GHOSTLAYER
+</Link>
+<p className="mt-3 text-sm text-gray-500">
+Business workflow intelligence for clearer operations and faster execution.
+</p>
+</div>
+
+<div className="flex flex-wrap items-center gap-5 text-sm text-gray-400">
+<a href="#results" className="navLink">
+Results
+</a>
+<a href="#signals" className="navLink">
+Signals
+</a>
+<a href="#process" className="navLink">
+Process
+</a>
+<Link href="/dashboard" className="navLink">
+Dashboard
+</Link>
+</div>
+</div>
+</footer>
+
+<style jsx global>{`
+.homepageLogo {
+display: inline-block;
+color: #ffffff;
+text-decoration: none;
+font-weight: 700;
+letter-spacing: 0.1em;
+line-height: 1;
+animation: homepageLogoPulse 2.8s ease-in-out infinite;
+text-shadow:
+0 0 5px rgba(255, 255, 255, 0.72),
+0 0 12px rgba(255, 255, 255, 0.48),
+0 0 24px rgba(96, 165, 250, 0.32),
+0 0 40px rgba(59, 130, 246, 0.18);
+}
+
+@keyframes homepageLogoPulse {
+0%,
+100% {
+opacity: 0.86;
+text-shadow:
+0 0 4px rgba(255, 255, 255, 0.5),
+0 0 10px rgba(255, 255, 255, 0.34),
+0 0 22px rgba(96, 165, 250, 0.2),
+0 0 34px rgba(59, 130, 246, 0.1);
+}
+50% {
+opacity: 1;
+text-shadow:
+0 0 8px rgba(255, 255, 255, 0.96),
+0 0 20px rgba(255, 255, 255, 0.74),
+0 0 34px rgba(96, 165, 250, 0.48),
+0 0 52px rgba(59, 130, 246, 0.28),
+0 0 74px rgba(147, 51, 234, 0.14);
+}
+}
+
+.heroHeadline {
+animation: heroHeadlinePulse 6s ease-in-out infinite;
+}
+
+@keyframes heroHeadlinePulse {
+0%,
+100% {
+text-shadow:
+0 0 5px rgba(255, 255, 255, 0.18),
+0 0 10px rgba(255, 255, 255, 0.07);
+}
+50% {
+text-shadow:
+0 0 16px rgba(255, 255, 255, 0.34),
+0 0 28px rgba(96, 165, 250, 0.18);
+}
+}
+
+.navLink {
+color: rgb(156 163 175);
+text-decoration: none;
+transition: color 0.2s ease;
+}
+
+.navLink:hover {
+color: white;
+}
+
+.navCtaPrimary {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+border-radius: 14px;
+padding: 12px 18px;
+background: white;
+color: black;
+text-decoration: none;
+font-weight: 700;
+transition:
+transform 0.2s ease,
+opacity 0.2s ease;
+}
+
+.navCtaPrimary:hover {
+transform: translateY(-1px);
+opacity: 0.92;
+}
+
+.navCtaSecondary {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+border-radius: 14px;
+padding: 12px 18px;
+border: 1px solid rgba(255, 255, 255, 0.1);
+background: rgba(255, 255, 255, 0.04);
+color: white;
+text-decoration: none;
+font-weight: 700;
+transition:
+transform 0.2s ease,
+background 0.2s ease;
+}
+
+.navCtaSecondary:hover {
+transform: translateY(-1px);
+background: rgba(255, 255, 255, 0.08);
+}
+
+.homepageMetricsGrid {
+display: grid;
+grid-template-columns: repeat(1, minmax(0, 1fr));
+gap: 16px;
+}
+
+@media (min-width: 768px) {
+.homepageMetricsGrid {
+grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+}
+
+.homepageMetricCard {
+width: 100%;
+border: 1px solid rgba(255, 255, 255, 0.08);
+background: linear-gradient(
+180deg,
+rgba(255, 255, 255, 0.04),
+rgba(255, 255, 255, 0.02)
+);
+border-radius: 24px;
+padding: 20px;
+box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+transition:
+transform 220ms ease,
+box-shadow 220ms ease,
+border-color 220ms ease;
+}
+
+.homepageMetricCard:hover {
+transform: translateY(-2px);
+border-color: rgba(255, 255, 255, 0.14);
+box-shadow:
+0 16px 34px rgba(0, 0, 0, 0.22),
+0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+.homepageMetricCardPrimary {
+box-shadow:
+0 12px 30px rgba(0, 0, 0, 0.22),
+0 0 0 1px rgba(134, 239, 172, 0.08) inset;
+}
+
+.homepageMetricTopRow {
+display: flex;
+align-items: center;
+justify-content: space-between;
+gap: 12px;
+}
+
+.homepageMetricLabel {
+font-size: 11px;
+letter-spacing: 0.22em;
+text-transform: uppercase;
+color: rgba(255, 255, 255, 0.68);
+}
+
+.homepageMetricValue {
+margin-top: 12px;
+font-size: clamp(2rem, 3vw, 2.55rem);
+line-height: 1.04;
+font-weight: 700;
+color: white;
+}
+
+.homepageMetricCopy {
+margin-top: 10px;
+font-size: 0.92rem;
+line-height: 1.65;
+color: rgba(255, 255, 255, 0.7);
+}
+
+.homepageLivePill {
+display: inline-flex;
+align-items: center;
+justify-content: center;
+padding: 6px 10px;
+border-radius: 999px;
+border: 1px solid rgba(34, 197, 94, 0.22);
+background: rgba(34, 197, 94, 0.08);
+color: #86efac;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 0.12em;
+text-transform: uppercase;
+animation: homepageLivePulse 2s ease-in-out infinite;
+}
+
+@keyframes homepageLivePulse {
+0%,
+100% {
+box-shadow:
+0 0 0 rgba(34, 197, 94, 0),
+0 0 6px rgba(34, 197, 94, 0.2);
+text-shadow: 0 0 4px rgba(134, 239, 172, 0.28);
+}
+50% {
+box-shadow:
+0 0 16px rgba(34, 197, 94, 0.18),
+0 0 28px rgba(34, 197, 94, 0.08);
+text-shadow:
+0 0 8px rgba(134, 239, 172, 0.8),
+0 0 18px rgba(34, 197, 94, 0.45);
+}
+}
+
+.sectionCard {
+border: 1px solid rgba(255, 255, 255, 0.08);
+background: rgba(255, 255, 255, 0.02);
+border-radius: 24px;
+padding: 22px;
+box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+transition:
+transform 0.22s ease,
+border-color 0.22s ease,
+box-shadow 0.22s ease;
+}
+
+.sectionCard:hover {
+transform: translateY(-2px);
+border-color: rgba(255, 255, 255, 0.14);
+box-shadow:
+0 16px 34px rgba(0, 0, 0, 0.2),
+0 0 0 1px rgba(255, 255, 255, 0.02) inset;
+}
+
+.sectionCardLabel {
+font-size: 11px;
+letter-spacing: 0.2em;
+text-transform: uppercase;
+color: rgb(103 232 249);
+}
+
+.sectionCardStep {
+font-size: 12px;
+font-weight: 700;
+letter-spacing: 0.14em;
+text-transform: uppercase;
+color: rgb(103 232 249);
+}
+
+.sectionCardTitle {
+margin-top: 12px;
+font-size: 1.35rem;
+line-height: 1.35;
+font-weight: 700;
+color: white;
+}
+
+.sectionCardCopy {
+margin-top: 10px;
+font-size: 0.95rem;
+line-height: 1.75;
+color: rgb(156 163 175);
+}
+`}</style>
+</main>
+);
+}
