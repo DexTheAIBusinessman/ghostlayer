@@ -17,12 +17,14 @@ function AnimatedNumber({
   suffix = '',
   decimals = 0,
   duration = 900,
+  useGrouping = false,
 }: {
   value: number;
   prefix?: string;
   suffix?: string;
   decimals?: number;
   duration?: number;
+  useGrouping?: boolean;
 }) {
   const [display, setDisplay] = useState(value);
   const previousValueRef = useRef(value);
@@ -36,7 +38,8 @@ function AnimatedNumber({
     const tick = (now: number) => {
       const progress = Math.min((now - startTime) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplay(start + (end - start) * eased);
+      const next = start + (end - start) * eased;
+      setDisplay(next);
 
       if (progress < 1) {
         frame = requestAnimationFrame(tick);
@@ -49,10 +52,17 @@ function AnimatedNumber({
     return () => cancelAnimationFrame(frame);
   }, [value, duration]);
 
+  const formatted = useGrouping
+    ? display.toLocaleString(undefined, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals,
+      })
+    : display.toFixed(decimals);
+
   return (
     <span>
       {prefix}
-      {display.toFixed(decimals)}
+      {formatted}
       {suffix}
     </span>
   );
@@ -122,6 +132,19 @@ export default function HomePage() {
     return () => {
       document.body.style.overflow = previousOverflow || '';
     };
+  }, [isCalendlyOpen]);
+
+  useEffect(() => {
+    if (!isCalendlyOpen) return;
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsCalendlyOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
   }, [isCalendlyOpen]);
 
   function openCalendly() {
@@ -254,7 +277,7 @@ export default function HomePage() {
             </div>
 
             <div className="w-full md:justify-self-center xl:justify-self-auto">
-              <div className="workflowSignalCard rounded-[28px] border border-white/10 p-4 sm:p-4.5">
+              <div className="workflowSignalCard rounded-[28px] border border-white/10 p-4 sm:p-[18px]">
                 <div className="signalHeader rounded-[20px] border border-white/8 px-4 py-3">
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.26em] text-gray-500">
@@ -265,9 +288,9 @@ export default function HomePage() {
                   <span className="signalLivePill">LIVE</span>
                 </div>
 
-                <div className="mt-3.5 grid grid-cols-2 gap-3">
+                <div className="mt-3.5 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <div className="signalMetric signalMetricCyan metricInteractive">
-                    <p className="signalMetricLabel text-cyan-200">Workflow Risk</p>
+                    <p className="signalMetricLabel text-cyan-200">Risk Score</p>
                     <p className="signalMetricValue">
                       <AnimatedNumber value={riskScore} suffix="/100" />
                     </p>
@@ -277,9 +300,9 @@ export default function HomePage() {
                   </div>
 
                   <div className="signalMetric signalMetricRed metricInteractive">
-                    <p className="signalMetricLabel text-red-200">Estimated Loss</p>
+                    <p className="signalMetricLabel text-red-200">Est. Monthly Loss</p>
                     <p className="signalMetricValue">
-                      <AnimatedNumber value={monthlyLoss} prefix="$" />
+                      <AnimatedNumber value={monthlyLoss} prefix="$" useGrouping />
                       <span className="signalMetricSuffix">/mo</span>
                     </p>
                     <p className="signalMetricText text-red-50/80">
@@ -436,7 +459,7 @@ export default function HomePage() {
             <div className="metricCard metricRed hoverCard metricInteractive p-5">
               <p className="metricLabel text-red-100">Est. Monthly Loss</p>
               <p className="metricValue">
-                <AnimatedNumber value={monthlyLoss} prefix="$" suffix="/mo" />
+                <AnimatedNumber value={monthlyLoss} prefix="$" suffix="/mo" useGrouping />
               </p>
               <p className="metricText text-red-50/80">
                 Estimated monthly business cost caused by workflow drag and missed execution.
@@ -446,7 +469,7 @@ export default function HomePage() {
             <div className="metricCard metricGreen hoverCard metricInteractive p-5">
               <p className="metricLabel text-green-100">Recovery Opportunity</p>
               <p className="metricValue">
-                <AnimatedNumber value={recoveryOpportunity} prefix="$" suffix="/mo" />
+                <AnimatedNumber value={recoveryOpportunity} prefix="$" suffix="/mo" useGrouping />
               </p>
               <p className="metricText text-green-50/80">
                 Potential monthly gain if friction and repeated effort are reduced.
@@ -544,8 +567,17 @@ export default function HomePage() {
       </footer>
 
       {isCalendlyOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/72 px-4 py-6 backdrop-blur-md">
-          <div className="relative w-full max-w-5xl overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0d14] shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/72 px-4 py-6 backdrop-blur-md"
+          onClick={closeCalendly}
+        >
+          <div
+            className="relative w-full max-w-5xl overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0d14] shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
+            role="dialog"
+            aria-modal="true"
+            aria-label="Book consultation"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="flex items-center justify-between border-b border-white/8 px-4 py-3 sm:px-5">
               <div>
                 <p className="text-sm font-semibold text-white">Book Consultation</p>
@@ -696,6 +728,7 @@ export default function HomePage() {
           letter-spacing: -0.03em;
           text-shadow: 0 0 14px rgba(255, 255, 255, 0.08);
           white-space: nowrap;
+          font-variant-numeric: tabular-nums;
         }
 
         .signalMetricSuffix {
@@ -852,6 +885,7 @@ export default function HomePage() {
           font-weight: 700;
           line-height: 1.05;
           word-break: break-word;
+          font-variant-numeric: tabular-nums;
         }
 
         .metricText {
