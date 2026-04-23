@@ -57,6 +57,7 @@ type Toast = {
 
 const STORAGE_KEY = 'ghostlayer_dashboard_saved_scans';
 const HOMEPAGE_URL = 'https://ghostlayer-swart.vercel.app/';
+const CALENDLY_URL = 'https://calendly.com/dexterstevens630/30min?hide_gdpr_banner=1';
 const MAX_SAVED_SCANS = 10;
 const MAX_ACTIVITY_ITEMS = 6;
 
@@ -322,6 +323,8 @@ export default function DashboardPage() {
   const [costImpact, setCostImpact] = useState('2840');
 
   const [isScanning, setIsScanning] = useState(false);
+  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const [isCalendlyLoading, setIsCalendlyLoading] = useState(true);
   const [scanProgress, setScanProgress] = useState(0);
   const [lastScanAt, setLastScanAt] = useState<Date | null>(new Date());
   const [feedback, setFeedback] = useState('');
@@ -550,21 +553,29 @@ If current friction is reduced, workflow health, throughput stability, and recov
     );
   }
 
-  function bookConsultation() {
-    scrollToSection('bookings');
+  function openCalendly() {
+    setIsCalendlyLoading(true);
+    setIsCalendlyOpen(true);
     addActivityItem({
       id: Date.now(),
       time: formatClock(new Date()),
       label: 'Consultation CTA clicked',
-      detail:
-        'User moved to the bookings section to review demand and next conversations.',
+      detail: 'Calendly modal opened from the dashboard sidebar.',
       tone: 'cyan',
     });
     pushToast(
-      'Bookings section opened',
-      'Review recent bookings and next-up consultation demand.',
+      'Consultation opened',
+      'Calendly is opening in a booking modal.',
       'cyan'
     );
+  }
+
+  function closeCalendly() {
+    setIsCalendlyOpen(false);
+  }
+
+  function bookConsultation() {
+    openCalendly();
   }
 
   function startWorkflowScan() {
@@ -740,6 +751,15 @@ If current friction is reduced, workflow health, throughput stability, and recov
       timeoutRefs.current.forEach((id) => window.clearTimeout(id));
     };
   }, []);
+
+  useEffect(() => {
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = isCalendlyOpen ? 'hidden' : previousOverflow || '';
+
+    return () => {
+      document.body.style.overflow = previousOverflow || '';
+    };
+  }, [isCalendlyOpen]);
 
   useEffect(() => {
     if (!isScanning) return;
@@ -1847,6 +1867,47 @@ If current friction is reduced, workflow health should move toward ${Math.min(
         </div>
       </div>
 
+      {isCalendlyOpen && (
+        <div className="fixed inset-0 z-[120] flex items-center justify-center bg-black/72 px-4 py-6 backdrop-blur-md">
+          <div className="relative w-full max-w-5xl overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0d14] shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+            <div className="flex items-center justify-between border-b border-white/8 px-4 py-3 sm:px-5">
+              <div>
+                <p className="text-sm font-semibold text-white">Book Consultation</p>
+                <p className="mt-1 text-xs text-gray-400">Loading secure scheduling...</p>
+              </div>
+              <button
+                type="button"
+                onClick={closeCalendly}
+                className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/[0.08]"
+              >
+                Close
+              </button>
+            </div>
+
+            <div className="relative h-[78vh] min-h-[620px] w-full bg-white">
+              {isCalendlyLoading && (
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[linear-gradient(180deg,#0b0f16,#111827)] text-white">
+                  <div className="loadingRing" />
+                  <p className="mt-4 text-sm font-medium text-white">
+                    Preparing your consultation booking...
+                  </p>
+                  <p className="mt-2 text-xs text-gray-400">
+                    Connecting to Calendly securely
+                  </p>
+                </div>
+              )}
+
+              <iframe
+                src={CALENDLY_URL}
+                title="Calendly booking"
+                className="h-full w-full border-0"
+                onLoad={() => setIsCalendlyLoading(false)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
+
       <style>{`
         .panelReveal {
           animation: panelReveal 520ms ease both;
@@ -2409,6 +2470,22 @@ If current friction is reduced, workflow health should move toward ${Math.min(
           line-height: 1.2;
           font-weight: 600;
           letter-spacing: -0.01em;
+        }
+
+        .loadingRing {
+          width: 48px;
+          height: 48px;
+          border-radius: 9999px;
+          border: 3px solid rgba(255,255,255,0.14);
+          border-top-color: rgba(125,211,252,1);
+          animation: spin 0.9s linear infinite;
+          box-shadow: 0 0 20px rgba(125,211,252,0.18);
+        }
+
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
         }
 
         @media (max-width: 1023px) {
