@@ -60,7 +60,9 @@ function AnimatedNumber({
 
 export default function HomePage() {
   const currentYear = new Date().getFullYear();
+
   const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
+  const [isCalendlyLoading, setIsCalendlyLoading] = useState(true);
 
   const [workflowHealth, setWorkflowHealth] = useState(82);
   const [riskScore, setRiskScore] = useState(68);
@@ -123,6 +125,7 @@ export default function HomePage() {
   }, [isCalendlyOpen]);
 
   function openCalendly() {
+    setIsCalendlyLoading(true);
     setIsCalendlyOpen(true);
   }
 
@@ -251,7 +254,7 @@ export default function HomePage() {
             </div>
 
             <div className="w-full md:justify-self-center xl:justify-self-auto">
-              <div className="workflowSignalCard rounded-[28px] border border-white/10 p-4 sm:p-5">
+              <div className="workflowSignalCard rounded-[28px] border border-white/10 p-4 sm:p-4.5">
                 <div className="signalHeader rounded-[20px] border border-white/8 px-4 py-3">
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.26em] text-gray-500">
@@ -262,7 +265,7 @@ export default function HomePage() {
                   <span className="signalLivePill">LIVE</span>
                 </div>
 
-                <div className="mt-4 grid grid-cols-2 gap-3">
+                <div className="mt-3.5 grid grid-cols-2 gap-3">
                   <div className="signalMetric signalMetricCyan metricInteractive">
                     <p className="signalMetricLabel text-cyan-200">Workflow Risk</p>
                     <p className="signalMetricValue">
@@ -541,13 +544,13 @@ export default function HomePage() {
       </footer>
 
       {isCalendlyOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 px-4 py-6 backdrop-blur-sm">
-          <div className="relative w-full max-w-5xl overflow-hidden rounded-[28px] border border-white/10 bg-[#0a0d14] shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/72 px-4 py-6 backdrop-blur-md">
+          <div className="relative w-full max-w-5xl overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0d14] shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
             <div className="flex items-center justify-between border-b border-white/8 px-4 py-3 sm:px-5">
               <div>
                 <p className="text-sm font-semibold text-white">Book Consultation</p>
                 <p className="mt-1 text-xs text-gray-400">
-                  Schedule directly without leaving the homepage.
+                  Loading secure scheduling...
                 </p>
               </div>
               <button
@@ -559,11 +562,20 @@ export default function HomePage() {
               </button>
             </div>
 
-            <div className="h-[78vh] min-h-[620px] w-full bg-white">
+            <div className="relative h-[78vh] min-h-[620px] w-full bg-white">
+              {isCalendlyLoading && (
+                <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[linear-gradient(180deg,#0b0f16,#111827)] text-white">
+                  <div className="loadingRing" />
+                  <p className="mt-4 text-sm font-medium text-white">Preparing your consultation booking...</p>
+                  <p className="mt-2 text-xs text-gray-400">Connecting to Calendly securely</p>
+                </div>
+              )}
+
               <iframe
                 src="https://calendly.com/dexterstevens630/30min?hide_gdpr_banner=1"
                 title="Calendly booking"
                 className="h-full w-full border-0"
+                onLoad={() => setIsCalendlyLoading(false)}
               />
             </div>
           </div>
@@ -627,7 +639,7 @@ export default function HomePage() {
           min-width: 0;
           border-radius: 22px;
           border: 1px solid rgba(255, 255, 255, 0.08);
-          padding: 16px 16px 15px;
+          padding: 14px 15px 14px;
           transition:
             transform 220ms ease,
             border-color 220ms ease,
@@ -670,14 +682,14 @@ export default function HomePage() {
           font-size: 10px;
           text-transform: uppercase;
           letter-spacing: 0.22em;
-          line-height: 1.4;
+          line-height: 1.35;
         }
 
         .signalMetricValue {
           position: relative;
           z-index: 1;
           margin-top: 12px;
-          font-size: clamp(2rem, 2.3vw, 2.7rem);
+          font-size: clamp(1.95rem, 2vw, 2.55rem);
           font-weight: 700;
           line-height: 0.98;
           color: white;
@@ -687,8 +699,8 @@ export default function HomePage() {
         }
 
         .signalMetricSuffix {
-          margin-left: 4px;
-          font-size: 0.42em;
+          margin-left: 3px;
+          font-size: 0.4em;
           font-weight: 700;
           opacity: 0.95;
         }
@@ -696,9 +708,20 @@ export default function HomePage() {
         .signalMetricText {
           position: relative;
           z-index: 1;
-          margin-top: 12px;
-          font-size: 0.94rem;
-          line-height: 1.7;
+          margin-top: 11px;
+          font-size: 0.9rem;
+          line-height: 1.6;
+          word-break: break-word;
+        }
+
+        .loadingRing {
+          width: 48px;
+          height: 48px;
+          border-radius: 9999px;
+          border: 3px solid rgba(255,255,255,0.14);
+          border-top-color: rgba(125,211,252,1);
+          animation: spin 0.9s linear infinite;
+          box-shadow: 0 0 20px rgba(125,211,252,0.18);
         }
 
         .sparkle {
@@ -974,22 +997,32 @@ export default function HomePage() {
           }
         }
 
+        @keyframes spin {
+          to {
+            transform: rotate(360deg);
+          }
+        }
+
         @media (max-width: 767px) {
           .workflowSignalCard {
             padding: 14px;
           }
 
           .signalMetric {
-            padding: 14px;
+            padding: 13px 13px 14px;
           }
 
           .signalMetricValue {
-            font-size: 2rem;
+            font-size: 1.82rem;
           }
 
           .signalMetricText {
-            font-size: 0.88rem;
-            line-height: 1.6;
+            font-size: 0.84rem;
+            line-height: 1.55;
+          }
+
+          .signalMetricSuffix {
+            font-size: 0.42em;
           }
 
           .metricValue {
