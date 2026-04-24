@@ -15,14 +15,6 @@ export const metadata: Metadata = {
     'operational drag',
     'Ghostlayer',
   ],
-  icons: {
-    icon: [
-      { url: '/favicon.ico' },
-      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
-    ],
-    shortcut: ['/favicon.ico'],
-    apple: [{ url: '/apple-icon.png', sizes: '180x180', type: 'image/png' }],
-  },
   openGraph: {
     title: 'Ghostlayer | Business Workflow Intelligence',
     description:
@@ -59,4 +51,3 @@ export default function RootLayout({
     </html>
   );
 }
-
