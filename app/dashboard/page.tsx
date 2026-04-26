@@ -337,7 +337,9 @@ export default function DashboardPage() {
   const [feedback, setFeedback] = useState('');
   const [scanFlash, setScanFlash] = useState(false);
 
-  const [scanMode, setScanMode] = useState<'idle' | 'running' | 'complete'>('idle');
+  const [scanMode, setScanMode] = useState<'idle' | 'running' | 'complete'>(
+    'idle'
+  );
   const [healthDelta, setHealthDelta] = useState('+2.1%');
   const [riskDelta, setRiskDelta] = useState('-1.4');
   const [lossDelta, setLossDelta] = useState('-$180');
@@ -351,14 +353,16 @@ export default function DashboardPage() {
 
   const [healthSeries, setHealthSeries] = useState([87, 88, 89, 90, 90, 91, 91]);
   const [riskSeries, setRiskSeries] = useState([61, 60, 60, 59, 58, 58, 58]);
-  const [lossSeries, setLossSeries] = useState([3180, 3120, 3040, 2980, 2920, 2880, 2840]);
+  const [lossSeries, setLossSeries] = useState([
+    3180, 3120, 3040, 2980, 2920, 2880, 2840,
+  ]);
 
   const [bookings, setBookings] = useState<BookingItem[]>([
     {
       id: 1,
       name: 'Dexter Test 5',
       email: 'stevensdexter17@gmail.com',
-      type: 'Business Consultation',
+      type: 'Workflow Scan',
       scheduled: '5/22/2026, 1:00 PM',
       source: 'calendly',
       status: 'confirmed',
@@ -376,7 +380,7 @@ export default function DashboardPage() {
       id: 3,
       name: 'Mark Chen',
       email: 'founder@fieldscope.co',
-      type: 'Business Consultation',
+      type: 'Workflow Scan',
       scheduled: '5/24/2026, 9:00 AM',
       source: 'calendly',
       status: 'confirmed',
@@ -385,7 +389,7 @@ export default function DashboardPage() {
       id: 4,
       name: 'Talia Brooks',
       email: 'team@arcpilot.ai',
-      type: 'Business Consultation',
+      type: 'Workflow Scan',
       scheduled: '5/25/2026, 2:15 PM',
       source: 'referral',
       status: 'confirmed',
@@ -404,7 +408,7 @@ export default function DashboardPage() {
       id: 2,
       time: formatClock(new Date(Date.now() - 1000 * 60 * 8)),
       label: 'Booking sync active',
-      detail: 'New consultation entered the demand layer.',
+      detail: 'New workflow scan entered the demand layer.',
       tone: 'green',
     },
     {
@@ -514,7 +518,11 @@ If current friction is reduced, workflow health, throughput stability, and recov
       detail: `${snapshot.companyName} snapshot stored locally for quick export and review.`,
       tone: 'green',
     });
-    pushToast('Scan saved', 'Current dashboard state was saved locally in this browser.', 'green');
+    pushToast(
+      'Scan saved',
+      'Current dashboard state was saved locally in this browser.',
+      'green'
+    );
   }
 
   function exportDashboard() {
@@ -534,16 +542,22 @@ If current friction is reduced, workflow health, throughput stability, and recov
   }
 
   function downloadExecutiveSummary() {
-    const content = `${summary}
-
-Saved scans available: ${savedScans.length}`;
+    const content = `${summary}\n\nSaved scans available: ${savedScans.length}`;
     downloadTextFile('ghostlayer-executive-summary.txt', content);
-    pushToast('Summary downloaded', 'Executive summary exported as a text file.', 'cyan');
+    pushToast(
+      'Summary downloaded',
+      'Executive summary exported as a text file.',
+      'cyan'
+    );
   }
 
   function scheduleOperatorReview() {
     scrollToSection('bookings');
-    pushToast('Review queued', 'Jumped to bookings so you can schedule the next operator review.', 'yellow');
+    pushToast(
+      'Review queued',
+      'Jumped to bookings so you can schedule the next operator review.',
+      'yellow'
+    );
   }
 
   function openCalendly() {
@@ -552,11 +566,15 @@ Saved scans available: ${savedScans.length}`;
     addActivityItem({
       id: Date.now(),
       time: formatClock(new Date()),
-      label: 'Consultation CTA clicked',
+      label: 'Workflow scan CTA clicked',
       detail: 'Calendly modal opened from the dashboard sidebar.',
       tone: 'cyan',
     });
-    pushToast('Consultation opened', 'Calendly is opening in a booking modal.', 'cyan');
+    pushToast(
+      'Workflow scan opened',
+      'Calendly is opening in a booking modal.',
+      'cyan'
+    );
   }
 
   function closeCalendly() {
@@ -571,7 +589,11 @@ Saved scans available: ${savedScans.length}`;
     if (isScanning) return;
 
     if (!companyName.trim()) {
-      pushToast('Company name required', 'Add a company name before running a scan.', 'yellow');
+      pushToast(
+        'Company name required',
+        'Add a company name before running a scan.',
+        'yellow'
+      );
       scrollToSection('run-scan');
       return;
     }
@@ -601,7 +623,11 @@ Saved scans available: ${savedScans.length}`;
       },
       ...prev.slice(0, 4),
     ]);
-    pushToast('Bookings refreshed', 'A new demo lead was added to the demand layer.', 'cyan');
+    pushToast(
+      'Bookings refreshed',
+      'A new demo lead was added to the demand layer.',
+      'cyan'
+    );
   }
 
   function submitFeedback() {
@@ -619,7 +645,11 @@ Saved scans available: ${savedScans.length}`;
       tone: 'yellow',
     });
     setFeedback('');
-    pushToast('Feedback submitted', 'Your feedback was captured in live activity.', 'yellow');
+    pushToast(
+      'Feedback submitted',
+      'Your feedback was captured in live activity.',
+      'yellow'
+    );
   }
 
   useEffect(() => {
@@ -675,7 +705,10 @@ Saved scans available: ${savedScans.length}`;
       });
 
       setMonthlyLoss((v) => {
-        const next = Math.max(2200, Math.min(3600, v + Math.round((Math.random() - 0.5) * 120)));
+        const next = Math.max(
+          2200,
+          Math.min(3600, v + Math.round((Math.random() - 0.5) * 120))
+        );
         setLossSeries((series) => [...series.slice(1), next]);
         return next;
       });
@@ -702,7 +735,7 @@ Saved scans available: ${savedScans.length}`;
       const details = [
         'Risk score adjusted after workflow drift.',
         'Summary cards refreshed with the latest scan state.',
-        'New consultation entered the demand layer.',
+        'New workflow scan entered the demand layer.',
         'Approval lane wait time ticked up in the current cycle.',
         'Handoff packet is missing execution notes.',
         'Manual progress updates consolidated into one surface.',
@@ -741,7 +774,10 @@ Saved scans available: ${savedScans.length}`;
     if (scanProgress >= 100) {
       const team = Number(teamSize) || 18;
       const cost = parsePositiveNumber(costImpact, 2840);
-      const risk = Math.max(50, Math.min(82, 44 + Math.floor(team / 2) + (workflowBottleneck ? 8 : 0)));
+      const risk = Math.max(
+        50,
+        Math.min(82, 44 + Math.floor(team / 2) + (workflowBottleneck ? 8 : 0))
+      );
       const health = Math.max(82, Math.min(96, 96 - Math.floor(team / 5)));
       const loss = Math.max(2000, Math.round(cost));
       const recovery = Math.round(loss * 1.4);
@@ -780,7 +816,12 @@ OPERATOR RECOMMENDATIONS
 5. Review booking load and intake flow for execution pressure
 
 OUTLOOK
-If current friction is reduced, workflow health should move toward ${Math.min(98, health + 4)}% and recovery opportunity can rise toward ${formatCurrency(Math.round(recovery * 1.08))}.`);
+If current friction is reduced, workflow health should move toward ${Math.min(
+        98,
+        health + 4
+      )}% and recovery opportunity can rise toward ${formatCurrency(
+        Math.round(recovery * 1.08)
+      )}.`);
 
       addActivityItem({
         id: Date.now(),
@@ -792,7 +833,11 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
 
       setIsScanning(false);
       setScanMode('complete');
-      pushToast('Scan completed', `${companyName || 'Company'} refreshed with updated workflow signals.`, 'green');
+      pushToast(
+        'Scan completed',
+        `${companyName || 'Company'} refreshed with updated workflow signals.`,
+        'green'
+      );
 
       addTimeout(() => {
         setScanMode('idle');
@@ -836,7 +881,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
       return acc;
     }, {});
     const topInquiryType =
-      Object.entries(inquiryMix).sort((a, b) => b[1] - a[1])[0]?.[0] || 'Business Consultation';
+      Object.entries(inquiryMix).sort((a, b) => b[1] - a[1])[0]?.[0] ||
+      'Workflow Scan';
 
     return {
       inboundThisWeek: bookings.length + 7,
@@ -894,8 +940,12 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
             </div>
 
             <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.02] p-3.5">
-              <p className="text-[10px] uppercase tracking-[0.24em] text-gray-500">Workspace</p>
-              <p className="mt-2 text-[0.95rem] font-medium text-white">Operations Intelligence</p>
+              <p className="text-[10px] uppercase tracking-[0.24em] text-gray-500">
+                Workspace
+              </p>
+              <p className="mt-2 text-[0.95rem] font-medium text-white">
+                Operations Intelligence
+              </p>
               <p className="mt-1 text-xs leading-6 text-gray-400">
                 Command surface for workflow drag, risk, and execution clarity.
               </p>
@@ -925,31 +975,45 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
             <div className="mt-5 grid gap-3">
               <div
                 className={`rounded-2xl border p-3 transition-all duration-500 ${
-                  scanFlash ? 'border-cyan-300/25 bg-cyan-400/[0.08]' : 'border-white/10 bg-black/20'
+                  scanFlash
+                    ? 'border-cyan-300/25 bg-cyan-400/[0.08]'
+                    : 'border-white/10 bg-black/20'
                 }`}
               >
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Last scan</p>
-                <p className="mt-2 text-sm text-white">{lastScanAt ? formatClock(lastScanAt) : 'None yet'}</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                  Last scan
+                </p>
+                <p className="mt-2 text-sm text-white">
+                  {lastScanAt ? formatClock(lastScanAt) : 'None yet'}
+                </p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Bookings sync</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                  Bookings sync
+                </p>
                 <p className="mt-2 text-[0.95rem] text-white">Demand layer active</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Environment</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                  Environment
+                </p>
                 <p className="mt-2 text-sm font-semibold signal-green">Live</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Saved scans</p>
+                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                  Saved scans
+                </p>
                 <p className="mt-2 text-[0.95rem] text-white">{savedScans.length}</p>
               </div>
             </div>
 
             <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-3">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">Signal rail</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
+                Signal rail
+              </p>
               <div className="mt-3 flex items-center gap-2">
                 <span className="railDot railDotGreen" />
                 <span className="railDot railDotCyan" />
@@ -959,7 +1023,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
             </div>
 
             <div className="mt-5 rounded-2xl border border-cyan-400/15 bg-cyan-400/[0.06] p-3.5">
-              <p className="text-[10px] uppercase tracking-[0.2em] text-cyan-300">Console state</p>
+              <p className="text-[10px] uppercase tracking-[0.2em] text-cyan-300">
+                Console state
+              </p>
               <p className="mt-2 text-sm text-cyan-100">{scanStatusText}</p>
               <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
                 <div
@@ -975,7 +1041,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                 onClick={bookConsultation}
                 className="w-full rounded-xl border border-cyan-400/20 bg-cyan-400/10 px-3.5 py-2.5 text-sm font-semibold text-cyan-200 transition hover:bg-cyan-400/14"
               >
-                Book Consultation
+                Book a Workflow Scan
               </button>
             </div>
           </div>
@@ -986,14 +1052,22 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
             <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3.5 sm:px-6 md:px-8 lg:px-10">
               <div className="min-w-0">
                 <div className="hidden md:flex md:items-center md:gap-3">
-                  <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">Dashboard</p>
+                  <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">
+                    Dashboard
+                  </p>
                   <span className="rounded-full border border-cyan-400/18 bg-cyan-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-200">
                     Demo Workspace
                   </span>
-                  <AppLink href="/privacy" className="text-xs text-gray-400 transition hover:text-white">
+                  <AppLink
+                    href="/privacy"
+                    className="text-xs text-gray-400 transition hover:text-white"
+                  >
                     Privacy
                   </AppLink>
-                  <AppLink href="/terms" className="text-xs text-gray-400 transition hover:text-white">
+                  <AppLink
+                    href="/terms"
+                    className="text-xs text-gray-400 transition hover:text-white"
+                  >
                     Terms
                   </AppLink>
                 </div>
@@ -1003,7 +1077,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                 </h2>
 
                 <p className="mt-1 text-xs text-gray-400 sm:text-sm">
-                  Public product demo for workflow visibility, drag detection, and operator framing.
+                  Public product demo for workflow visibility, drag detection, and operator
+                  framing.
                 </p>
               </div>
 
@@ -1062,7 +1137,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
               <div className="border-b border-white/8 px-5 py-5 sm:px-6 lg:px-6">
                 <div className="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between">
                   <div className="max-w-4xl">
-                    <p className="text-[11px] uppercase tracking-[0.3em] text-cyan-300">Operations Overview</p>
+                    <p className="text-[11px] uppercase tracking-[0.3em] text-cyan-300">
+                      Operations Overview
+                    </p>
 
                     <h1 className="dashboardHeadlineGlow mt-3 text-3xl font-bold leading-tight sm:text-4xl lg:text-[2.55rem]">
                       Detect execution drag before it compounds across the workflow layer
@@ -1115,18 +1192,24 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
               </div>
 
               <div className="grid grid-cols-1 gap-3.5 px-5 py-5 sm:px-6 md:grid-cols-2 xl:grid-cols-4 lg:px-6">
-                <div className={`metricCard hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}>
+                <div
+                  className={`metricCard hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}
+                >
                   <p className="metricLabel">Workflow Health</p>
                   <p className="metricValue">
                     <AnimatedNumber value={workflowHealth} suffix="%" />
                   </p>
-                  <p className="metricText">Operational coherence across active workflow stages.</p>
+                  <p className="metricText">
+                    Operational coherence across active workflow stages.
+                  </p>
                   <div className="mt-3">
                     <span className="deltaPill deltaPillGreen">{healthDelta}</span>
                   </div>
                 </div>
 
-                <div className={`metricCard metricBlue hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}>
+                <div
+                  className={`metricCard metricBlue hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}
+                >
                   <p className="metricLabel text-cyan-200">Risk Score</p>
                   <p className="metricValue">
                     <AnimatedNumber value={riskScore} suffix="/100" />
@@ -1139,7 +1222,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                   </div>
                 </div>
 
-                <div className={`metricCard metricRed hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}>
+                <div
+                  className={`metricCard metricRed hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}
+                >
                   <p className="metricLabel text-red-200">Est. Monthly Loss</p>
                   <p className="metricValue">
                     <AnimatedNumber value={monthlyLoss} prefix="$" suffix="/mo" />
@@ -1152,7 +1237,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                   </div>
                 </div>
 
-                <div className={`metricCard metricGreen hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}>
+                <div
+                  className={`metricCard metricGreen hoverCard metricInteractive ${scanFlash ? 'metricFlash' : ''}`}
+                >
                   <p className="metricLabel text-green-200">Recovery Opportunity</p>
                   <p className="metricValue">
                     <AnimatedNumber value={recoveryOpportunity} prefix="$" suffix="/mo" />
@@ -1164,7 +1251,10 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
               </div>
             </section>
 
-            <section id="priority-issues" className="panelReveal mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6">
+            <section
+              id="priority-issues"
+              className="panelReveal mt-6 rounded-[28px] border border-white/8 bg-white/[0.022] p-5 shadow-[0_10px_34px_rgba(0,0,0,0.2)] sm:p-6"
+            >
               <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
                 <div>
                   <h3 className="text-[1.55rem] font-semibold">Priority Issues</h3>
@@ -1185,7 +1275,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                     <span className="signal High">High</span>
                   </div>
                   <p className="mt-3.5 text-sm leading-7 text-gray-300">
-                    Throughput pressure is building around approval bottlenecks, increasing wait time before work advances cleanly.
+                    Throughput pressure is building around approval bottlenecks, increasing wait
+                    time before work advances cleanly.
                   </p>
                   <div className="actionCard">
                     <p className="actionLabel">Recommended action</p>
@@ -1201,7 +1292,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                     <span className="signal Medium">Medium</span>
                   </div>
                   <p className="mt-3.5 text-sm leading-7 text-gray-300">
-                    Critical workflow context is likely degrading between intake, execution, and follow-through.
+                    Critical workflow context is likely degrading between intake, execution, and
+                    follow-through.
                   </p>
                   <div className="actionCard">
                     <p className="actionLabel">Recommended action</p>
@@ -1217,7 +1309,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                     <span className="signal Medium">Medium</span>
                   </div>
                   <p className="mt-3.5 text-sm leading-7 text-gray-300">
-                    The same progress signal is likely being captured in multiple places, increasing drag.
+                    The same progress signal is likely being captured in multiple places,
+                    increasing drag.
                   </p>
                   <div className="actionCard">
                     <p className="actionLabel">Recommended action</p>
@@ -1243,8 +1336,12 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                 <section id="intelligence-summary" className="cardShell hoverCard panelReveal">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-[1.55rem] font-semibold text-cyan-300">Workflow Intelligence Summary</h3>
-                      <p className="mt-2 text-sm uppercase tracking-[0.2em] text-gray-500">Operational signal</p>
+                      <h3 className="text-[1.55rem] font-semibold text-cyan-300">
+                        Workflow Intelligence Summary
+                      </h3>
+                      <p className="mt-2 text-sm uppercase tracking-[0.2em] text-gray-500">
+                        Operational signal
+                      </p>
                     </div>
 
                     <span className="hidden rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs uppercase tracking-[0.18em] text-gray-400 sm:block">
@@ -1253,7 +1350,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                   </div>
 
                   <p className="mt-4 text-sm text-gray-500">
-                    This summary isolates where drag is forming, where cost exposure is building, and where operator attention should concentrate first.
+                    This summary isolates where drag is forming, where cost exposure is building,
+                    and where operator attention should concentrate first.
                   </p>
 
                   <pre className="mt-4 min-h-[180px] overflow-x-auto whitespace-pre-wrap break-words rounded-2xl border border-white/8 bg-[#0a0d14] p-4 text-sm leading-7 text-gray-300">
@@ -1266,7 +1364,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                     <div className="min-w-0">
                       <h3 className="text-[1.55rem] font-semibold">Recent Bookings</h3>
                       <p className="mt-2 text-sm text-gray-400">
-                        Consultation activity entering the Ghostlayer demand layer.
+                        Workflow scan activity entering the Ghostlayer demand layer.
                       </p>
                     </div>
 
@@ -1284,11 +1382,21 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                       <table className="min-w-full border-separate border-spacing-0 text-left text-sm">
                         <thead>
                           <tr className="text-gray-400">
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Name</th>
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Email</th>
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Type</th>
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Scheduled</th>
-                            <th className="border-b border-white/8 px-3 py-3 font-medium">Source</th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Name
+                            </th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Email
+                            </th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Type
+                            </th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Scheduled
+                            </th>
+                            <th className="border-b border-white/8 px-3 py-3 font-medium">
+                              Source
+                            </th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1297,10 +1405,18 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                               key={booking.id}
                               className="text-gray-200 transition-colors duration-200 hover:bg-white/[0.03]"
                             >
-                              <td className="border-b border-white/6 px-3 py-3.5">{booking.name}</td>
-                              <td className="border-b border-white/6 px-3 py-3.5">{booking.email}</td>
-                              <td className="border-b border-white/6 px-3 py-3.5">{booking.type}</td>
-                              <td className="border-b border-white/6 px-3 py-3.5">{booking.scheduled}</td>
+                              <td className="border-b border-white/6 px-3 py-3.5">
+                                {booking.name}
+                              </td>
+                              <td className="border-b border-white/6 px-3 py-3.5">
+                                {booking.email}
+                              </td>
+                              <td className="border-b border-white/6 px-3 py-3.5">
+                                {booking.type}
+                              </td>
+                              <td className="border-b border-white/6 px-3 py-3.5">
+                                {booking.scheduled}
+                              </td>
                               <td className="border-b border-white/6 px-3 py-3.5">
                                 <span
                                   className={`rounded-full border px-3 py-1 text-xs ${
@@ -1336,7 +1452,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                           <div className="flex items-start justify-between gap-3">
                             <div className="min-w-0">
                               <p className="font-medium text-white">{booking.name}</p>
-                              <p className="mt-1 break-all text-sm text-gray-400">{booking.email}</p>
+                              <p className="mt-1 break-all text-sm text-gray-400">
+                                {booking.email}
+                              </p>
                             </div>
                             <span
                               className={`shrink-0 rounded-full border px-3 py-1 text-xs ${
@@ -1369,49 +1487,91 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
 
                   <div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-3">
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Inbound this week</p>
-                      <p className="mt-2 text-2xl font-semibold text-white">{demandSnapshot.inboundThisWeek}</p>
-                      <p className="mt-2 text-sm text-gray-400">Total consultation demand entering the current week.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Inbound this week
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-white">
+                        {demandSnapshot.inboundThisWeek}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Total workflow scan demand entering the current week.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Confirmed rate</p>
-                      <p className="mt-2 text-2xl font-semibold text-cyan-200">{demandSnapshot.confirmedRate}%</p>
-                      <p className="mt-2 text-sm text-gray-400">Share of scheduled demand already locked in.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Confirmed rate
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-cyan-200">
+                        {demandSnapshot.confirmedRate}%
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Share of scheduled demand already locked in.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Top inquiry type</p>
-                      <p className="mt-2 text-lg font-semibold text-white">{demandSnapshot.topInquiryType}</p>
-                      <p className="mt-2 text-sm text-gray-400">Most common operator entry point right now.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Top inquiry type
+                      </p>
+                      <p className="mt-2 text-lg font-semibold text-white">
+                        {demandSnapshot.topInquiryType}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Most common operator entry point right now.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Next up</p>
-                      <p className="mt-2 text-lg font-semibold text-white">{demandSnapshot.nextUp}</p>
-                      <p className="mt-2 text-sm text-gray-400">Closest demand event requiring operator attention.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Next up
+                      </p>
+                      <p className="mt-2 text-lg font-semibold text-white">
+                        {demandSnapshot.nextUp}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Closest demand event requiring operator attention.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Avg. days to call</p>
-                      <p className="mt-2 text-2xl font-semibold text-white">{demandSnapshot.avgDaysToCall}</p>
-                      <p className="mt-2 text-sm text-gray-400">Typical lag from inquiry to scheduled conversation.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Avg. days to call
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-white">
+                        {demandSnapshot.avgDaysToCall}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Typical lag from inquiry to scheduled conversation.
+                      </p>
                     </div>
 
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">Pending demand</p>
-                      <p className="mt-2 text-2xl font-semibold text-yellow-200">{demandSnapshot.pending}</p>
-                      <p className="mt-2 text-sm text-gray-400">Active opportunities not yet fully confirmed.</p>
+                      <p className="text-[10px] uppercase tracking-[0.18em] text-gray-500">
+                        Pending demand
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-yellow-200">
+                        {demandSnapshot.pending}
+                      </p>
+                      <p className="mt-2 text-sm text-gray-400">
+                        Active opportunities not yet fully confirmed.
+                      </p>
                     </div>
                   </div>
                 </section>
               </div>
 
               <div className="grid gap-6 self-start">
-                <section id="run-scan" className={`cardShell hoverCard panelReveal ${scanFlash ? 'scanPulse' : ''} ${scanMode === 'running' ? 'scanModeShell' : ''} ${scanMode === 'complete' ? 'scanCompleteShell' : ''}`}>
+                <section
+                  id="run-scan"
+                  className={`cardShell hoverCard panelReveal ${scanFlash ? 'scanPulse' : ''} ${
+                    scanMode === 'running' ? 'scanModeShell' : ''
+                  } ${scanMode === 'complete' ? 'scanCompleteShell' : ''}`}
+                >
                   <h3 className="text-[1.55rem] font-semibold">Run a New Workflow Scan</h3>
                   <p className="mt-2 text-sm text-gray-400">
-                    Enter business inputs to generate a fresh workflow intelligence summary and cost signal.
+                    Enter business inputs to generate a fresh workflow intelligence summary and
+                    cost signal.
                   </p>
 
                   <div className="mt-5 grid grid-cols-1 gap-3.5 md:grid-cols-2">
@@ -1472,7 +1632,11 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                   <div className="mt-5 rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
                     <div className="flex items-center justify-between gap-4">
                       <p className="text-sm font-medium text-white">Scan progress</p>
-                      {isScanning ? <p className="text-sm text-cyan-200">{`${scanProgress}%`}</p> : <p className="text-sm font-semibold signal-green">Ready</p>}
+                      {isScanning ? (
+                        <p className="text-sm text-cyan-200">{`${scanProgress}%`}</p>
+                      ) : (
+                        <p className="text-sm font-semibold signal-green">Ready</p>
+                      )}
                     </div>
 
                     <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
@@ -1500,7 +1664,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                         <span className="signal High text-sm font-semibold">High</span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
-                        Multi-step review pressure is likely slowing work before throughput resumes.
+                        Multi-step review pressure is likely slowing work before throughput
+                        resumes.
                       </p>
                     </div>
 
@@ -1523,7 +1688,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-medium">Sales to Delivery</p>
-                        <span className="signal-red text-sm font-semibold">Missing context</span>
+                        <span className="signal-red text-sm font-semibold">
+                          Missing context
+                        </span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
                         Critical execution context is likely not arriving intact at the next stage.
@@ -1533,7 +1700,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-medium">Support to Operations</p>
-                        <span className="signal-yellow text-sm font-semibold">Weak ownership</span>
+                        <span className="signal-yellow text-sm font-semibold">
+                          Weak ownership
+                        </span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
                         Escalated work may be slowing because ownership boundaries are unclear.
@@ -1549,7 +1718,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-medium">Reporting overlap</p>
-                        <span className="signal-cyan text-sm font-semibold">Repeated effort</span>
+                        <span className="signal-cyan text-sm font-semibold">
+                          Repeated effort
+                        </span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
                         Similar progress signal is likely being captured across multiple surfaces.
@@ -1559,7 +1730,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                     <div className="rounded-2xl border border-white/8 bg-[#0a0d14] p-4">
                       <div className="flex items-center justify-between gap-4">
                         <p className="font-medium">Manual progress updates</p>
-                        <span className="signal-cyan text-sm font-semibold">Duplicate work</span>
+                        <span className="signal-cyan text-sm font-semibold">
+                          Duplicate work
+                        </span>
                       </div>
                       <p className="mt-2 text-sm text-gray-400">
                         Teams may be re-entering the same status layer across tools and stages.
@@ -1604,7 +1777,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
                             <p className="font-medium text-white">{item.label}</p>
                           </div>
 
-                          <p className="text-xs uppercase tracking-[0.18em] text-gray-500">{item.time}</p>
+                          <p className="text-xs uppercase tracking-[0.18em] text-gray-500">
+                            {item.time}
+                          </p>
                         </div>
 
                         <p className="mt-2 text-sm text-gray-400">{item.detail}</p>
@@ -1691,7 +1866,8 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
               </div>
 
               <div className="mt-6 border-t border-white/8 pt-6 text-sm text-gray-500">
-                © 2026 Ghostlayer. Business workflow intelligence for clearer operations and faster execution.
+                © 2026 Ghostlayer. Business workflow intelligence for clearer operations and
+                faster execution.
               </div>
             </footer>
           </div>
@@ -1703,7 +1879,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
           <div className="relative w-full max-w-5xl overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0d14] shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
             <div className="flex items-center justify-between border-b border-white/8 px-4 py-3 sm:px-5">
               <div>
-                <p className="text-sm font-semibold text-white">Book Consultation</p>
+                <p className="text-sm font-semibold text-white">Book a Workflow Scan</p>
                 <p className="mt-1 text-xs text-gray-400">Loading secure scheduling...</p>
               </div>
               <button
@@ -1719,8 +1895,12 @@ If current friction is reduced, workflow health should move toward ${Math.min(98
               {isCalendlyLoading && (
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[linear-gradient(180deg,#0b0f16,#111827)] text-white">
                   <div className="loadingRing" />
-                  <p className="mt-4 text-sm font-medium text-white">Preparing your consultation booking...</p>
-                  <p className="mt-2 text-xs text-gray-400">Connecting to Calendly securely</p>
+                  <p className="mt-4 text-sm font-medium text-white">
+                    Preparing your workflow scan booking...
+                  </p>
+                  <p className="mt-2 text-xs text-gray-400">
+                    Connecting to Calendly securely
+                  </p>
                 </div>
               )}
 
