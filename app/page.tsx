@@ -17,14 +17,12 @@ function AnimatedNumber({
   suffix = '',
   decimals = 0,
   duration = 900,
-  useGrouping = false,
 }: {
   value: number;
   prefix?: string;
   suffix?: string;
   decimals?: number;
   duration?: number;
-  useGrouping?: boolean;
 }) {
   const [display, setDisplay] = useState(value);
   const previousValueRef = useRef(value);
@@ -38,8 +36,7 @@ function AnimatedNumber({
     const tick = (now: number) => {
       const progress = Math.min((now - startTime) / duration, 1);
       const eased = 1 - Math.pow(1 - progress, 3);
-      const next = start + (end - start) * eased;
-      setDisplay(next);
+      setDisplay(start + (end - start) * eased);
 
       if (progress < 1) {
         frame = requestAnimationFrame(tick);
@@ -52,17 +49,10 @@ function AnimatedNumber({
     return () => cancelAnimationFrame(frame);
   }, [value, duration]);
 
-  const formatted = useGrouping
-    ? display.toLocaleString(undefined, {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-      })
-    : display.toFixed(decimals);
-
   return (
     <span>
       {prefix}
-      {formatted}
+      {display.toFixed(decimals)}
       {suffix}
     </span>
   );
@@ -79,8 +69,7 @@ export default function HomePage() {
   const [monthlyLoss, setMonthlyLoss] = useState(3247);
   const [recoveryOpportunity, setRecoveryOpportunity] = useState(4200);
 
-  const logoPulseGlow =
-    'animate-[logoPulseGlow_3.2s_ease-in-out_infinite] [text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(255,255,255,0.82),0_0_34px_rgba(96,165,250,0.62),0_0_50px_rgba(59,130,246,0.48)] text-white';
+  const logoPulseGlow = 'ghostlayerLogoPulse text-white';
 
   const sparkles = useMemo<Sparkle[]>(
     () => [
@@ -132,19 +121,6 @@ export default function HomePage() {
     return () => {
       document.body.style.overflow = previousOverflow || '';
     };
-  }, [isCalendlyOpen]);
-
-  useEffect(() => {
-    if (!isCalendlyOpen) return;
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') {
-        setIsCalendlyOpen(false);
-      }
-    };
-
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
   }, [isCalendlyOpen]);
 
   function openCalendly() {
@@ -200,6 +176,9 @@ export default function HomePage() {
             </a>
             <a href="#results" className="transition hover:text-white">
               Results
+            </a>
+            <a href="#pricing" className="transition hover:text-white">
+              Pricing
             </a>
             <a href="#next-step" className="transition hover:text-white">
               Next Step
@@ -258,7 +237,7 @@ export default function HomePage() {
                   onClick={openCalendly}
                   className="rounded-2xl bg-white px-7 py-3.5 text-base font-semibold text-black transition hover:opacity-90"
                 >
-                  Book Business Consultation
+                  Book a Workflow Scan
                 </button>
 
                 <a
@@ -277,7 +256,7 @@ export default function HomePage() {
             </div>
 
             <div className="w-full md:justify-self-center xl:justify-self-auto">
-              <div className="workflowSignalCard rounded-[28px] border border-white/10 p-4 sm:p-[18px]">
+              <div className="workflowSignalCard rounded-[28px] border border-white/10 p-4 sm:p-4.5">
                 <div className="signalHeader rounded-[20px] border border-white/8 px-4 py-3">
                   <div>
                     <p className="text-[10px] uppercase tracking-[0.26em] text-gray-500">
@@ -288,9 +267,9 @@ export default function HomePage() {
                   <span className="signalLivePill">LIVE</span>
                 </div>
 
-                <div className="mt-3.5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <div className="mt-3.5 grid grid-cols-2 gap-3">
                   <div className="signalMetric signalMetricCyan metricInteractive">
-                    <p className="signalMetricLabel text-cyan-200">Risk Score</p>
+                    <p className="signalMetricLabel text-cyan-200">Workflow Risk</p>
                     <p className="signalMetricValue">
                       <AnimatedNumber value={riskScore} suffix="/100" />
                     </p>
@@ -300,9 +279,9 @@ export default function HomePage() {
                   </div>
 
                   <div className="signalMetric signalMetricRed metricInteractive">
-                    <p className="signalMetricLabel text-red-200">Est. Monthly Loss</p>
+                    <p className="signalMetricLabel text-red-200">Estimated Loss</p>
                     <p className="signalMetricValue">
-                      <AnimatedNumber value={monthlyLoss} prefix="$" useGrouping />
+                      <AnimatedNumber value={monthlyLoss} prefix="$" />
                       <span className="signalMetricSuffix">/mo</span>
                     </p>
                     <p className="signalMetricText text-red-50/80">
@@ -333,7 +312,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
       <section id="how-it-works" className="relative z-10 px-4 py-5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         <div className="mx-auto max-w-7xl rounded-[30px] border border-white/8 bg-white/[0.03] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-6">
           <div className="max-w-3xl">
@@ -459,7 +437,7 @@ export default function HomePage() {
             <div className="metricCard metricRed hoverCard metricInteractive p-5">
               <p className="metricLabel text-red-100">Est. Monthly Loss</p>
               <p className="metricValue">
-                <AnimatedNumber value={monthlyLoss} prefix="$" suffix="/mo" useGrouping />
+                <AnimatedNumber value={monthlyLoss} prefix="$" suffix="/mo" />
               </p>
               <p className="metricText text-red-50/80">
                 Estimated monthly business cost caused by workflow drag and missed execution.
@@ -469,11 +447,101 @@ export default function HomePage() {
             <div className="metricCard metricGreen hoverCard metricInteractive p-5">
               <p className="metricLabel text-green-100">Recovery Opportunity</p>
               <p className="metricValue">
-                <AnimatedNumber value={recoveryOpportunity} prefix="$" suffix="/mo" useGrouping />
+                <AnimatedNumber value={recoveryOpportunity} prefix="$" suffix="/mo" />
               </p>
               <p className="metricText text-green-50/80">
                 Potential monthly gain if friction and repeated effort are reduced.
               </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing" className="relative z-10 px-4 py-5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+        <div className="mx-auto max-w-7xl rounded-[30px] border border-cyan-400/14 bg-white/[0.035] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-6">
+          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,460px)]">
+            <div className="max-w-3xl">
+              <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
+                Launch Pricing
+              </p>
+
+              <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
+                Start with a Ghostlayer Workflow Scan
+              </h2>
+
+              <p className="mt-3 text-base leading-7 text-gray-300">
+                A focused workflow diagnostic for businesses that want to find hidden friction,
+                broken handoffs, approval delays, and operational drag before those problems get more expensive.
+              </p>
+
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <button
+                  type="button"
+                  onClick={openCalendly}
+                  className="rounded-2xl bg-white px-7 py-3.5 text-base font-semibold text-black transition hover:opacity-90"
+                >
+                  Book a Workflow Scan
+                </button>
+
+                <a
+                  href="/dashboard"
+                  className="rounded-2xl border border-white/12 bg-white/[0.04] px-7 py-3.5 text-center text-base font-semibold text-white transition hover:bg-white/[0.08]"
+                >
+                  View Sample Dashboard
+                </a>
+              </div>
+            </div>
+
+            <div className="rounded-[28px] border border-white/10 bg-[#0a0d14] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.28)] hoverCard">
+              <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">
+                Workflow Scan
+              </p>
+
+              <div className="mt-4 flex items-end gap-2">
+                <p className="text-5xl font-bold tracking-tight text-white">$497</p>
+                <p className="pb-1 text-sm font-medium text-gray-400">one-time</p>
+              </div>
+
+              <p className="mt-4 text-base leading-7 text-gray-300">
+                Find the workflow friction slowing your business down.
+              </p>
+
+              <div className="mt-5 rounded-3xl border border-white/8 bg-white/[0.03] p-4">
+                <p className="text-sm font-semibold text-white">Includes:</p>
+
+                <ul className="mt-3 space-y-3 text-sm leading-6 text-gray-300">
+                  <li className="flex gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span>Bottleneck review</span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span>Approval and handoff analysis</span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span>Dashboard/report</span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span>Recommended fixes</span>
+                  </li>
+                  <li className="flex gap-3">
+                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span>Consultation call</span>
+                  </li>
+                </ul>
+              </div>
+
+              <div className="mt-4 rounded-3xl border border-cyan-400/12 bg-cyan-400/[0.055] p-4">
+                <p className="text-sm font-semibold text-white">
+                  Need ongoing monitoring?
+                </p>
+                <p className="mt-2 text-sm leading-6 text-gray-300">
+                  Monthly workflow intelligence plans start at{' '}
+                  <span className="font-semibold text-cyan-100">$149/month</span>.
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -490,7 +558,7 @@ export default function HomePage() {
                 Next Step
               </p>
               <h2 className="mt-3 text-3xl font-bold sm:text-4xl">
-                Book a consultation and see where your workflow is leaking time and revenue
+                Book a workflow scan and see where your workflow is leaking time and revenue
               </h2>
               <p className="mt-3 text-base leading-7 text-gray-300">
                 Ghostlayer is built to make operational friction visible, actionable, and expensive to ignore.
@@ -504,7 +572,7 @@ export default function HomePage() {
                 onClick={openCalendly}
                 className="rounded-2xl bg-white px-7 py-3.5 text-base font-semibold text-black transition hover:opacity-90"
               >
-                Book Consultation
+                Book a Workflow Scan
               </button>
 
               <a
@@ -544,6 +612,9 @@ export default function HomePage() {
               <a href="#results" className="transition hover:text-white">
                 Results
               </a>
+              <a href="#pricing" className="transition hover:text-white">
+                Pricing
+              </a>
               <a href="#next-step" className="transition hover:text-white">
                 Next Step
               </a>
@@ -567,20 +638,11 @@ export default function HomePage() {
       </footer>
 
       {isCalendlyOpen && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/72 px-4 py-6 backdrop-blur-md"
-          onClick={closeCalendly}
-        >
-          <div
-            className="relative w-full max-w-5xl overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0d14] shadow-[0_24px_80px_rgba(0,0,0,0.55)]"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Book consultation"
-            onClick={(e) => e.stopPropagation()}
-          >
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/72 px-4 py-6 backdrop-blur-md">
+          <div className="relative w-full max-w-5xl overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0d14] shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
             <div className="flex items-center justify-between border-b border-white/8 px-4 py-3 sm:px-5">
               <div>
-                <p className="text-sm font-semibold text-white">Book Consultation</p>
+                <p className="text-sm font-semibold text-white">Book a Workflow Scan</p>
                 <p className="mt-1 text-xs text-gray-400">
                   Loading secure scheduling...
                 </p>
@@ -598,7 +660,7 @@ export default function HomePage() {
               {isCalendlyLoading && (
                 <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[linear-gradient(180deg,#0b0f16,#111827)] text-white">
                   <div className="loadingRing" />
-                  <p className="mt-4 text-sm font-medium text-white">Preparing your consultation booking...</p>
+                  <p className="mt-4 text-sm font-medium text-white">Preparing your workflow scan booking...</p>
                   <p className="mt-2 text-xs text-gray-400">Connecting to Calendly securely</p>
                 </div>
               )}
@@ -614,7 +676,17 @@ export default function HomePage() {
         </div>
       )}
 
-      <style jsx>{`
+      <style jsx global>{`
+        .ghostlayerLogoPulse {
+          animation: logoPulseGlow 3.2s ease-in-out infinite;
+          color: #ffffff;
+          text-shadow:
+            0 0 8px rgba(255, 255, 255, 0.95),
+            0 0 18px rgba(255, 255, 255, 0.82),
+            0 0 34px rgba(96, 165, 250, 0.62),
+            0 0 50px rgba(59, 130, 246, 0.48);
+        }
+
         .hero-glow {
           animation: heroPulse 6s ease-in-out infinite;
           text-shadow:
@@ -728,7 +800,6 @@ export default function HomePage() {
           letter-spacing: -0.03em;
           text-shadow: 0 0 14px rgba(255, 255, 255, 0.08);
           white-space: nowrap;
-          font-variant-numeric: tabular-nums;
         }
 
         .signalMetricSuffix {
@@ -885,7 +956,6 @@ export default function HomePage() {
           font-weight: 700;
           line-height: 1.05;
           word-break: break-word;
-          font-variant-numeric: tabular-nums;
         }
 
         .metricText {
