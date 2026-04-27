@@ -11,6 +11,8 @@ type Sparkle = {
   opacity: number;
 };
 
+const STRIPE_PAYMENT_LINK = 'https://buy.stripe.com/00w28refMasTcD678J4ko00';
+
 function AnimatedNumber({
   value,
   prefix = '',
@@ -69,7 +71,8 @@ export default function HomePage() {
   const [monthlyLoss, setMonthlyLoss] = useState(3247);
   const [recoveryOpportunity, setRecoveryOpportunity] = useState(4200);
 
-  const logoPulseGlow = 'ghostlayerLogoPulse text-white';
+  const logoPulseGlow =
+    'animate-[logoPulseGlow_3.2s_ease-in-out_infinite] [text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(255,255,255,0.82),0_0_34px_rgba(96,165,250,0.62),0_0_50px_rgba(59,130,246,0.48)] text-white';
 
   const sparkles = useMemo<Sparkle[]>(
     () => [
@@ -458,9 +461,9 @@ export default function HomePage() {
       </section>
 
       <section id="pricing" className="relative z-10 px-4 py-5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-        <div className="mx-auto max-w-7xl rounded-[30px] border border-cyan-400/14 bg-white/[0.035] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-6">
-          <div className="grid items-center gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(340px,460px)]">
-            <div className="max-w-3xl">
+        <div className="mx-auto max-w-7xl overflow-hidden rounded-[30px] border border-cyan-400/12 bg-white/[0.03] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-6">
+          <div className="grid items-center gap-7 xl:grid-cols-[minmax(0,1fr)_minmax(360px,440px)]">
+            <div className="max-w-4xl">
               <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
                 Launch Pricing
               </p>
@@ -469,16 +472,26 @@ export default function HomePage() {
                 Start with a Ghostlayer Workflow Scan
               </h2>
 
-              <p className="mt-3 text-base leading-7 text-gray-300">
+              <p className="mt-4 max-w-3xl text-base leading-7 text-gray-300">
                 A focused workflow diagnostic for businesses that want to find hidden friction,
-                broken handoffs, approval delays, and operational drag before those problems get more expensive.
+                broken handoffs, approval delays, and operational drag before those problems get
+                more expensive.
               </p>
 
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
+                <a
+                  href={STRIPE_PAYMENT_LINK}
+                  target="_blank"
+                  rel="noreferrer noopener"
+                  className="rounded-2xl bg-white px-7 py-3.5 text-center text-base font-semibold text-black transition hover:opacity-90"
+                >
+                  Pay for Workflow Scan
+                </a>
+
                 <button
                   type="button"
                   onClick={openCalendly}
-                  className="rounded-2xl bg-white px-7 py-3.5 text-base font-semibold text-black transition hover:opacity-90"
+                  className="rounded-2xl border border-white/12 bg-white/[0.04] px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/[0.08]"
                 >
                   Book a Workflow Scan
                 </button>
@@ -490,56 +503,58 @@ export default function HomePage() {
                   View Sample Dashboard
                 </a>
               </div>
+
+              <p className="mt-4 text-sm leading-7 text-gray-500">
+                Payments are processed securely through Stripe. The Workflow Scan is a one-time
+                service purchase.
+              </p>
             </div>
 
-            <div className="rounded-[28px] border border-white/10 bg-[#0a0d14] p-5 shadow-[0_18px_50px_rgba(0,0,0,0.28)] hoverCard">
-              <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">
+            <div className="rounded-[26px] border border-white/10 bg-[#0a0d14]/86 p-5 shadow-[0_18px_50px_rgba(0,0,0,0.24)]">
+              <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300">
                 Workflow Scan
               </p>
 
-              <div className="mt-4 flex items-end gap-2">
+              <div className="mt-5 flex items-end gap-2">
                 <p className="text-5xl font-bold tracking-tight text-white">$497</p>
-                <p className="pb-1 text-sm font-medium text-gray-400">one-time</p>
+                <p className="pb-2 text-sm text-gray-400">one-time</p>
               </div>
 
-              <p className="mt-4 text-base leading-7 text-gray-300">
+              <p className="mt-5 text-base leading-7 text-gray-300">
                 Find the workflow friction slowing your business down.
               </p>
 
-              <div className="mt-5 rounded-3xl border border-white/8 bg-white/[0.03] p-4">
+              <div className="mt-5 rounded-[22px] border border-white/8 bg-white/[0.03] p-4">
                 <p className="text-sm font-semibold text-white">Includes:</p>
-
-                <ul className="mt-3 space-y-3 text-sm leading-6 text-gray-300">
+                <ul className="mt-4 space-y-3 text-sm leading-7 text-gray-300">
                   <li className="flex gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span className="text-cyan-300">•</span>
                     <span>Bottleneck review</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span className="text-cyan-300">•</span>
                     <span>Approval and handoff analysis</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span className="text-cyan-300">•</span>
                     <span>Dashboard/report</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span className="text-cyan-300">•</span>
                     <span>Recommended fixes</span>
                   </li>
                   <li className="flex gap-3">
-                    <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-cyan-300" />
+                    <span className="text-cyan-300">•</span>
                     <span>Consultation call</span>
                   </li>
                 </ul>
               </div>
 
-              <div className="mt-4 rounded-3xl border border-cyan-400/12 bg-cyan-400/[0.055] p-4">
-                <p className="text-sm font-semibold text-white">
-                  Need ongoing monitoring?
-                </p>
+              <div className="mt-4 rounded-[22px] border border-cyan-400/12 bg-cyan-400/[0.06] p-4">
+                <p className="text-sm font-semibold text-white">Need ongoing monitoring?</p>
                 <p className="mt-2 text-sm leading-6 text-gray-300">
                   Monthly workflow intelligence plans start at{' '}
-                  <span className="font-semibold text-cyan-100">$149/month</span>.
+                  <span className="font-semibold text-cyan-100">$149/month.</span>
                 </p>
               </div>
             </div>
@@ -676,17 +691,7 @@ export default function HomePage() {
         </div>
       )}
 
-      <style jsx global>{`
-        .ghostlayerLogoPulse {
-          animation: logoPulseGlow 3.2s ease-in-out infinite;
-          color: #ffffff;
-          text-shadow:
-            0 0 8px rgba(255, 255, 255, 0.95),
-            0 0 18px rgba(255, 255, 255, 0.82),
-            0 0 34px rgba(96, 165, 250, 0.62),
-            0 0 50px rgba(59, 130, 246, 0.48);
-        }
-
+      <style jsx>{`
         .hero-glow {
           animation: heroPulse 6s ease-in-out infinite;
           text-shadow:
