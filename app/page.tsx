@@ -71,8 +71,7 @@ export default function HomePage() {
   const [monthlyLoss, setMonthlyLoss] = useState(3247);
   const [recoveryOpportunity, setRecoveryOpportunity] = useState(4200);
 
-  const logoPulseGlow =
-    'animate-[logoPulseGlow_3.2s_ease-in-out_infinite] [text-shadow:0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(255,255,255,0.82),0_0_34px_rgba(96,165,250,0.62),0_0_50px_rgba(59,130,246,0.48)] text-white';
+  const logoPulseGlow = 'ghostlayerLogoPulse text-white';
 
   const sparkles = useMemo<Sparkle[]>(
     () => [
@@ -315,6 +314,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
       <section id="how-it-works" className="relative z-10 px-4 py-5 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         <div className="mx-auto max-w-7xl rounded-[30px] border border-white/8 bg-white/[0.03] p-5 shadow-[0_10px_40px_rgba(0,0,0,0.18)] backdrop-blur-sm sm:p-6">
           <div className="max-w-3xl">
@@ -481,11 +481,9 @@ export default function HomePage() {
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
                 <a
                   href={STRIPE_PAYMENT_LINK}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="rounded-2xl bg-white px-7 py-3.5 text-center text-base font-semibold text-black transition hover:opacity-90"
+                  className="rounded-2xl bg-white px-7 py-3.5 text-center text-base font-semibold text-black shadow-[0_10px_28px_rgba(255,255,255,0.12)] transition duration-150 ease-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_14px_34px_rgba(255,255,255,0.16)] active:translate-y-0.5 active:scale-[0.98] active:shadow-[0_5px_16px_rgba(255,255,255,0.1)]"
                 >
-                  Pay for Workflow Scan
+                  Start Workflow Scan — $497
                 </a>
 
                 <button
@@ -691,7 +689,17 @@ export default function HomePage() {
         </div>
       )}
 
-      <style jsx>{`
+      <style jsx global>{`
+        .ghostlayerLogoPulse {
+          animation: logoPulseGlow 3.2s ease-in-out infinite;
+          color: #ffffff;
+          text-shadow:
+            0 0 8px rgba(255, 255, 255, 0.95),
+            0 0 18px rgba(255, 255, 255, 0.82),
+            0 0 34px rgba(96, 165, 250, 0.62),
+            0 0 50px rgba(59, 130, 246, 0.48);
+        }
+
         .hero-glow {
           animation: heroPulse 6s ease-in-out infinite;
           text-shadow:
