@@ -360,38 +360,38 @@ export default function DashboardPage() {
   const [bookings, setBookings] = useState<BookingItem[]>([
     {
       id: 1,
-      name: 'Dexter Test 5',
-      email: 'stevensdexter17@gmail.com',
+      name: 'Sample Client A',
+      email: 'client.a@example.com',
       type: 'Workflow Scan',
       scheduled: '5/22/2026, 1:00 PM',
-      source: 'calendly',
+      source: 'demo',
       status: 'confirmed',
     },
     {
       id: 2,
-      name: 'Ariana Lewis',
-      email: 'ops@northbridge.io',
+      name: 'Sample Client B',
+      email: 'client.b@example.com',
       type: 'Workflow Review',
       scheduled: '5/23/2026, 11:30 AM',
-      source: 'website',
+      source: 'demo',
       status: 'pending',
     },
     {
       id: 3,
-      name: 'Mark Chen',
-      email: 'founder@fieldscope.co',
+      name: 'Sample Client C',
+      email: 'client.c@example.com',
       type: 'Workflow Scan',
       scheduled: '5/24/2026, 9:00 AM',
-      source: 'calendly',
+      source: 'demo',
       status: 'confirmed',
     },
     {
       id: 4,
-      name: 'Talia Brooks',
-      email: 'team@arcpilot.ai',
+      name: 'Sample Client D',
+      email: 'client.d@example.com',
       type: 'Workflow Scan',
       scheduled: '5/25/2026, 2:15 PM',
-      source: 'referral',
+      source: 'demo',
       status: 'confirmed',
     },
   ]);
@@ -407,8 +407,8 @@ export default function DashboardPage() {
     {
       id: 2,
       time: formatClock(new Date(Date.now() - 1000 * 60 * 8)),
-      label: 'Booking sync active',
-      detail: 'New workflow scan entered the demand layer.',
+      label: 'Sample booking sync',
+      detail: 'Sample workflow scan entered the demo demand layer.',
       tone: 'green',
     },
     {
@@ -451,7 +451,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
     { id: 'delay-hotspots', label: 'Delay Hotspots' },
     { id: 'broken-handoffs', label: 'Broken Handoffs' },
     { id: 'duplicate-work', label: 'Duplicate Work' },
-    { id: 'activity', label: 'Live Activity' },
+    { id: 'activity', label: 'Sample Activity' },
     { id: 'feedback', label: 'Feedback' },
   ];
 
@@ -538,7 +538,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
       JSON.stringify(payload, null, 2),
       'application/json;charset=utf-8'
     );
-    pushToast('Export ready', 'Dashboard export downloaded as JSON.', 'cyan');
+    pushToast('Export ready', 'Sample Dashboard export downloaded as JSON.', 'cyan');
   }
 
   function downloadExecutiveSummary() {
@@ -567,7 +567,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
       id: Date.now(),
       time: formatClock(new Date()),
       label: 'Workflow scan CTA clicked',
-      detail: 'Calendly modal opened from the dashboard sidebar.',
+      detail: 'Calendly modal opened from the sample dashboard sidebar.',
       tone: 'cyan',
     });
     pushToast(
@@ -615,7 +615,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
       {
         id: Date.now(),
         name: 'New Demo Lead',
-        email: `lead${prev.length + 1}@ghostlayer.ai`,
+        email: `sample.lead.${prev.length + 1}@example.com`,
         type: 'Workflow Review',
         scheduled: formatShortDate(new Date(Date.now() + 1000 * 60 * 60 * 24)),
         source: 'website',
@@ -651,6 +651,29 @@ If current friction is reduced, workflow health, throughput stability, and recov
       'yellow'
     );
   }
+
+  useEffect(() => {
+    document.title = 'Sample Ghostlayer Dashboard | Workflow Scan Demo';
+
+    const description =
+      'Explore a synthetic Ghostlayer sample dashboard showing workflow health, bottlenecks, operational drag, and recommended fixes.';
+
+    let metaDescription = document.querySelector('meta[name="description"]');
+    if (!metaDescription) {
+      metaDescription = document.createElement('meta');
+      metaDescription.setAttribute('name', 'description');
+      document.head.appendChild(metaDescription);
+    }
+    metaDescription.setAttribute('content', description);
+
+    let robots = document.querySelector('meta[name="robots"]');
+    if (!robots) {
+      robots = document.createElement('meta');
+      robots.setAttribute('name', 'robots');
+      document.head.appendChild(robots);
+    }
+    robots.setAttribute('content', 'noindex, follow');
+  }, []);
 
   useEffect(() => {
     const stored = window.localStorage.getItem(STORAGE_KEY);
@@ -727,7 +750,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
       const labels = [
         'Signal recalculated',
         'Operator view refreshed',
-        'Booking sync active',
+        'Sample booking sync',
         'Throughput drift detected',
         'Context gap flagged',
         'Status overlap reduced',
@@ -735,7 +758,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
       const details = [
         'Risk score adjusted after workflow drift.',
         'Summary cards refreshed with the latest scan state.',
-        'New workflow scan entered the demand layer.',
+        'Sample workflow scan entered the demo demand layer.',
         'Approval lane wait time ticked up in the current cycle.',
         'Handoff packet is missing execution notes.',
         'Manual progress updates consolidated into one surface.',
@@ -951,7 +974,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
               </p>
             </div>
 
-            <nav className="mt-5 space-y-1.5" aria-label="Dashboard sections">
+            <nav className="mt-5 space-y-1.5" aria-label="Sample Dashboard sections">
               {navItems.map((item) => {
                 const isActive = activeSection === item.id;
                 return (
@@ -992,14 +1015,14 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                 <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
                   Bookings sync
                 </p>
-                <p className="mt-2 text-[0.95rem] text-white">Demand layer active</p>
+                <p className="mt-2 text-[0.95rem] text-white">Sample demand layer</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
                 <p className="text-[10px] uppercase tracking-[0.2em] text-gray-500">
-                  Environment
+                  Data Mode
                 </p>
-                <p className="mt-2 text-sm font-semibold signal-green">Live</p>
+                <p className="mt-2 text-sm font-semibold signal-green">Demo</p>
               </div>
 
               <div className="rounded-2xl border border-white/10 bg-black/20 p-3">
@@ -1053,10 +1076,10 @@ If current friction is reduced, workflow health should move toward ${Math.min(
               <div className="min-w-0">
                 <div className="hidden md:flex md:items-center md:gap-3">
                   <p className="text-[11px] uppercase tracking-[0.28em] text-cyan-300">
-                    Dashboard
+                    Sample Dashboard
                   </p>
                   <span className="rounded-full border border-cyan-400/18 bg-cyan-400/10 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.16em] text-cyan-200">
-                    Demo Workspace
+                    Sample Workspace
                   </span>
                   <AppLink
                     href="/privacy"
@@ -1073,11 +1096,11 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                 </div>
 
                 <h2 className="mt-1 text-lg font-semibold text-white sm:text-[1.15rem]">
-                  Workflow Operations Console
+                  Ghostlayer Workflow Operations Console
                 </h2>
 
                 <p className="mt-1 text-xs text-gray-400 sm:text-sm">
-                  Public product demo for workflow visibility, drag detection, and operator
+                  Sample dashboard using demo data for workflow visibility, drag detection, and operator
                   framing.
                 </p>
               </div>
@@ -1126,6 +1149,12 @@ If current friction is reduced, workflow health should move toward ${Math.min(
           </div>
 
           <div className="mx-auto w-full max-w-7xl px-4 py-5 sm:px-6 md:px-8 lg:px-10 md:py-7">
+            <div className="mb-5 rounded-[24px] border border-cyan-400/15 bg-cyan-400/[0.06] p-4">
+              <p className="text-sm font-semibold text-cyan-100">Sample dashboard notice</p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                This public dashboard uses synthetic demo data only. Names, emails, bookings, activity, and scan results are examples — not live client data.
+              </p>
+            </div>
             <section
               id="overview"
               className={`panelReveal overflow-hidden rounded-[28px] border border-white/8 bg-[linear-gradient(180deg,rgba(255,255,255,0.045),rgba(255,255,255,0.02))] shadow-[0_12px_40px_rgba(0,0,0,0.28)] ${
@@ -1152,10 +1181,10 @@ If current friction is reduced, workflow health should move toward ${Math.min(
 
                     <div className="mt-5 flex flex-wrap gap-2">
                       <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300">
-                        Live telemetry feel
+                        Sample telemetry view
                       </span>
                       <span className="rounded-full border border-cyan-400/18 bg-cyan-400/8 px-3 py-1 text-xs text-cyan-200">
-                        Dynamic scan state
+                        Demo scan state
                       </span>
                       <span className="rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs text-gray-300">
                         Operator-grade hierarchy
@@ -1648,7 +1677,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
 
                     <p className="mt-3 text-sm text-gray-400">
                       {isScanning
-                        ? 'Refreshing live signal state across workflow, handoff, and reporting layers.'
+                        ? 'Refreshing sample signal state across workflow, handoff, and reporting layers.'
                         : 'Ready for the next operator-grade scan.'}
                     </p>
                   </div>
@@ -1744,9 +1773,9 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                 <section id="activity" className="cardShell hoverCard panelReveal">
                   <div className="flex items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-[1.55rem] font-semibold">Live Activity</h3>
+                      <h3 className="text-[1.55rem] font-semibold">Sample Activity</h3>
                       <p className="mt-2 text-sm text-gray-400">
-                        Console-native signal and action updates.
+                        Sample signal and action updates using demo data.
                       </p>
                     </div>
 
@@ -1830,7 +1859,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
                     GHOSTLAYER
                   </AppLink>
                   <p className="mt-3 text-sm leading-7 text-gray-400">
-                    Business workflow intelligence for faster execution.
+                    Workflow scans for clearer operations and faster execution.
                   </p>
                 </div>
 
@@ -1866,8 +1895,7 @@ If current friction is reduced, workflow health should move toward ${Math.min(
               </div>
 
               <div className="mt-6 border-t border-white/8 pt-6 text-sm text-gray-500">
-                © 2026 Ghostlayer. Business workflow intelligence for clearer operations and
-                faster execution.
+                © 2026 Ghostlayer. Workflow scans for clearer operations and faster execution.
               </div>
             </footer>
           </div>
