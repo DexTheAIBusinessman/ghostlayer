@@ -134,8 +134,7 @@ export default function GhostlayerHomepageLivePreview() {
   }, []);
 
   function openCalendly() {
-    setIsCalendlyLoading(true);
-    setIsCalendlyOpen(true);
+    window.location.href = "/workflow-scan";
   }
 
   function closeCalendly() {
