@@ -203,7 +203,7 @@ export default function GhostlayerHomepageLivePreview() {
                 Workflow Scans for Service Businesses
               </p>
 
-              <h1 className="hero-glow mt-7 max-w-4xl text-4xl font-bold leading-[1.03] text-white sm:text-5xl md:max-w-3xl md:text-[3rem] md:leading-[1.02] lg:max-w-4xl lg:text-[3.55rem] xl:text-[3.9rem]">
+              <h1 className="homepageHeadlineGlow hero-glow mt-7 max-w-4xl text-4xl font-bold leading-[1.03] text-white sm:text-5xl md:max-w-3xl md:text-[3rem] md:leading-[1.02] lg:max-w-4xl lg:text-[3.55rem] xl:text-[3.9rem]">
                 Find Workflow Friction
                 <br />
                 Before It Slows
@@ -462,7 +462,7 @@ export default function GhostlayerHomepageLivePreview() {
       )}
 
       <style>{`
-        .ghostlayerLogoPulse { animation: logoPulseGlow 3.2s ease-in-out infinite; color: #ffffff; text-shadow: 0 0 8px rgba(255,255,255,0.95),0 0 18px rgba(255,255,255,0.82),0 0 34px rgba(96,165,250,0.62),0 0 50px rgba(59,130,246,0.48); }
+.ghostlayerLogoPulse { animation: logoPulseGlow 3.2s ease-in-out infinite; color: #ffffff; text-shadow: 0 0 8px rgba(255,255,255,0.95),0 0 18px rgba(255,255,255,0.82),0 0 34px rgba(96,165,250,0.62),0 0 50px rgba(59,130,246,0.48); }
         .hero-glow { animation: heroPulse 6s ease-in-out infinite; text-shadow: 0 0 8px rgba(255,255,255,0.62),0 0 16px rgba(255,255,255,0.52),0 0 28px rgba(96,165,250,0.48),0 0 48px rgba(59,130,246,0.4),0 0 76px rgba(147,51,234,0.28); }
         .workflowSignalCard { background: linear-gradient(180deg, rgba(255,255,255,0.042), rgba(255,255,255,0.018)), rgba(10,13,20,0.92); box-shadow: 0 20px 60px rgba(0,0,0,0.36), inset 0 0 0 1px rgba(255,255,255,0.02); backdrop-filter: blur(20px); animation: cardFloat 7s ease-in-out infinite; }
         .signalHeader { display: flex; align-items: center; justify-content: space-between; background: rgba(7,10,16,0.78); box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02),0 8px 24px rgba(0,0,0,0.18); }
@@ -506,6 +506,64 @@ export default function GhostlayerHomepageLivePreview() {
         @keyframes spin { to { transform: rotate(360deg); } }
         @media (max-width: 767px) { .workflowSignalCard { padding: 14px; } .signalMetric { padding: 13px 13px 14px; } .signalMetricValue { font-size: 1.82rem; } .signalMetricText { font-size: 0.84rem; line-height: 1.55; } .signalMetricSuffix { font-size: 0.42em; } .metricValue { font-size: 1.85rem; } .metricCard { border-radius: 20px; } }
         @media (max-width: 520px) { .signalMetricValue { white-space: normal; } }
+
+.homepageHeadlineGlow {
+          animation: homepageHeadlinePulseGlow 3.4s ease-in-out infinite;
+          text-shadow:
+            0 0 10px rgba(255, 255, 255, 0.34),
+            0 0 22px rgba(96, 165, 250, 0.26),
+            0 0 44px rgba(59, 130, 246, 0.20);
+        }
+
+        .homepageLogoGlow {
+          animation: homepageLogoPulseGlow 2.8s ease-in-out infinite;
+          color: #ffffff;
+          text-shadow:
+            0 0 8px rgba(255, 255, 255, 0.70),
+            0 0 18px rgba(255, 255, 255, 0.45),
+            0 0 34px rgba(96, 165, 250, 0.36),
+            0 0 52px rgba(59, 130, 246, 0.24);
+        }
+
+        @keyframes homepageHeadlinePulseGlow {
+          0%,
+          100% {
+            opacity: 0.88;
+            text-shadow:
+              0 0 8px rgba(255, 255, 255, 0.24),
+              0 0 18px rgba(96, 165, 250, 0.18),
+              0 0 38px rgba(59, 130, 246, 0.14);
+          }
+
+          50% {
+            opacity: 1;
+            text-shadow:
+              0 0 16px rgba(255, 255, 255, 0.86),
+              0 0 34px rgba(147, 197, 253, 0.62),
+              0 0 66px rgba(96, 165, 250, 0.48),
+              0 0 104px rgba(59, 130, 246, 0.34);
+          }
+        }
+
+        @keyframes homepageLogoPulseGlow {
+          0%,
+          100% {
+            opacity: 0.82;
+            text-shadow:
+              0 0 7px rgba(255, 255, 255, 0.46),
+              0 0 16px rgba(96, 165, 250, 0.24),
+              0 0 34px rgba(59, 130, 246, 0.16);
+          }
+
+          50% {
+            opacity: 1;
+            text-shadow:
+              0 0 12px rgba(255, 255, 255, 0.95),
+              0 0 26px rgba(255, 255, 255, 0.58),
+              0 0 48px rgba(147, 197, 253, 0.42),
+              0 0 76px rgba(59, 130, 246, 0.30);
+          }
+        }
       `}</style>
     </main>
   );
