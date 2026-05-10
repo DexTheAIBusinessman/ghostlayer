@@ -57,7 +57,7 @@ type Toast = {
 
 const STORAGE_KEY = 'ghostlayer_dashboard_saved_scans';
 const HOMEPAGE_URL = '/';
-const CALENDLY_URL = 'https://calendly.com/dexterstevens630/30min?hide_gdpr_banner=1';
+const CALENDLY_URL = '/workflow-scan?hide_gdpr_banner=1';
 const MAX_SAVED_SCANS = 10;
 const MAX_ACTIVITY_ITEMS = 6;
 
@@ -561,20 +561,7 @@ If current friction is reduced, workflow health, throughput stability, and recov
   }
 
   function openCalendly() {
-    setIsCalendlyLoading(true);
-    setIsCalendlyOpen(true);
-    addActivityItem({
-      id: Date.now(),
-      time: formatClock(new Date()),
-      label: 'Workflow scan CTA clicked',
-      detail: 'Calendly modal opened from the sample dashboard sidebar.',
-      tone: 'cyan',
-    });
-    pushToast(
-      'Workflow scan opened',
-      'Calendly is opening in a booking modal.',
-      'cyan'
-    );
+    window.location.href = "/workflow-scan";
   }
 
   function closeCalendly() {
