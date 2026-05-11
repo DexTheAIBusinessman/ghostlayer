@@ -175,15 +175,9 @@ export default function GhostlayerHomepageLivePreview() {
 
           <nav className="hidden items-center gap-6 text-sm text-gray-300 lg:flex">
             <a href="#how-it-works" className="transition hover:text-white">How It Works</a>
-            <a href="#methodology" className="transition hover:text-white">Methodology</a>
             <a href="#who-it-helps" className="transition hover:text-white">Who It Helps</a>
-            <a href="#results" className="transition hover:text-white">Results</a>
             <a href="#pricing" className="transition hover:text-white">Pricing</a>
             <a href="#next-step" className="transition hover:text-white">Next Step</a>
-            <a href="/privacy" className="transition hover:text-white">Privacy</a>
-              <a href="/refund-policy" className="transition hover:text-white">Refund Policy</a>
-              <a href="/service-agreement" className="transition hover:text-white">Service Agreement</a>
-            <a href="/terms" className="transition hover:text-white">Terms</a>
             <a href="/dashboard" className="rounded-full border border-cyan-400/18 bg-cyan-400/8 px-4 py-2 font-semibold text-cyan-200 transition hover:bg-cyan-400/12 hover:text-white">
               Sample Dashboard
             </a>
@@ -425,28 +419,68 @@ export default function GhostlayerHomepageLivePreview() {
         </div>
       </section>
 
-      <footer className="relative z-10 border-t border-white/8 bg-[#05070b]/70 backdrop-blur-xl">
-        <div className="mx-auto max-w-7xl px-4 py-7 sm:px-6 md:px-8 lg:px-10">
-          <div className="flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
-            <div className="max-w-md">
-              <a href="/" className={`inline-block text-[1.2rem] font-bold tracking-[0.14em] sm:text-[1.3rem] ${logoPulseGlow}`}>GHOSTLAYER</a>
-              <p className="mt-2.5 text-sm leading-7 text-gray-400">Workflow scans for clearer operations, stronger follow-through, and faster execution.</p>
-            </div>
-            <div className="flex max-w-xl flex-wrap items-center gap-x-6 gap-y-2 text-sm text-gray-400 md:justify-end">
-              <a href="#how-it-works" className="transition hover:text-white">How It Works</a>
-              <a href="#methodology" className="transition hover:text-white">Methodology</a>
-              <a href="#who-it-helps" className="transition hover:text-white">Who It Helps</a>
-              <a href="#results" className="transition hover:text-white">Results</a>
-              <a href="#pricing" className="transition hover:text-white">Pricing</a>
-              <a href="#next-step" className="transition hover:text-white">Next Step</a>
-              <a href="/dashboard" className="transition hover:text-white">Sample Dashboard</a>
-              <a href="/privacy" className="transition hover:text-white">Privacy</a>
-              <a href="/refund-policy" className="transition hover:text-white">Refund Policy</a>
-              <a href="/service-agreement" className="transition hover:text-white">Service Agreement</a>
-              <a href="/terms" className="transition hover:text-white">Terms</a>
-            </div>
+      <footer className="relative z-10 border-t border-white/10 bg-black/35 px-6 py-10 backdrop-blur md:px-10">
+        <div className="mx-auto grid max-w-7xl gap-10 md:grid-cols-[1.4fr_1fr_1fr]">
+          <div>
+            <a
+              href="/"
+              className="homepageLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
+            >
+              GHOSTLAYER
+            </a>
+            <p className="mt-5 max-w-sm text-sm leading-7 text-gray-400">
+              Workflow scans for clearer operations, stronger follow-through, and
+              faster execution.
+            </p>
           </div>
-          <p className="mt-5 border-t border-white/8 pt-5 text-sm text-gray-500">© {currentYear} Ghostlayer. Workflow scans for clearer operations, stronger follow-through, and faster execution.</p>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-300">
+              Site
+            </p>
+            <nav className="mt-5 grid gap-3 text-sm text-gray-400">
+              <a href="#how-it-works" className="transition hover:text-white">
+                How It Works
+              </a>
+              <a href="#who-it-helps" className="transition hover:text-white">
+                Who It Helps
+              </a>
+              <a href="#pricing" className="transition hover:text-white">
+                Pricing
+              </a>
+              <a href="#next-step" className="transition hover:text-white">
+                Next Step
+              </a>
+              <a href="/dashboard" className="transition hover:text-white">
+                Sample Dashboard
+              </a>
+            </nav>
+          </div>
+
+          <div>
+            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-cyan-300">
+              Legal
+            </p>
+            <nav className="mt-5 grid gap-3 text-sm text-gray-400">
+              <a href="/privacy" className="transition hover:text-white">
+                Privacy
+              </a>
+              <a href="/terms" className="transition hover:text-white">
+                Terms
+              </a>
+              <a href="/refund-policy" className="transition hover:text-white">
+                Refund Policy
+              </a>
+              <a href="/service-agreement" className="transition hover:text-white">
+                Service Agreement
+              </a>
+            </nav>
+          </div>
+        </div>
+
+        <div className="mx-auto mt-10 max-w-7xl border-t border-white/10 pt-6 text-xs text-gray-500">
+          © 2026 Ghostlayer. Workflow scans for clearer operations, stronger
+          follow-through, and faster execution.
         </div>
       </footer>
 
