@@ -5,8 +5,7 @@ export const metadata = {
 };
 
 const STRIPE_PAYMENT_LINK =
-  process.env.NEXT_PUBLIC_STRIPE_PAYMENT_LINK ||
-  "PASTE_YOUR_STRIPE_PAYMENT_LINK_HERE";
+  "https://buy.stripe.com/00w28refMasTcD678J4ko00";
 
 function NightSkyBackground() {
   const stars = [
