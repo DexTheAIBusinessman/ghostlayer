@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 const WEBHOOK_URL =
@@ -45,6 +46,7 @@ function AnimatedNumber({
 }
 
 export default function WorkflowScanPage() {
+  const router = useRouter();
   const [form, setForm] = useState<FormState>({
     name: "",
     email: "",
@@ -134,6 +136,7 @@ export default function WorkflowScanPage() {
       }
 
       setStatus("success");
+      router.push("/start-workflow-scan");
       setForm({
         name: "",
         email: "",
