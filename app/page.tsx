@@ -181,6 +181,8 @@ export default function GhostlayerHomepageLivePreview() {
             <a href="#pricing" className="transition hover:text-white">Pricing</a>
             <a href="#next-step" className="transition hover:text-white">Next Step</a>
             <a href="/privacy" className="transition hover:text-white">Privacy</a>
+              <a href="/refund-policy" className="transition hover:text-white">Refund Policy</a>
+              <a href="/service-agreement" className="transition hover:text-white">Service Agreement</a>
             <a href="/terms" className="transition hover:text-white">Terms</a>
             <a href="/dashboard" className="rounded-full border border-cyan-400/18 bg-cyan-400/8 px-4 py-2 font-semibold text-cyan-200 transition hover:bg-cyan-400/12 hover:text-white">
               Sample Dashboard
@@ -439,6 +441,8 @@ export default function GhostlayerHomepageLivePreview() {
               <a href="#next-step" className="transition hover:text-white">Next Step</a>
               <a href="/dashboard" className="transition hover:text-white">Sample Dashboard</a>
               <a href="/privacy" className="transition hover:text-white">Privacy</a>
+              <a href="/refund-policy" className="transition hover:text-white">Refund Policy</a>
+              <a href="/service-agreement" className="transition hover:text-white">Service Agreement</a>
               <a href="/terms" className="transition hover:text-white">Terms</a>
             </div>
           </div>
