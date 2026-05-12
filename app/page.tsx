@@ -11,7 +11,6 @@ type Sparkle = {
   opacity: number;
 };
 
-const STRIPE_PAYMENT_LINK = "https://buy.stripe.com/00w28refMasTcD678J4ko00";
 
 function AnimatedNumber({
   value,
@@ -62,9 +61,6 @@ function AnimatedNumber({
 
 export default function GhostlayerHomepageLivePreview() {
   const currentYear = new Date().getFullYear();
-
-  const [isCalendlyOpen, setIsCalendlyOpen] = useState(false);
-  const [isCalendlyLoading, setIsCalendlyLoading] = useState(true);
 
   const [workflowHealth, setWorkflowHealth] = useState(82);
   const [riskScore, setRiskScore] = useState(68);
@@ -132,14 +128,10 @@ export default function GhostlayerHomepageLivePreview() {
 
     return () => window.clearInterval(interval);
   }, []);
-
-  function openCalendly() {
+  function openWorkflowScan() {
     window.location.href = "/workflow-scan";
   }
 
-  function closeCalendly() {
-    setIsCalendlyOpen(false);
-  }
 
   return (
     <main className="relative min-h-screen overflow-x-hidden bg-[#05070b] text-white">
@@ -213,11 +205,7 @@ export default function GhostlayerHomepageLivePreview() {
               </p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <button type="button" onClick={openCalendly} className="rounded-2xl bg-white px-7 py-3.5 text-base font-semibold text-black transition hover:opacity-90">
-                  Book a Workflow Scan
-                </button>
-
-                <a href="/dashboard" className="rounded-2xl border border-white/12 bg-white/[0.04] px-7 py-3.5 text-center text-base font-semibold text-white transition hover:bg-white/[0.08]">
+<a href="/dashboard" className="rounded-2xl border border-white/12 bg-white/[0.04] px-7 py-3.5 text-center text-base font-semibold text-white transition hover:bg-white/[0.08]">
                   View Sample Dashboard
                 </a>
               </div>
@@ -377,11 +365,10 @@ export default function GhostlayerHomepageLivePreview() {
               <p className="mt-4 max-w-3xl text-base leading-7 text-gray-300">A focused workflow diagnostic for businesses that want to find hidden friction, broken handoffs, approval delays, and operational drag before those problems get more expensive.</p>
 
               <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-                <a href={STRIPE_PAYMENT_LINK} className="rounded-2xl bg-white px-7 py-3.5 text-center text-base font-semibold text-black shadow-[0_10px_28px_rgba(255,255,255,0.12)] transition duration-150 ease-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_14px_34px_rgba(255,255,255,0.16)] active:translate-y-0.5 active:scale-[0.98] active:shadow-[0_5px_16px_rgba(255,255,255,0.1)]">
+                <a href="/workflow-scan" className="rounded-2xl bg-white px-7 py-3.5 text-center text-base font-semibold text-black shadow-[0_10px_28px_rgba(255,255,255,0.12)] transition duration-150 ease-out hover:-translate-y-0.5 hover:opacity-90 hover:shadow-[0_14px_34px_rgba(255,255,255,0.16)] active:translate-y-0.5 active:scale-[0.98] active:shadow-[0_5px_16px_rgba(255,255,255,0.1)]">
                   Start Workflow Scan — $497
                 </a>
-                <button type="button" onClick={openCalendly} className="rounded-2xl border border-white/12 bg-white/[0.04] px-7 py-3.5 text-base font-semibold text-white transition hover:bg-white/[0.08]">Book a Workflow Scan</button>
-                <a href="/dashboard" className="rounded-2xl border border-white/12 bg-white/[0.04] px-7 py-3.5 text-center text-base font-semibold text-white transition hover:bg-white/[0.08]">View Sample Dashboard</a>
+<a href="/dashboard" className="rounded-2xl border border-white/12 bg-white/[0.04] px-7 py-3.5 text-center text-base font-semibold text-white transition hover:bg-white/[0.08]">View Sample Dashboard</a>
               </div>
 
               <p className="mt-4 text-sm leading-7 text-gray-500">Payments are processed securely through Stripe. The Workflow Scan is a one-time service purchase. Client information should only be shared when needed to understand the workflow.</p>
@@ -410,8 +397,7 @@ export default function GhostlayerHomepageLivePreview() {
               <p className="mt-3 text-base leading-7 text-gray-300">Ghostlayer is built to make operational friction visible, actionable, and easier to prioritize. If the process is slowing growth, the scan shows what to fix first.</p>
             </div>
             <div className="flex w-full flex-col gap-3 sm:w-auto sm:flex-row xl:flex-col">
-              <button type="button" onClick={openCalendly} className="rounded-2xl bg-white px-7 py-3.5 text-base font-semibold text-black transition hover:opacity-90">Book a Workflow Scan</button>
-              <a href="/dashboard" className="rounded-2xl border border-white/12 bg-white/[0.04] px-7 py-3.5 text-center text-base font-semibold text-white transition hover:bg-white/[0.08]">View Sample Dashboard</a>
+<a href="/dashboard" className="rounded-2xl border border-white/12 bg-white/[0.04] px-7 py-3.5 text-center text-base font-semibold text-white transition hover:bg-white/[0.08]">View Sample Dashboard</a>
             </div>
           </div>
         </div>
@@ -482,22 +468,8 @@ export default function GhostlayerHomepageLivePreview() {
         </div>
       </footer>
 
-      {isCalendlyOpen && (
-        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/72 px-4 py-6 backdrop-blur-md">
-          <div className="relative w-full max-w-5xl overflow-hidden rounded-[30px] border border-white/10 bg-[#0a0d14] shadow-[0_24px_80px_rgba(0,0,0,0.55)]">
-            <div className="flex items-center justify-between border-b border-white/8 px-4 py-3 sm:px-5">
-              <div><p className="text-sm font-semibold text-white">Book a Workflow Scan</p><p className="mt-1 text-xs text-gray-400">Loading secure scheduling...</p></div>
-              <button type="button" onClick={closeCalendly} className="rounded-xl border border-white/10 bg-white/[0.04] px-3 py-2 text-xs font-semibold text-white transition hover:bg-white/[0.08]">Close</button>
-            </div>
-            <div className="relative h-[78vh] min-h-[620px] w-full bg-white">
-              {isCalendlyLoading && <div className="absolute inset-0 z-10 flex flex-col items-center justify-center bg-[linear-gradient(180deg,#0b0f16,#111827)] text-white"><div className="loadingRing" /><p className="mt-4 text-sm font-medium text-white">Preparing your workflow scan booking...</p><p className="mt-2 text-xs text-gray-400">Connecting to Calendly securely</p></div>}
-              <iframe src="https://calendly.com/dexterstevens630/30min?hide_gdpr_banner=1" title="Calendly booking" className="h-full w-full border-0" onLoad={() => setIsCalendlyLoading(false)} />
-            </div>
-          </div>
-        </div>
-      )}
-
-      <style>{`
+      
+<style>{`
 .ghostlayerLogoPulse { animation: logoPulseGlow 3.2s ease-in-out infinite; color: #ffffff; text-shadow: 0 0 8px rgba(255,255,255,0.95),0 0 18px rgba(255,255,255,0.82),0 0 34px rgba(96,165,250,0.62),0 0 50px rgba(59,130,246,0.48); }
         .hero-glow { animation: heroPulse 6s ease-in-out infinite; text-shadow: 0 0 8px rgba(255,255,255,0.62),0 0 16px rgba(255,255,255,0.52),0 0 28px rgba(96,165,250,0.48),0 0 48px rgba(59,130,246,0.4),0 0 76px rgba(147,51,234,0.28); }
         .workflowSignalCard { background: linear-gradient(180deg, rgba(255,255,255,0.042), rgba(255,255,255,0.018)), rgba(10,13,20,0.92); box-shadow: 0 20px 60px rgba(0,0,0,0.36), inset 0 0 0 1px rgba(255,255,255,0.02); backdrop-filter: blur(20px); animation: cardFloat 7s ease-in-out infinite; }
