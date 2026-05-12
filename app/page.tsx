@@ -382,7 +382,13 @@ export default function GhostlayerHomepageLivePreview() {
                 <p className="text-sm font-semibold text-white">Includes:</p>
                 <ul className="mt-4 space-y-3 text-sm leading-7 text-gray-300"><li>• Bottleneck review</li><li>• Approval and handoff analysis</li><li>• Dashboard/report</li><li>• Recommended fixes</li><li>• Consultation call</li></ul>
               </div>
-              <div className="mt-4 rounded-[22px] border border-cyan-400/12 bg-cyan-400/[0.06] p-4"><p className="text-sm font-semibold text-white">Need ongoing monitoring?</p><p className="mt-2 text-sm leading-6 text-gray-300">Monthly workflow monitoring plans start at <span className="font-semibold text-cyan-100">$149/month.</span></p></div>
+              <div className="mt-4 rounded-[22px] border border-cyan-400/12 bg-cyan-400/[0.06] p-4"><p className="text-sm font-semibold text-white">Need ongoing monitoring?</p>
+                  <a
+                    href="https://buy.stripe.com/aFa14ndbIfNd1Ys2St4ko01"
+                    className="mt-4 inline-flex rounded-xl border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-sm font-bold text-cyan-100 transition hover:bg-cyan-300/15 hover:text-white"
+                  >
+                    Start Monthly Monitoring
+                  </a><p className="mt-2 text-sm leading-6 text-gray-300">Monthly workflow monitoring plans start at <span className="font-semibold text-cyan-100">$149/month.</span></p></div>
             </div>
           </div>
         </div>
