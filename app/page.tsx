@@ -169,9 +169,7 @@ export default function GhostlayerHomepageLivePreview() {
 
       <header className="relative z-20 border-b border-white/8 bg-[#05070b]/82 backdrop-blur-xl">
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-4 sm:px-6 md:px-8 lg:px-10">
-          <a href="/" className={`inline-block text-[1.05rem] font-bold tracking-[0.16em] sm:text-[1.16rem] ${logoPulseGlow}`}>
-            GHOSTLAYER
-          </a>
+          <a href="/" className="homepageLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white">GHOSTLAYER</a>
 
           <nav className="hidden items-center gap-6 text-sm text-gray-300 lg:flex">
             <a href="#how-it-works" className="transition hover:text-white">How It Works</a>
