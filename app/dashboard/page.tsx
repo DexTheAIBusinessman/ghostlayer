@@ -320,6 +320,12 @@ function TrendChart({
 }
 
 export default function DashboardPage() {
+  const [hasMounted, setHasMounted] = useState(false);
+
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
   const [activeSection, setActiveSection] = useState<SectionId>('overview');
 
   const [companyName, setCompanyName] = useState('Ghostlayer Demo Co.');
