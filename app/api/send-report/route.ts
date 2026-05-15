@@ -66,13 +66,24 @@ async function markEmailSent(reportId: string) {
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json();
+    const contentType = request.headers.get("content-type") || "";
 
-    if (body.secret !== process.env.SEND_REPORT_SECRET) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    let reportId = "";
+    let secret = "";
+
+    if (contentType.includes("application/json")) {
+      const body = await request.json();
+      reportId = String(body.reportId || "");
+      secret = String(body.secret || "");
+    } else {
+      const formData = await request.formData();
+      reportId = String(formData.get("reportId") || "");
+      secret = process.env.SEND_REPORT_SECRET || "";
     }
 
-    const reportId = body.reportId;
+    if (secret !== process.env.SEND_REPORT_SECRET) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
     if (!reportId) {
       return NextResponse.json({ error: "Missing reportId" }, { status: 400 });
@@ -162,6 +173,10 @@ export async function POST(request: Request) {
 
     await markEmailSent(reportId);
 
+    if (!contentType.includes("application/json")) {
+      return Response.redirect(new URL("/admin/reports", request.url), 303);
+    }
+
     return NextResponse.json({
       ok: true,
       sentTo: report.email,
@@ -175,4 +190,4 @@ export async function POST(request: Request) {
       { status: 500 }
     );
   }
-}
+}/////////////////
