@@ -39,3 +39,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local cleanup
+.vscode/
+dev.log
+dashboard-code.txt
+*.backup.*
+*.copyfix.*
+supabase/.temp/
