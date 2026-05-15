@@ -17,6 +17,15 @@ type ClientReport = {
   main_recommendation: string | null;
   status: string | null;
   email_sent: boolean | null;
+  monitoring_active: boolean | null;
+  monitoring_status: string | null;
+  monitoring_cycle: string | null;
+  last_monitoring_date: string | null;
+  next_monitoring_date: string | null;
+  monitoring_notes: string | null;
+  monitoring_priority: string | null;
+  monitoring_risk_change: string | null;
+  monitoring_last_sent_at: string | null;
 };
 
 type ReportFormValues = {
@@ -34,6 +43,15 @@ type ReportFormValues = {
   main_recommendation: string | null;
   status: string;
   email_sent: boolean;
+  monitoring_active: boolean;
+  monitoring_status: string;
+  monitoring_cycle: string;
+  last_monitoring_date: string | null;
+  next_monitoring_date: string | null;
+  monitoring_notes: string | null;
+  monitoring_priority: string | null;
+  monitoring_risk_change: string | null;
+  monitoring_last_sent_at: string | null;
 };
 
 function cleanReportId(value: string) {
@@ -65,6 +83,15 @@ function parseNumber(value: FormDataEntryValue | null) {
 
 function listToText(items: string[] | null | undefined) {
   return Array.isArray(items) ? items.join("\n") : "";
+}
+
+function parseDate(value: FormDataEntryValue | null) {
+  const date = String(value || "").trim();
+  return date || null;
+}
+
+function parseCheckbox(value: FormDataEntryValue | null) {
+  return value === "on" || value === "true";
 }
 
 async function getReport(reportId: string): Promise<ClientReport | null> {
@@ -143,6 +170,21 @@ async function saveReport(formData: FormData) {
       String(formData.get("main_recommendation") || "").trim() || null,
     status: String(formData.get("status") || "Draft").trim() || "Draft",
     email_sent: existingEmailSent,
+    monitoring_active: parseCheckbox(formData.get("monitoring_active")),
+    monitoring_status:
+      String(formData.get("monitoring_status") || "Not Started").trim() ||
+      "Not Started",
+    monitoring_cycle:
+      String(formData.get("monitoring_cycle") || "Monthly").trim() || "Monthly",
+    last_monitoring_date: parseDate(formData.get("last_monitoring_date")),
+    next_monitoring_date: parseDate(formData.get("next_monitoring_date")),
+    monitoring_notes:
+      String(formData.get("monitoring_notes") || "").trim() || null,
+    monitoring_priority:
+      String(formData.get("monitoring_priority") || "").trim() || null,
+    monitoring_risk_change:
+      String(formData.get("monitoring_risk_change") || "").trim() || null,
+    monitoring_last_sent_at: null,
   };
 
   const originalReportId = cleanReportId(
@@ -513,6 +555,138 @@ export default async function ReportBuilderPage({
               <p className="mt-2 font-mono text-xs text-cyan-100">
                 /reports/{report?.report_id || "YOUR-REPORT-ID"}
               </p>
+            </div>
+          </div>
+
+          <div className="mt-8 rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-6">
+            <div className="mb-6">
+              <p className="text-xs font-bold uppercase tracking-[0.28em] text-emerald-200">
+                Monthly Monitoring
+              </p>
+              <h2 className="mt-3 text-2xl font-bold text-white">
+                Monitoring Status
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+                Use this section for clients on monthly monitoring. Workflow Scan
+                clients can stay inactive until they upgrade.
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2">
+              <label className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/25 px-4 py-4">
+                <input
+                  name="monitoring_active"
+                  type="checkbox"
+                  defaultChecked={Boolean(report?.monitoring_active)}
+                  className="h-5 w-5 accent-emerald-300"
+                />
+                <span>
+                  <span className="block text-sm font-bold text-white">
+                    Monitoring Active
+                  </span>
+                  <span className="mt-1 block text-xs text-gray-400">
+                    Turn this on for monthly monitoring clients.
+                  </span>
+                </span>
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
+                  Monitoring Status
+                </span>
+                <select
+                  name="monitoring_status"
+                  defaultValue={report?.monitoring_status || "Not Started"}
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/50 focus:bg-black/40"
+                >
+                  <option value="Not Started">Not Started</option>
+                  <option value="Active">Active</option>
+                  <option value="Needs Review">Needs Review</option>
+                  <option value="Paused">Paused</option>
+                  <option value="Cancelled">Cancelled</option>
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
+                  Monitoring Cycle
+                </span>
+                <select
+                  name="monitoring_cycle"
+                  defaultValue={report?.monitoring_cycle || "Monthly"}
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/50 focus:bg-black/40"
+                >
+                  <option value="Monthly">Monthly</option>
+                  <option value="Biweekly">Biweekly</option>
+                  <option value="Quarterly">Quarterly</option>
+                </select>
+              </label>
+
+              <label className="block">
+                <span className="mb-2 block text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
+                  Monitoring Priority
+                </span>
+                <select
+                  name="monitoring_priority"
+                  defaultValue={report?.monitoring_priority || ""}
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/50 focus:bg-black/40"
+                >
+                  <option value="">None</option>
+                  <option value="Low">Low</option>
+                  <option value="Medium">Medium</option>
+                  <option value="High">High</option>
+                  <option value="Urgent">Urgent</option>
+                </select>
+              </label>
+
+              <Field
+                label="Last Monitoring Date"
+                name="last_monitoring_date"
+                type="date"
+                defaultValue={report?.last_monitoring_date || ""}
+              />
+
+              <Field
+                label="Next Monitoring Date"
+                name="next_monitoring_date"
+                type="date"
+                defaultValue={report?.next_monitoring_date || ""}
+              />
+
+              <label className="block">
+                <span className="mb-2 block text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
+                  Risk Change
+                </span>
+                <select
+                  name="monitoring_risk_change"
+                  defaultValue={report?.monitoring_risk_change || ""}
+                  className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/50 focus:bg-black/40"
+                >
+                  <option value="">None</option>
+                  <option value="Improved">Improved</option>
+                  <option value="No Change">No Change</option>
+                  <option value="Worsened">Worsened</option>
+                </select>
+              </label>
+
+              <div className="rounded-2xl border border-white/10 bg-black/25 p-5">
+                <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
+                  Last Monitoring Sent
+                </p>
+                <p className="mt-3 text-sm text-gray-300">
+                  {report?.monitoring_last_sent_at || "No monitoring update sent yet."}
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6">
+              <TextArea
+                label="Monitoring Notes"
+                name="monitoring_notes"
+                rows={5}
+                placeholder="Add internal monitoring notes, monthly changes, risks, and what to check next."
+                defaultValue={report?.monitoring_notes || ""}
+              />
             </div>
           </div>
 

@@ -10,6 +10,14 @@ type ClientReport = {
   estimated_loss: string | null;
   status: string | null;
   email_sent: boolean | null;
+  monitoring_active: boolean | null;
+  monitoring_status: string | null;
+  monitoring_cycle: string | null;
+  last_monitoring_date: string | null;
+  next_monitoring_date: string | null;
+  monitoring_priority: string | null;
+  monitoring_risk_change: string | null;
+  monitoring_last_sent_at: string | null;
   created_at: string | null;
   updated_at: string | null;
 };
@@ -110,6 +118,44 @@ function StatusBadge({
   );
 }
 
+function MonitoringBadge({
+  active,
+  status,
+  nextDate,
+  priority,
+}: {
+  active: boolean | null;
+  status: string | null;
+  nextDate: string | null;
+  priority: string | null;
+}) {
+  if (!active) {
+    return (
+      <div>
+        <span className="inline-flex rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 text-xs font-semibold text-gray-300">
+          Not Active
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div className="space-y-1">
+      <span className="inline-flex rounded-full border border-emerald-400/40 bg-emerald-400/10 px-3 py-1 text-xs font-semibold text-emerald-200 shadow-[0_0_18px_rgba(16,185,129,0.2)]">
+        {status || "Active"}
+      </span>
+
+      {nextDate ? (
+        <div className="text-xs text-gray-400">Next: {nextDate}</div>
+      ) : null}
+
+      {priority ? (
+        <div className="text-xs text-cyan-200">Priority: {priority}</div>
+      ) : null}
+    </div>
+  );
+}
+
 export default async function AdminReportsPage() {
   const reports = await getReports();
 
@@ -193,6 +239,7 @@ export default async function AdminReportsPage() {
                   <th className="px-6 py-4">Risk</th>
                   <th className="px-6 py-4">Loss</th>
                   <th className="px-6 py-4">Status</th>
+                  <th className="px-6 py-4">Monitoring</th>
                   <th className="px-6 py-4">Actions</th>
                 </tr>
               </thead>
@@ -230,6 +277,15 @@ export default async function AdminReportsPage() {
                       <StatusBadge
                         status={report.status}
                         emailSent={report.email_sent}
+                      />
+                    </td>
+
+                    <td className="px-6 py-5">
+                      <MonitoringBadge
+                        active={report.monitoring_active}
+                        status={report.monitoring_status}
+                        nextDate={report.next_monitoring_date}
+                        priority={report.monitoring_priority}
                       />
                     </td>
 
@@ -272,7 +328,7 @@ export default async function AdminReportsPage() {
                 {reports.length === 0 && (
                   <tr>
                     <td
-                      colSpan={7}
+                      colSpan={8}
                       className="px-6 py-16 text-center text-gray-400"
                     >
                       No client reports yet.
