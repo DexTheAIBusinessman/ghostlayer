@@ -1,6 +1,10 @@
 const NOTION_API_KEY = Deno.env.get("NOTION_API_KEY");
 const NOTION_CLIENTS_DATABASE_ID = Deno.env.get("NOTION_CLIENTS_DATABASE_ID");
-const STRIPE_WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET");
+const STRIPE_WEBHOOK_SECRETS = [
+  Deno.env.get("STRIPE_WEBHOOK_SECRET"),
+  Deno.env.get("STRIPE_WEBHOOK_SECRET_TEST"),
+  Deno.env.get("STRIPE_WEBHOOK_SECRET_LIVE"),
+].filter((secret): secret is string => Boolean(secret));
 
 const SUPABASE_URL =
   Deno.env.get("GHOSTLAYER_SUPABASE_URL") ||
@@ -106,8 +110,8 @@ async function hmacSha256Hex(secret: string, message: string) {
 }
 
 async function verifyStripeSignature(rawBody: string, signatureHeader: string) {
-  if (!STRIPE_WEBHOOK_SECRET) {
-    throw new Error("Missing STRIPE_WEBHOOK_SECRET");
+  if (STRIPE_WEBHOOK_SECRETS.length === 0) {
+    throw new Error("Missing Stripe webhook signing secret");
   }
 
   const parts = signatureHeader.split(",");
@@ -125,20 +129,21 @@ async function verifyStripeSignature(rawBody: string, signatureHeader: string) {
   }
 
   const signedPayload = `${timestamp}.${rawBody}`;
-  const expectedSignature = await hmacSha256Hex(
-    STRIPE_WEBHOOK_SECRET,
-    signedPayload,
-  );
 
-  const expectedBytes = hexToBytes(expectedSignature);
+  for (const secret of STRIPE_WEBHOOK_SECRETS) {
+    const expectedSignature = await hmacSha256Hex(secret, signedPayload);
+    const expectedBytes = hexToBytes(expectedSignature);
 
-  const matched = signatures.some((signature) =>
-    timingSafeEqual(expectedBytes, hexToBytes(signature))
-  );
+    const matched = signatures.some((signature) =>
+      timingSafeEqual(expectedBytes, hexToBytes(signature))
+    );
 
-  if (!matched) {
-    throw new Error("Stripe signature verification failed");
+    if (matched) {
+      return;
+    }
   }
+
+  throw new Error("Stripe signature verification failed");
 }
 
 function getCustomFieldValue(
