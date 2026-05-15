@@ -138,12 +138,19 @@ export default async function AdminReportsPage() {
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-7 text-gray-300">
-              Manage workflow scan reports, review delivery status, open private
-              report pages, and send finished report emails.
+              Manage workflow scan reports, create new report drafts, edit existing
+              reports, open private report pages, and send finished report emails.
             </p>
           </div>
 
           <div className="flex flex-wrap gap-3">
+            <Link
+              href="/admin/reports/builder"
+              className="rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.22)] transition hover:scale-[1.02] hover:opacity-90"
+            >
+              Create Report
+            </Link>
+
             <Link
               href="/dashboard"
               className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] hover:bg-white/[0.08]"
@@ -177,7 +184,7 @@ export default async function AdminReportsPage() {
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[980px] text-left text-sm">
+            <table className="w-full min-w-[1100px] text-left text-sm">
               <thead className="border-b border-white/10 bg-white/[0.03] text-xs uppercase tracking-[0.22em] text-gray-400">
                 <tr>
                   <th className="px-6 py-4">Client</th>
@@ -235,6 +242,15 @@ export default async function AdminReportsPage() {
                           View
                         </Link>
 
+                        <Link
+                          href={`/admin/reports/builder?reportId=${encodeURIComponent(
+                            report.report_id
+                          )}`}
+                          className="rounded-xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
+                        >
+                          Edit
+                        </Link>
+
                         <form action="/api/send-report" method="post">
                           <input
                             type="hidden"
@@ -272,8 +288,8 @@ export default async function AdminReportsPage() {
           <h2 className="text-lg font-bold text-white">Founder note</h2>
           <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
             This page is your internal Ghostlayer operating console. Use it to
-            review client reports, open private report links, and send completed
-            scan emails after your manual review is finished.
+            create reports, edit drafts, review client reports, open private report
+            links, and send completed scan emails after your manual review is finished.
           </p>
         </div>
       </section>
@@ -322,32 +338,6 @@ export default async function AdminReportsPage() {
           opacity: 0.32;
           filter: saturate(0.9) contrast(1.08);
           animation: adminMoonGlow 4.8s ease-in-out infinite;
-        }
-
-        .adminMoon::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          border-radius: inherit;
-          background:
-            radial-gradient(circle at 58% 32%, rgba(30, 41, 59, 0.20) 0 4%, transparent 5%),
-            radial-gradient(circle at 38% 45%, rgba(30, 41, 59, 0.16) 0 5%, transparent 6%),
-            radial-gradient(circle at 68% 58%, rgba(30, 41, 59, 0.15) 0 6%, transparent 7%),
-            radial-gradient(circle at 50% 75%, rgba(30, 41, 59, 0.12) 0 4%, transparent 5%),
-            linear-gradient(135deg, rgba(255,255,255,0.12), transparent 38%, rgba(15,23,42,0.16));
-          mix-blend-mode: multiply;
-          opacity: 0.62;
-        }
-
-        .adminMoon::after {
-          content: "";
-          position: absolute;
-          inset: -18%;
-          border-radius: inherit;
-          background: radial-gradient(circle, rgba(191, 219, 254, 0.22), transparent 64%);
-          filter: blur(18px);
-          opacity: 0.9;
-          animation: adminMoonAuraGlow 4.8s ease-in-out infinite;
         }
 
         .adminStar {
@@ -428,8 +418,7 @@ export default async function AdminReportsPage() {
         }
 
         @keyframes adminTwinkle {
-          0%,
-          100% {
+          0%, 100% {
             transform: translateY(0px) scale(0.85);
             opacity: 0.22;
           }
@@ -451,8 +440,7 @@ export default async function AdminReportsPage() {
         }
 
         @keyframes adminFloatSlow {
-          0%,
-          100% {
+          0%, 100% {
             transform: translate3d(0, 0, 0);
           }
 
@@ -462,8 +450,7 @@ export default async function AdminReportsPage() {
         }
 
         @keyframes adminFogDriftOne {
-          0%,
-          100% {
+          0%, 100% {
             transform: translateX(-2%) translateY(0px) scaleX(1);
           }
 
@@ -473,8 +460,7 @@ export default async function AdminReportsPage() {
         }
 
         @keyframes adminFogDriftTwo {
-          0%,
-          100% {
+          0%, 100% {
             transform: translateX(3%) translateY(0px) scaleX(1.02);
           }
 
@@ -484,8 +470,7 @@ export default async function AdminReportsPage() {
         }
 
         @keyframes adminWordPulseGlow {
-          0%,
-          100% {
+          0%, 100% {
             opacity: 0.82;
             text-shadow:
               0 0 7px rgba(255, 255, 255, 0.46),
@@ -504,8 +489,7 @@ export default async function AdminReportsPage() {
         }
 
         @keyframes adminMoonGlow {
-          0%,
-          100% {
+          0%, 100% {
             opacity: 0.24;
             box-shadow:
               0 0 34px rgba(255, 255, 255, 0.28),
@@ -525,19 +509,7 @@ export default async function AdminReportsPage() {
               inset 18px 14px 44px rgba(255, 255, 255, 0.38);
           }
         }
-
-        @keyframes adminMoonAuraGlow {
-          0%,
-          100% {
-            opacity: 0.48;
-          }
-
-          50% {
-            opacity: 1;
-          }
-        }
       `}</style>
     </main>
- 
- );
+  );
 }

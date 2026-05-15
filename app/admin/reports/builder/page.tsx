@@ -1,6 +1,24 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
+type ClientReport = {
+  id: string;
+  report_id: string;
+  client_name: string;
+  company: string | null;
+  email: string;
+  risk_score: number | null;
+  estimated_loss: string | null;
+  time_lost: string | null;
+  bottlenecks_found: number | null;
+  top_bottlenecks: string[] | null;
+  recommended_fixes: string[] | null;
+  next_steps: string[] | null;
+  main_recommendation: string | null;
+  status: string | null;
+  email_sent: boolean | null;
+};
+
 type ReportFormValues = {
   report_id: string;
   client_name: string;
@@ -45,6 +63,39 @@ function parseNumber(value: FormDataEntryValue | null) {
   return parsed;
 }
 
+function listToText(items: string[] | null | undefined) {
+  return Array.isArray(items) ? items.join("\n") : "";
+}
+
+async function getReport(reportId: string): Promise<ClientReport | null> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error("Missing Supabase environment variables.");
+  }
+
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/client_reports?report_id=eq.${encodeURIComponent(
+      reportId
+    )}&select=*`,
+    {
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+      },
+      cache: "no-store",
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Could not load report.");
+  }
+
+  const data = await response.json();
+  return data?.[0] ?? null;
+}
+
 async function saveReport(formData: FormData) {
   "use server";
 
@@ -73,6 +124,9 @@ async function saveReport(formData: FormData) {
     throw new Error("Client email is required.");
   }
 
+  const existingEmailSent =
+    String(formData.get("existing_email_sent") || "false") === "true";
+
   const report: ReportFormValues = {
     report_id: reportId,
     client_name: clientName,
@@ -88,12 +142,16 @@ async function saveReport(formData: FormData) {
     main_recommendation:
       String(formData.get("main_recommendation") || "").trim() || null,
     status: String(formData.get("status") || "Draft").trim() || "Draft",
-    email_sent: false,
+    email_sent: existingEmailSent,
   };
+
+  const originalReportId = cleanReportId(
+    String(formData.get("original_report_id") || reportId)
+  );
 
   const checkResponse = await fetch(
     `${supabaseUrl}/rest/v1/client_reports?report_id=eq.${encodeURIComponent(
-      reportId
+      originalReportId
     )}&select=id`,
     {
       headers: {
@@ -113,7 +171,7 @@ async function saveReport(formData: FormData) {
   if (existing?.length > 0) {
     const updateResponse = await fetch(
       `${supabaseUrl}/rest/v1/client_reports?report_id=eq.${encodeURIComponent(
-        reportId
+        originalReportId
       )}`,
       {
         method: "PATCH",
@@ -201,12 +259,14 @@ function Field({
   type = "text",
   placeholder,
   required = false,
+  defaultValue = "",
 }: {
   label: string;
   name: string;
   type?: string;
   placeholder?: string;
   required?: boolean;
+  defaultValue?: string | number;
 }) {
   return (
     <label className="block">
@@ -218,6 +278,7 @@ function Field({
         type={type}
         placeholder={placeholder}
         required={required}
+        defaultValue={defaultValue}
         className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none transition placeholder:text-gray-600 focus:border-cyan-300/50 focus:bg-black/40 focus:shadow-[0_0_28px_rgba(34,211,238,0.12)]"
       />
     </label>
@@ -230,12 +291,14 @@ function TextArea({
   placeholder,
   rows = 5,
   required = false,
+  defaultValue = "",
 }: {
   label: string;
   name: string;
   placeholder?: string;
   rows?: number;
   required?: boolean;
+  defaultValue?: string;
 }) {
   return (
     <label className="block">
@@ -247,6 +310,7 @@ function TextArea({
         rows={rows}
         placeholder={placeholder}
         required={required}
+        defaultValue={defaultValue}
         className="w-full resize-y rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm leading-6 text-white outline-none transition placeholder:text-gray-600 focus:border-cyan-300/50 focus:bg-black/40 focus:shadow-[0_0_28px_rgba(34,211,238,0.12)]"
       />
       <p className="mt-2 text-xs text-gray-500">
@@ -256,7 +320,19 @@ function TextArea({
   );
 }
 
-export default function ReportBuilderPage() {
+export default async function ReportBuilderPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ reportId?: string }>;
+}) {
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const reportId = resolvedSearchParams.reportId
+    ? cleanReportId(resolvedSearchParams.reportId)
+    : "";
+
+  const report = reportId ? await getReport(reportId) : null;
+  const isEditing = Boolean(report);
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] text-white">
       <NightSkyBackground />
@@ -282,12 +358,13 @@ export default function ReportBuilderPage() {
             </p>
 
             <h1 className="mt-4 text-4xl font-bold tracking-tight sm:text-5xl">
-              Create Client Report
+              {isEditing ? "Edit Client Report" : "Create Client Report"}
             </h1>
 
             <p className="mt-4 max-w-2xl text-sm leading-7 text-gray-300">
-              Fill this out after your workflow review. Ghostlayer will save the
-              report into Supabase and create the private client report page.
+              {isEditing
+                ? "Edit the saved workflow scan report. Changes update the private client report page immediately."
+                : "Fill this out after your workflow review. Ghostlayer will save the report into Supabase and create the private client report page."}
             </p>
           </div>
 
@@ -303,18 +380,31 @@ export default function ReportBuilderPage() {
           action={saveReport}
           className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8"
         >
+          <input
+            type="hidden"
+            name="original_report_id"
+            value={report?.report_id || ""}
+          />
+          <input
+            type="hidden"
+            name="existing_email_sent"
+            value={report?.email_sent ? "true" : "false"}
+          />
+
           <div className="grid gap-6 md:grid-cols-2">
             <Field
               label="Client Name"
               name="client_name"
               placeholder="Example: Dexter Test"
               required
+              defaultValue={report?.client_name || ""}
             />
 
             <Field
               label="Company"
               name="company"
               placeholder="Example: Ghostlayer"
+              defaultValue={report?.company || ""}
             />
 
             <Field
@@ -323,6 +413,7 @@ export default function ReportBuilderPage() {
               type="email"
               placeholder="client@example.com"
               required
+              defaultValue={report?.email || ""}
             />
 
             <Field
@@ -330,6 +421,7 @@ export default function ReportBuilderPage() {
               name="report_id"
               placeholder="example-company-workflow-scan"
               required
+              defaultValue={report?.report_id || ""}
             />
 
             <Field
@@ -337,18 +429,21 @@ export default function ReportBuilderPage() {
               name="risk_score"
               type="number"
               placeholder="72"
+              defaultValue={report?.risk_score ?? ""}
             />
 
             <Field
               label="Estimated Loss"
               name="estimated_loss"
               placeholder="$3,300/mo"
+              defaultValue={report?.estimated_loss || ""}
             />
 
             <Field
               label="Time Lost"
               name="time_lost"
               placeholder="11 hrs/week"
+              defaultValue={report?.time_lost || ""}
             />
 
             <Field
@@ -356,6 +451,7 @@ export default function ReportBuilderPage() {
               name="bottlenecks_found"
               type="number"
               placeholder="7"
+              defaultValue={report?.bottlenecks_found ?? ""}
             />
           </div>
 
@@ -364,18 +460,21 @@ export default function ReportBuilderPage() {
               label="Top Bottlenecks"
               name="top_bottlenecks"
               placeholder={"Missed follow-ups\nApproval delays\nRepeated manual updates"}
+              defaultValue={listToText(report?.top_bottlenecks)}
             />
 
             <TextArea
               label="Recommended Fixes"
               name="recommended_fixes"
               placeholder={"Assign one owner for each follow-up\nCreate one status tracker\nReduce duplicate reporting"}
+              defaultValue={listToText(report?.recommended_fixes)}
             />
 
             <TextArea
               label="Next Steps"
               name="next_steps"
               placeholder={"Review the main bottleneck\nPrioritize follow-up ownership\nStart monthly monitoring if needed"}
+              defaultValue={listToText(report?.next_steps)}
             />
 
             <TextArea
@@ -384,6 +483,7 @@ export default function ReportBuilderPage() {
               rows={7}
               placeholder="Fix missed follow-ups first by assigning one clear owner and one follow-up status for every active client."
               required
+              defaultValue={report?.main_recommendation || ""}
             />
           </div>
 
@@ -394,7 +494,7 @@ export default function ReportBuilderPage() {
               </span>
               <select
                 name="status"
-                defaultValue="Draft"
+                defaultValue={report?.status || "Draft"}
                 className="w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-sm text-white outline-none transition focus:border-cyan-300/50 focus:bg-black/40"
               >
                 <option value="Draft">Draft</option>
@@ -408,10 +508,10 @@ export default function ReportBuilderPage() {
                 Private Report URL
               </p>
               <p className="mt-3 text-sm leading-6 text-gray-300">
-                After saving, the report will live at:
+                This report lives at:
               </p>
               <p className="mt-2 font-mono text-xs text-cyan-100">
-                /reports/YOUR-REPORT-ID
+                /reports/{report?.report_id || "YOUR-REPORT-ID"}
               </p>
             </div>
           </div>
@@ -421,8 +521,17 @@ export default function ReportBuilderPage() {
               type="submit"
               className="rounded-2xl bg-white px-6 py-3 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.22)] transition hover:scale-[1.02] hover:opacity-90"
             >
-              Save Report
+              {isEditing ? "Save Changes" : "Save Report"}
             </button>
+
+            {report?.report_id ? (
+              <Link
+                href={`/reports/${report.report_id}`}
+                className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-6 py-3 text-sm font-semibold text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
+              >
+                Preview Report
+              </Link>
+            ) : null}
 
             <Link
               href="/admin/reports"
