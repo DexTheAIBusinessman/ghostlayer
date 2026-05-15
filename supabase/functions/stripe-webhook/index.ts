@@ -2,6 +2,14 @@ const NOTION_API_KEY = Deno.env.get("NOTION_API_KEY");
 const NOTION_CLIENTS_DATABASE_ID = Deno.env.get("NOTION_CLIENTS_DATABASE_ID");
 const STRIPE_WEBHOOK_SECRET = Deno.env.get("STRIPE_WEBHOOK_SECRET");
 
+const SUPABASE_URL =
+  Deno.env.get("GHOSTLAYER_SUPABASE_URL") ||
+  Deno.env.get("NEXT_PUBLIC_SUPABASE_URL");
+
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get(
+  "GHOSTLAYER_SUPABASE_SERVICE_ROLE_KEY",
+);
+
 type StripeEvent = {
   id: string;
   type: string;
@@ -21,8 +29,27 @@ type StripeEvent = {
       currency?: string | null;
       payment_status?: string | null;
       metadata?: Record<string, string> | null;
+      custom_fields?: Array<{
+        key?: string;
+        label?: {
+          type?: string;
+          custom?: string;
+        };
+        text?: {
+          value?: string;
+        };
+      }>;
     };
   };
+};
+
+type PlanDetails = {
+  plan: "Workflow Scan" | "Workflow Monitoring";
+  paymentType: "One-Time" | "Subscription";
+  subscriptionStatus: "" | "Active";
+  clientStatus: "Paid" | "Active Monitoring";
+  reportStatus: "Draft" | "Active Monitoring";
+  reportSuffix: "workflow-scan" | "workflow-monitoring";
 };
 
 function jsonResponse(body: unknown, status = 200) {
@@ -114,6 +141,29 @@ async function verifyStripeSignature(rawBody: string, signatureHeader: string) {
   }
 }
 
+function getCustomFieldValue(
+  event: StripeEvent,
+  possibleKeys: string[],
+): string | null {
+  const fields = event.data.object.custom_fields || [];
+
+  for (const field of fields) {
+    const key = field.key?.toLowerCase() || "";
+    const label = field.label?.custom?.toLowerCase() || "";
+
+    const matched = possibleKeys.some((possibleKey) => {
+      const normalized = possibleKey.toLowerCase();
+      return key.includes(normalized) || label.includes(normalized);
+    });
+
+    if (matched && field.text?.value) {
+      return field.text.value.trim();
+    }
+  }
+
+  return null;
+}
+
 function getCustomerEmail(event: StripeEvent) {
   const object = event.data.object;
 
@@ -135,7 +185,15 @@ function getCustomerName(event: StripeEvent) {
   );
 }
 
-function getPlanDetails(event: StripeEvent) {
+function getCompanyName(event: StripeEvent) {
+  return (
+    getCustomFieldValue(event, ["business", "company", "organization"]) ||
+    event.data.object.metadata?.company ||
+    null
+  );
+}
+
+function getPlanDetails(event: StripeEvent): PlanDetails {
   const object = event.data.object;
 
   const amountTotal = object.amount_total ?? 0;
@@ -153,6 +211,8 @@ function getPlanDetails(event: StripeEvent) {
       paymentType: "Subscription",
       subscriptionStatus: "Active",
       clientStatus: "Active Monitoring",
+      reportStatus: "Active Monitoring",
+      reportSuffix: "workflow-monitoring",
     };
   }
 
@@ -161,7 +221,32 @@ function getPlanDetails(event: StripeEvent) {
     paymentType: "One-Time",
     subscriptionStatus: "",
     clientStatus: "Paid",
+    reportStatus: "Draft",
+    reportSuffix: "workflow-scan",
   };
+}
+
+function slugify(value: string) {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 52);
+}
+
+function makeReportId(event: StripeEvent) {
+  const object = event.data.object;
+  const planDetails = getPlanDetails(event);
+  const email = getCustomerEmail(event) || "client";
+  const name = getCompanyName(event) || getCustomerName(event) || email;
+  const base = slugify(name) || slugify(email.split("@")[0]) || "client";
+  const shortSession = String(object.id || event.id || crypto.randomUUID())
+    .replace(/[^a-zA-Z0-9]/g, "")
+    .slice(-8)
+    .toLowerCase();
+
+  return `${base}-${planDetails.reportSuffix}-${shortSession}`;
 }
 
 async function findNotionClientByEmail(email: string) {
@@ -207,6 +292,7 @@ async function createNotionClientFromStripe(event: StripeEvent, email: string) {
 
   const object = event.data.object;
   const name = getCustomerName(event);
+  const company = getCompanyName(event);
   const planDetails = getPlanDetails(event);
 
   const response = await fetch("https://api.notion.com/v1/pages", {
@@ -225,7 +311,7 @@ async function createNotionClientFromStripe(event: StripeEvent, email: string) {
           title: [
             {
               text: {
-                content: name,
+                content: company || name,
               },
             },
           ],
@@ -302,7 +388,6 @@ async function updateNotionClientFromStripe(pageId: string, event: StripeEvent) 
     throw new Error("Missing NOTION_API_KEY");
   }
 
-  const object = event.data.object;
   const planDetails = getPlanDetails(event);
 
   const properties: Record<string, unknown> = {
@@ -345,26 +430,6 @@ async function updateNotionClientFromStripe(pageId: string, event: StripeEvent) 
     },
     body: JSON.stringify({
       properties,
-      children: [
-        {
-          object: "block",
-          type: "paragraph",
-          paragraph: {
-            rich_text: [
-              {
-                type: "text",
-                text: {
-                  content: `Stripe payment received. Plan: ${
-                    planDetails.plan
-                  }. Payment type: ${planDetails.paymentType}. Stripe checkout/session ID: ${
-                    object.id ?? "unknown"
-                  }.`,
-                },
-              },
-            ],
-          },
-        },
-      ],
     }),
   });
 
@@ -376,6 +441,108 @@ async function updateNotionClientFromStripe(pageId: string, event: StripeEvent) 
   return await response.json();
 }
 
+async function findClientReportByEmail(email: string) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error("Missing Supabase environment variables");
+  }
+
+  const response = await fetch(
+    `${SUPABASE_URL}/rest/v1/client_reports?email=eq.${encodeURIComponent(
+      email,
+    )}&select=report_id,status,email_sent&order=created_at.desc&limit=1`,
+    {
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      },
+    },
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Supabase report lookup failed: ${errorText}`);
+  }
+
+  const data = await response.json();
+
+  return data?.[0] ?? null;
+}
+
+async function createClientReportDraft(event: StripeEvent, email: string) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error("Missing Supabase environment variables");
+  }
+
+  const planDetails = getPlanDetails(event);
+  const name = getCustomerName(event);
+  const company = getCompanyName(event);
+  const existing = await findClientReportByEmail(email);
+
+  if (existing && existing.status !== "Report Sent") {
+    return {
+      action: "existing_report_draft_found",
+      reportId: existing.report_id,
+    };
+  }
+
+  const reportId = makeReportId(event);
+
+  const mainRecommendation =
+    planDetails.plan === "Workflow Monitoring"
+      ? "Monthly monitoring is active. Review workflow status, follow-up risk, bottlenecks, and new operational drag during the next monitoring cycle."
+      : "Review the client intake details and identify the highest-priority workflow bottleneck before preparing the final report.";
+
+  const response = await fetch(`${SUPABASE_URL}/rest/v1/client_reports`, {
+    method: "POST",
+    headers: {
+      apikey: SUPABASE_SERVICE_ROLE_KEY,
+      Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+      "Content-Type": "application/json",
+      Prefer: "return=representation",
+    },
+    body: JSON.stringify({
+      report_id: reportId,
+      client_name: name,
+      company,
+      email,
+      risk_score: 0,
+      estimated_loss: "$0/mo",
+      time_lost: "0 hrs/week",
+      bottlenecks_found: 0,
+      top_bottlenecks: [],
+      recommended_fixes: [],
+      next_steps:
+        planDetails.plan === "Workflow Monitoring"
+          ? [
+              "Review prior workflow scan results.",
+              "Check for new bottlenecks or missed follow-up risks.",
+              "Prepare the next monthly monitoring update.",
+            ]
+          : [
+              "Review client intake details.",
+              "Identify workflow friction and bottlenecks.",
+              "Complete the report builder fields.",
+              "Send the finished report email.",
+            ],
+      main_recommendation: mainRecommendation,
+      status: planDetails.reportStatus,
+      email_sent: false,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Supabase report draft create failed: ${errorText}`);
+  }
+
+  const data = await response.json();
+
+  return {
+    action: "created_report_draft",
+    reportId: data?.[0]?.report_id || reportId,
+  };
+}
+
 async function handleCheckoutCompleted(event: StripeEvent) {
   const email = getCustomerEmail(event);
 
@@ -383,26 +550,15 @@ async function handleCheckoutCompleted(event: StripeEvent) {
     throw new Error("No customer email found on Stripe checkout session.");
   }
 
-  const existingClient = await findNotionClientByEmail(email);
-
-  if (existingClient) {
-    await updateNotionClientFromStripe(existingClient.id, event);
-
-    return {
-      ok: true,
-      action: "updated_existing_client",
-      email,
-      plan: getPlanDetails(event).plan,
-    };
-  }
-
-  await createNotionClientFromStripe(event, email);
+  const reportDraft = await createClientReportDraft(event, email);
+  const planDetails = getPlanDetails(event);
 
   return {
     ok: true,
-    action: "created_new_client",
     email,
-    plan: getPlanDetails(event).plan,
+    plan: planDetails.plan,
+    notionAction: "notion_skipped_for_report_draft_test",
+    reportDraft,
   };
 }
 
