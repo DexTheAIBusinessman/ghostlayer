@@ -76,6 +76,7 @@ async function getRequestBody(request: Request) {
     return {
       secret: String(body.secret || ""),
       reportId: String(body.reportId || ""),
+      shouldRedirect: false,
     };
   }
 
@@ -84,6 +85,7 @@ async function getRequestBody(request: Request) {
   return {
     secret: String(formData.get("secret") || ""),
     reportId: String(formData.get("reportId") || ""),
+    shouldRedirect: true,
   };
 }
 
@@ -306,7 +308,7 @@ function buildReportEmail({
 
 export async function POST(request: Request) {
   try {
-    const { secret, reportId: rawReportId } = await getRequestBody(request);
+    const { secret, reportId: rawReportId, shouldRedirect } = await getRequestBody(request);
 
     const expectedSecret = process.env.SEND_REPORT_SECRET;
 
@@ -381,6 +383,13 @@ export async function POST(request: Request) {
     }
 
     await markEmailSent(report.report_id);
+
+    if (shouldRedirect) {
+      return NextResponse.redirect(
+        new URL("/admin/reports?sent=1", request.url),
+        303
+      );
+    }
 
     return jsonResponse({
       ok: true,
