@@ -386,12 +386,21 @@ export default async function ClientReportPage({
       <NightSkyBackground />
 
       <section className="relative z-10 mx-auto max-w-6xl px-6 py-10 sm:px-8 lg:px-10">
-        <a
-          href="/"
-          className="homepageLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
-        >
-          GHOSTLAYER
-        </a>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <a
+            href="/"
+            className="homepageLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
+          >
+            GHOSTLAYER
+          </a>
+
+          <a
+            href="/client/reports"
+            className="rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-white transition hover:bg-white/[0.08]"
+          >
+            My Reports
+          </a>
+        </div>
 
         <div className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-10">
           <p className="text-xs uppercase tracking-[0.32em] text-cyan-300">

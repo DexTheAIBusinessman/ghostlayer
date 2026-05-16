@@ -170,7 +170,12 @@ function NightSkyBackground() {
   );
 }
 
-export default async function AdminReportsPage() {
+export default async function AdminReportsPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ sent?: string; access?: string }>;
+}) {
+  const resolvedSearchParams = searchParams ? await searchParams : {};
   const reports = await getClientReports();
   const sendReportSecret = process.env.SEND_REPORT_SECRET || "";
 
@@ -281,6 +286,24 @@ export default async function AdminReportsPage() {
           </div>
         </div>
 
+        {resolvedSearchParams.sent === "1" ? (
+          <div className="mb-6 rounded-[1.5rem] border border-emerald-400/30 bg-emerald-400/10 px-6 py-5 text-emerald-100 shadow-[0_0_36px_rgba(16,185,129,0.12)]">
+            <p className="text-sm font-bold">Report sent successfully.</p>
+            <p className="mt-1 text-sm text-emerald-100/80">
+              The client email was sent, the report was marked sent, and the access code was included.
+            </p>
+          </div>
+        ) : null}
+
+        {resolvedSearchParams.access === "regenerated" ? (
+          <div className="mb-6 rounded-[1.5rem] border border-cyan-400/30 bg-cyan-400/10 px-6 py-5 text-cyan-100 shadow-[0_0_36px_rgba(34,211,238,0.12)]">
+            <p className="text-sm font-bold">Access code regenerated.</p>
+            <p className="mt-1 text-sm text-cyan-100/80">
+              Copy the new code from the Access column before sending it to the client.
+            </p>
+          </div>
+        ) : null}
+
         <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
           <div className="border-b border-white/10 px-6 py-5">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">
@@ -384,6 +407,31 @@ export default async function AdminReportsPage() {
                         <div className="text-xs text-gray-500">
                           Views: {report.client_view_count || 0}
                         </div>
+
+                        <form
+                          action="/api/regenerate-report-access-code"
+                          method="post"
+                          className="pt-2"
+                        >
+                          <input
+                            type="hidden"
+                            name="secret"
+                            value={sendReportSecret}
+                          />
+
+                          <input
+                            type="hidden"
+                            name="reportId"
+                            value={report.report_id}
+                          />
+
+                          <button
+                            type="submit"
+                            className="rounded-xl border border-purple-300/20 bg-purple-300/10 px-3 py-2 text-xs font-bold text-purple-100 transition hover:bg-purple-300/15"
+                          >
+                            Regenerate Code
+                          </button>
+                        </form>
                       </div>
                     </td>
 
