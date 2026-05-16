@@ -125,27 +125,43 @@ async function unlockReport(formData: FormData) {
 function NightSkyBackground() {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#05070b]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_12%,rgba(34,211,238,0.10),transparent_28%),radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.10),transparent_28%),radial-gradient(circle_at_50%_100%,rgba(147,197,253,0.045),transparent_34%)]" />
-      <div className="absolute left-[-10%] top-[18%] h-[170px] w-[120%] rounded-full bg-gradient-to-r from-transparent via-cyan-200/10 to-transparent blur-[92px] animate-[reportFogOne_42s_ease-in-out_infinite]" />
-      <div className="absolute left-[-10%] top-[58%] h-[170px] w-[120%] rounded-full bg-gradient-to-r from-transparent via-blue-300/10 to-transparent blur-[92px] animate-[reportFogTwo_46s_ease-in-out_infinite]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(34,211,238,0.10),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.10),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.06),transparent_38%)]" />
+
+      <div className="absolute left-[-18%] top-[12%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-cyan-200/10 to-transparent blur-[105px] animate-[reportFogOne_42s_ease-in-out_infinite]" />
+
+      <div className="absolute left-[-18%] top-[52%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-blue-300/10 to-transparent blur-[110px] animate-[reportFogTwo_48s_ease-in-out_infinite]" />
+
+      <div className="absolute bottom-[-16%] left-[-10%] h-[22rem] w-[52rem] rounded-full bg-emerald-300/10 blur-[120px] animate-[reportLowGlow_12s_ease-in-out_infinite]" />
+
+      <div className="absolute right-[-12%] top-[8%] h-[28rem] w-[28rem] rounded-full bg-blue-400/8 blur-[120px]" />
+
       {[
-        ["6%", "10%"],
-        ["12%", "32%"],
-        ["25%", "18%"],
-        ["42%", "12%"],
-        ["51%", "38%"],
-        ["68%", "20%"],
-        ["77%", "50%"],
-        ["86%", "16%"],
-        ["94%", "70%"],
-        ["30%", "88%"],
-        ["59%", "74%"],
-        ["90%", "40%"],
-      ].map(([left, top], index) => (
+        ["6%", "10%", "2px", "0s"],
+        ["12%", "32%", "2px", "1.1s"],
+        ["25%", "18%", "3px", "1.6s"],
+        ["42%", "12%", "2px", "2.5s"],
+        ["51%", "38%", "2px", "1.3s"],
+        ["68%", "20%", "2px", "2.9s"],
+        ["77%", "50%", "3px", "1.8s"],
+        ["86%", "16%", "2px", "0.4s"],
+        ["94%", "70%", "2px", "2.2s"],
+        ["30%", "88%", "2px", "2.4s"],
+        ["59%", "74%", "2px", "1.7s"],
+        ["90%", "40%", "2px", "0.9s"],
+        ["18%", "74%", "3px", "2.8s"],
+        ["73%", "82%", "2px", "1.4s"],
+        ["38%", "64%", "2px", "3.1s"],
+      ].map(([left, top, size, delay], index) => (
         <span
           key={index}
-          className="absolute block h-[2px] w-[2px] rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(147,197,253,0.62)] animate-[reportTwinkle_5s_ease-in-out_infinite]"
-          style={{ left, top, animationDelay: `${index * 0.35}s` }}
+          className="absolute block rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(147,197,253,0.62),0_0_34px_rgba(34,211,238,0.25)] animate-[reportTwinkle_5.5s_ease-in-out_infinite]"
+          style={{
+            left,
+            top,
+            width: size,
+            height: size,
+            animationDelay: delay,
+          }}
         />
       ))}
     </div>
@@ -229,7 +245,10 @@ function LockedReport({
           <div className="mt-8 rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-5">
             <p className="text-sm leading-6 text-gray-300">
               Need help? Reply to your Ghostlayer email or contact{" "}
-              <span className="text-cyan-100">ghostlayerbusiness@gmail.com</span>.
+              <span className="text-cyan-100">
+                ghostlayerbusiness@gmail.com
+              </span>
+              .
             </p>
           </div>
         </div>
@@ -244,18 +263,90 @@ function ReportStyles() {
   return (
     <style>{`
       @keyframes reportTwinkle {
-        0%, 100% { transform: translateY(0px) scale(0.85); opacity: 0.22; }
-        25% { transform: translateY(-4px) scale(1.18); opacity: 1; }
-        50% { transform: translateY(0px) scale(0.95); opacity: 0.42; }
-        75% { transform: translateY(3px) scale(1.08); opacity: 0.78; }
+        0%, 100% {
+          transform: translateY(0px) scale(0.75);
+          opacity: 0.18;
+        }
+
+        25% {
+          transform: translateY(-4px) scale(1.2);
+          opacity: 1;
+        }
+
+        50% {
+          transform: translateY(0px) scale(0.95);
+          opacity: 0.42;
+        }
+
+        75% {
+          transform: translateY(3px) scale(1.08);
+          opacity: 0.78;
+        }
       }
+
       @keyframes reportFogOne {
-        0%, 100% { transform: translateX(-2%) translateY(0px) scaleX(1); }
-        50% { transform: translateX(3%) translateY(-4px) scaleX(1.04); }
+        0%, 100% {
+          transform: translateX(-3%) translateY(0px) scaleX(1);
+          opacity: 0.62;
+        }
+
+        50% {
+          transform: translateX(4%) translateY(-10px) scaleX(1.08);
+          opacity: 0.9;
+        }
       }
+
       @keyframes reportFogTwo {
-        0%, 100% { transform: translateX(3%) translateY(0px) scaleX(1.02); }
-        50% { transform: translateX(-2%) translateY(5px) scaleX(1.06); }
+        0%, 100% {
+          transform: translateX(4%) translateY(0px) scaleX(1.02);
+          opacity: 0.52;
+        }
+
+        50% {
+          transform: translateX(-3%) translateY(9px) scaleX(1.1);
+          opacity: 0.88;
+        }
+      }
+
+      @keyframes reportLowGlow {
+        0%, 100% {
+          opacity: 0.34;
+          transform: translateY(0px) scale(1);
+        }
+
+        50% {
+          opacity: 0.7;
+          transform: translateY(-12px) scale(1.04);
+        }
+      }
+
+      .homepageLogoGlow {
+        animation: reportLogoGlow 2.8s ease-in-out infinite;
+        color: #ffffff;
+        text-shadow:
+          0 0 8px rgba(255, 255, 255, 0.70),
+          0 0 18px rgba(255, 255, 255, 0.45),
+          0 0 34px rgba(96, 165, 250, 0.36),
+          0 0 52px rgba(59, 130, 246, 0.24);
+      }
+
+      @keyframes reportLogoGlow {
+        0%, 100% {
+          opacity: 0.82;
+          text-shadow:
+            0 0 7px rgba(255, 255, 255, 0.46),
+            0 0 16px rgba(96, 165, 250, 0.24),
+            0 0 34px rgba(59, 130, 246, 0.16);
+        }
+
+        50% {
+          opacity: 1;
+          text-shadow:
+            0 0 12px rgba(255, 255, 255, 0.95),
+            0 0 26px rgba(255, 255, 255, 0.58),
+            0 0 48px rgba(147, 197, 253, 0.42),
+            0 0 76px rgba(59, 130, 246, 0.30);
+        }
       }
     `}</style>
   );
