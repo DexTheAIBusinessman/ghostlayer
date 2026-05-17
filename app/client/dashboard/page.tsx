@@ -222,6 +222,34 @@ export default async function ClientDashboardPage() {
             </Link>
 
             <Link
+              href="/client/billing"
+              className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 px-5 py-3 text-sm font-semibold text-emerald-100 transition hover:scale-[1.02] hover:bg-emerald-300/15"
+            >
+              Billing
+            </Link>
+
+            <Link
+              href="/client/monitoring"
+              className="rounded-2xl border border-purple-300/20 bg-purple-300/10 px-5 py-3 text-sm font-semibold text-purple-100 transition hover:scale-[1.02] hover:bg-purple-300/15"
+            >
+              Monitoring
+            </Link>
+
+            <Link
+              href="/client/messages"
+              className="rounded-2xl border border-blue-300/20 bg-blue-300/10 px-5 py-3 text-sm font-semibold text-blue-100 transition hover:scale-[1.02] hover:bg-blue-300/15"
+            >
+              Messages
+            </Link>
+
+            <Link
+              href="/client/uploads"
+              className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] hover:bg-white/[0.08]"
+            >
+              Uploads
+            </Link>
+
+            <Link
               href="/logout"
               className="rounded-2xl border border-red-300/20 bg-red-300/10 px-5 py-3 text-sm font-semibold text-red-100 transition hover:scale-[1.02] hover:bg-red-300/15"
             >
