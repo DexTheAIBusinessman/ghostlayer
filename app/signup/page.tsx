@@ -33,21 +33,23 @@ async function signupClient(formData: FormData) {
     redirect("/signup?error=config");
   }
 
-  const response = await fetch(`${supabaseUrl}/auth/v1/signup`, {
-    method: "POST",
-    headers: {
-      apikey: anonKey,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      email,
-      password,
-      options: {
-        email_redirect_to: `${siteUrl.replace(/\/$/, "")}/login?verified=1`,
+  const redirectTo = `${siteUrl.replace(/\/$/, "")}/login?verified=1`;
+
+  const response = await fetch(
+    `${supabaseUrl}/auth/v1/signup?redirect_to=${encodeURIComponent(redirectTo)}`,
+    {
+      method: "POST",
+      headers: {
+        apikey: anonKey,
+        "Content-Type": "application/json",
       },
-    }),
-    cache: "no-store",
-  });
+      body: JSON.stringify({
+        email,
+        password,
+      }),
+      cache: "no-store",
+    }
+  );
 
   if (!response.ok) {
     redirect("/signup?error=failed");
