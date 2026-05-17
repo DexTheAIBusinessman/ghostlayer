@@ -26,6 +26,15 @@ type ClientReport = {
   monitoring_priority: string | null;
   monitoring_risk_change: string | null;
   monitoring_last_sent_at: string | null;
+  intake_summary: string | null;
+  intake_business_type: string | null;
+  intake_team_size: string | null;
+  intake_tools: string | null;
+  intake_pain_points: string | null;
+  intake_manual_tasks: string | null;
+  intake_followup_process: string | null;
+  intake_approval_process: string | null;
+  intake_notes: string | null;
 };
 
 type ReportFormValues = {
@@ -52,6 +61,15 @@ type ReportFormValues = {
   monitoring_priority: string | null;
   monitoring_risk_change: string | null;
   monitoring_last_sent_at: string | null;
+  intake_summary: string | null;
+  intake_business_type: string | null;
+  intake_team_size: string | null;
+  intake_tools: string | null;
+  intake_pain_points: string | null;
+  intake_manual_tasks: string | null;
+  intake_followup_process: string | null;
+  intake_approval_process: string | null;
+  intake_notes: string | null;
 };
 
 function cleanReportId(value: string) {
@@ -185,6 +203,24 @@ async function saveReport(formData: FormData) {
     monitoring_risk_change:
       String(formData.get("monitoring_risk_change") || "").trim() || null,
     monitoring_last_sent_at: null,
+    intake_summary:
+      String(formData.get("intake_summary") || "").trim() || null,
+    intake_business_type:
+      String(formData.get("intake_business_type") || "").trim() || null,
+    intake_team_size:
+      String(formData.get("intake_team_size") || "").trim() || null,
+    intake_tools:
+      String(formData.get("intake_tools") || "").trim() || null,
+    intake_pain_points:
+      String(formData.get("intake_pain_points") || "").trim() || null,
+    intake_manual_tasks:
+      String(formData.get("intake_manual_tasks") || "").trim() || null,
+    intake_followup_process:
+      String(formData.get("intake_followup_process") || "").trim() || null,
+    intake_approval_process:
+      String(formData.get("intake_approval_process") || "").trim() || null,
+    intake_notes:
+      String(formData.get("intake_notes") || "").trim() || null,
   };
 
   const originalReportId = cleanReportId(
@@ -558,7 +594,97 @@ export default async function ReportBuilderPage({
             </div>
           </div>
 
-          <div className="mt-8 rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-6">
+          <div className="mt-8 rounded-[2rem] border border-cyan-400/20 bg-cyan-400/10 p-6">
+          <div className="mb-6">
+            <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-200">
+              Client Intake
+            </p>
+            <h2 className="mt-3 text-2xl font-bold text-white">
+              Intake Details
+            </h2>
+            <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+              Save the client\'s submitted workflow context here. These fields
+              appear in the Admin Reports intake viewer and help you review the
+              client before editing or sending the final report.
+            </p>
+          </div>
+
+          <div className="grid gap-6 md:grid-cols-2">
+            <TextArea
+              label="Intake Summary"
+              name="intake_summary"
+              placeholder="Briefly summarize what the client submitted and what kind of workflow they need reviewed."
+              rows={5}
+              defaultValue={report?.intake_summary || ""}
+            />
+
+            <TextArea
+              label="Pain Points"
+              name="intake_pain_points"
+              placeholder="Missed follow-ups, approval delays, client handoff gaps, duplicate reporting, slow intake, etc."
+              rows={5}
+              defaultValue={report?.intake_pain_points || ""}
+            />
+
+            <Field
+              label="Business Type"
+              name="intake_business_type"
+              placeholder="Example: Service business, agency, consulting, local business"
+              defaultValue={report?.intake_business_type || ""}
+            />
+
+            <Field
+              label="Team Size"
+              name="intake_team_size"
+              placeholder="Example: Solo, 2-5, 6-10, 10+"
+              defaultValue={report?.intake_team_size || ""}
+            />
+
+            <TextArea
+              label="Tools Used"
+              name="intake_tools"
+              placeholder="Google Sheets, Notion, Slack, Trello, Calendly, Stripe, email, CRM, etc."
+              rows={4}
+              defaultValue={report?.intake_tools || ""}
+            />
+
+            <TextArea
+              label="Manual Tasks"
+              name="intake_manual_tasks"
+              placeholder="What tasks are repeated manually every week?"
+              rows={4}
+              defaultValue={report?.intake_manual_tasks || ""}
+            />
+
+            <TextArea
+              label="Follow-up Process"
+              name="intake_followup_process"
+              placeholder="How does the client currently track follow-ups, reminders, handoffs, and next steps?"
+              rows={4}
+              defaultValue={report?.intake_followup_process || ""}
+            />
+
+            <TextArea
+              label="Approval Process"
+              name="intake_approval_process"
+              placeholder="How are approvals, decisions, sign-offs, or client confirmations handled?"
+              rows={4}
+              defaultValue={report?.intake_approval_process || ""}
+            />
+
+            <div className="md:col-span-2">
+              <TextArea
+                label="Intake Notes"
+                name="intake_notes"
+                placeholder="Any extra notes, context, concerns, or manual observations from reviewing the intake."
+                rows={6}
+                defaultValue={report?.intake_notes || ""}
+              />
+            </div>
+          </div>
+        </div>
+
+        <div className="mt-8 rounded-[2rem] border border-emerald-400/20 bg-emerald-400/10 p-6">
             <div className="mb-6">
               <p className="text-xs font-bold uppercase tracking-[0.28em] text-emerald-200">
                 Monthly Monitoring
