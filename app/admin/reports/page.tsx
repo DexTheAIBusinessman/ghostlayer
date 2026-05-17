@@ -198,6 +198,114 @@ function sortReports(reports: ClientReport[], sort: string) {
   });
 }
 
+
+function listHasItems(value: string[] | null) {
+  return Array.isArray(value) && value.filter(Boolean).length > 0;
+}
+
+function reportReadiness(report: ClientReport) {
+  const checks = [
+    {
+      label: "Risk score is filled",
+      passed: Number(report.risk_score || 0) > 0,
+    },
+    {
+      label: "Estimated drag is filled",
+      passed:
+        Boolean(report.estimated_loss) &&
+        !["$0/mo", "$0", "0", "0/mo"].includes(
+          String(report.estimated_loss || "").trim().toLowerCase()
+        ),
+    },
+    {
+      label: "Time lost is filled",
+      passed:
+        Boolean(report.time_lost) &&
+        !["0 hrs/week", "0 hours/week", "0", ""].includes(
+          String(report.time_lost || "").trim().toLowerCase()
+        ),
+    },
+    {
+      label: "Bottlenecks count is filled",
+      passed: Number(report.bottlenecks_found || 0) > 0,
+    },
+    {
+      label: "Top bottlenecks are added",
+      passed: listHasItems(report.top_bottlenecks),
+    },
+    {
+      label: "Recommended fixes are added",
+      passed: listHasItems(report.recommended_fixes),
+    },
+    {
+      label: "Next steps are added",
+      passed: listHasItems(report.next_steps),
+    },
+    {
+      label: "Main recommendation is added",
+      passed: Boolean(String(report.main_recommendation || "").trim()),
+    },
+    {
+      label: "Client email is added",
+      passed: Boolean(String(report.email || "").trim()),
+    },
+    {
+      label: "Access code exists",
+      passed: Boolean(String(report.report_access_code || "").trim()),
+    },
+  ];
+
+  const missing = checks.filter((check) => !check.passed);
+
+  return {
+    ready: missing.length === 0,
+    missing,
+    completed: checks.length - missing.length,
+    total: checks.length,
+  };
+}
+
+function PreSendChecklist({ report }: { report: ClientReport }) {
+  const readiness = reportReadiness(report);
+
+  if (report.email_sent || report.status === "Report Sent") {
+    return (
+      <div className="rounded-xl border border-cyan-300/20 bg-cyan-300/10 px-3 py-2 text-xs text-cyan-100">
+        Already sent
+      </div>
+    );
+  }
+
+  return (
+    <details
+      className={`rounded-xl border px-3 py-2 text-xs ${
+        readiness.ready
+          ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"
+          : "border-yellow-300/25 bg-yellow-300/10 text-yellow-100"
+      }`}
+    >
+      <summary className="cursor-pointer font-bold">
+        {readiness.ready
+          ? "Ready to send"
+          : `Needs review (${readiness.completed}/${readiness.total})`}
+      </summary>
+
+      {readiness.ready ? (
+        <p className="mt-2 leading-5 text-emerald-100/80">
+          This report has the core fields needed before sending.
+        </p>
+      ) : (
+        <ul className="mt-2 space-y-1 leading-5 text-yellow-100/80">
+          {readiness.missing.map((item) => (
+            <li key={item.label}>• {item.label}</li>
+          ))}
+        </ul>
+      )}
+    </details>
+  );
+}
+
+
 function StatusBadge({
   status,
   emailSent,
@@ -638,7 +746,7 @@ export default async function AdminReportsPage({
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[1450px] text-left text-sm">
+            <table className="w-full min-w-[1600px] text-left text-sm">
               <thead className="border-b border-white/10 bg-black/20 text-xs uppercase tracking-[0.18em] text-gray-400">
                 <tr>
                   <th className="px-6 py-4">Client</th>
@@ -649,6 +757,7 @@ export default async function AdminReportsPage({
                   <th className="px-6 py-4">Monitoring</th>
                   <th className="px-6 py-4">Access</th>
                   <th className="px-6 py-4">Intake</th>
+                  <th className="px-6 py-4">Pre-Send</th>
                   <th className="px-6 py-4">Created</th>
                   <th className="px-6 py-4">Actions</th>
                 </tr>
@@ -776,6 +885,10 @@ export default async function AdminReportsPage({
                       <IntakeSummary report={report} />
                     </td>
 
+                    <td className="px-6 py-5">
+                      <PreSendChecklist report={report} />
+                    </td>
+
                     <td className="px-6 py-5 text-gray-400">
                       {formatDate(report.created_at)}
                     </td>
@@ -901,7 +1014,7 @@ export default async function AdminReportsPage({
                 {visibleReports.length === 0 ? (
                   <tr>
                     <td
-                      colSpan={10}
+                      colSpan={11}
                       className="px-6 py-16 text-center text-gray-400"
                     >
                       No reports match this search or filter.
