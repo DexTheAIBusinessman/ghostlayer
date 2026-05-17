@@ -352,6 +352,30 @@ function ReportStyles() {
   );
 }
 
+
+function hasCompletedReportContent(report: Report) {
+  const hasRisk = Number(report.risk_score || 0) > 0;
+  const hasDrag =
+    Boolean(report.estimated_loss) &&
+    !["$0/mo", "$0", "0", "0/mo"].includes(
+      String(report.estimated_loss || "").trim().toLowerCase()
+    );
+  const hasTime =
+    Boolean(report.time_lost) &&
+    !["0 hrs/week", "0 hours/week", "0", ""].includes(
+      String(report.time_lost || "").trim().toLowerCase()
+    );
+  const hasBottlenecks = Number(report.bottlenecks_found || 0) > 0;
+  const hasRecommendation = Boolean(
+    String(report.main_recommendation || "").trim()
+  );
+
+  return (
+    report.status === "Report Sent" ||
+    (hasRisk && hasDrag && hasTime && hasBottlenecks && hasRecommendation)
+  );
+}
+
 export default async function ClientReportPage({
   params,
   searchParams,
@@ -412,9 +436,9 @@ export default async function ClientReportPage({
           </h1>
 
           <p className="mt-4 max-w-3xl text-base leading-8 text-gray-300">
-            Ghostlayer reviewed the workflow details submitted for this scan and
-            identified the highest-priority sources of workflow friction,
-            operational drag, and missed execution risk.
+            {hasCompletedReportContent(report)
+              ? "Ghostlayer reviewed the workflow details submitted for this scan and identified the highest-priority sources of workflow friction, operational drag, and missed execution risk."
+              : "This workflow scan report is still being prepared. Once reviewed, it will show the highest-priority workflow friction, operational drag, missed execution risk, and recommended fixes."}
           </p>
 
           <div className="mt-8 grid gap-4 md:grid-cols-4">
