@@ -104,6 +104,7 @@ export async function POST(request: Request) {
       {
         method: "POST",
         headers: {
+          apikey: serviceRoleKey,
           Authorization: `Bearer ${serviceRoleKey}`,
           "Content-Type": file.type || "application/octet-stream",
           "x-upsert": "false",
