@@ -191,8 +191,84 @@ function StatusPill({
   );
 }
 
+
+type PortalCounts = {
+  totalMessages: number;
+  openMessages: number;
+  reportMessages: number;
+  totalUploads: number;
+  reportUploads: number;
+  uploadBytes: number;
+};
+
+async function getPortalCounts(): Promise<PortalCounts> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error("Missing Supabase environment variables.");
+  }
+
+  const [messagesResponse, uploadsResponse] = await Promise.all([
+    fetch(
+      `${supabaseUrl}/rest/v1/client_messages?select=id,status,report_id&limit=1000`,
+      {
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+        },
+        cache: "no-store",
+      }
+    ),
+    fetch(
+      `${supabaseUrl}/rest/v1/client_uploads?select=id,report_id,file_size&limit=1000`,
+      {
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+        },
+        cache: "no-store",
+      }
+    ),
+  ]);
+
+  if (!messagesResponse.ok) {
+    const errorText = await messagesResponse.text();
+    throw new Error(`Could not load client messages: ${errorText}`);
+  }
+
+  if (!uploadsResponse.ok) {
+    const errorText = await uploadsResponse.text();
+    throw new Error(`Could not load client uploads: ${errorText}`);
+  }
+
+  const messages = await messagesResponse.json();
+  const uploads = await uploadsResponse.json();
+
+  return {
+    totalMessages: messages.length,
+    openMessages: messages.filter((item: { status?: string }) => item.status === "Open").length,
+    reportMessages: messages.filter((item: { report_id?: string | null }) => Boolean(item.report_id)).length,
+    totalUploads: uploads.length,
+    reportUploads: uploads.filter((item: { report_id?: string | null }) => Boolean(item.report_id)).length,
+    uploadBytes: uploads.reduce(
+      (sum: number, item: { file_size?: number | null }) => sum + Number(item.file_size || 0),
+      0
+    ),
+  };
+}
+
+function formatBytes(value: number) {
+  if (!value) return "0 B";
+  if (value < 1024) return `${value} B`;
+  if (value < 1024 * 1024) return `${Math.round(value / 1024)} KB`;
+
+  return `${(value / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 export default async function AdminAnalyticsPage() {
   const reports = await getReports();
+  const portalCounts = await getPortalCounts();
 
   const totalReports = reports.length;
   const draftReports = reports.filter(
@@ -358,7 +434,63 @@ export default async function AdminAnalyticsPage() {
         <div className="mt-8 grid gap-6 xl:grid-cols-[1.1fr_0.9fr]">
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <div className="border-b border-white/10 px-6 py-5">
-              <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">
+              
+          <div className="mt-8 grid gap-4 md:grid-cols-4">
+            <Link
+              href="/admin/messages"
+              className="rounded-[1.5rem] border border-blue-300/20 bg-blue-300/10 p-5 text-blue-100 transition hover:scale-[1.02] hover:bg-blue-300/15"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
+                Messages
+              </p>
+              <p className="mt-3 text-2xl font-black">{portalCounts.totalMessages}</p>
+              <p className="mt-2 text-xs text-blue-100/75">
+                View client messages and reply by email.
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/uploads"
+              className="rounded-[1.5rem] border border-cyan-300/20 bg-cyan-300/10 p-5 text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
+                Uploads
+              </p>
+              <p className="mt-3 text-2xl font-black">{portalCounts.totalUploads}</p>
+              <p className="mt-2 text-xs text-cyan-100/75">
+                Review uploaded workflow files.
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/activity"
+              className="rounded-[1.5rem] border border-purple-300/20 bg-purple-300/10 p-5 text-purple-100 transition hover:scale-[1.02] hover:bg-purple-300/15"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
+                Activity
+              </p>
+              <p className="mt-3 text-2xl font-black">Logs</p>
+              <p className="mt-2 text-xs text-purple-100/75">
+                See portal, report, upload, and message events.
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/reports"
+              className="rounded-[1.5rem] border border-emerald-300/20 bg-emerald-300/10 p-5 text-emerald-100 transition hover:scale-[1.02] hover:bg-emerald-300/15"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
+                Reports
+              </p>
+              <p className="mt-3 text-2xl font-black">{totalReports}</p>
+              <p className="mt-2 text-xs text-emerald-100/75">
+                Open the report command center.
+              </p>
+            </Link>
+          </div>
+
+
+<p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">
                 Recent Reports
               </p>
               <h2 className="mt-2 text-2xl font-bold">Latest Client Records</h2>
