@@ -316,7 +316,7 @@ async function createMonitoringDraft({
   }
 }
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
     const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -365,12 +365,13 @@ export async function POST() {
       skippedCount,
     });
 
-    return NextResponse.json({
-      ok: true,
-      dueReports: dueReports.length,
-      createdCount,
-      skippedCount,
-    });
+    return NextResponse.redirect(
+      new URL(
+        `/admin/monitoring?created=1&due=${dueReports.length}&createdCount=${createdCount}&skippedCount=${skippedCount}`,
+        request.url
+      ),
+      303
+    );
   } catch (error) {
     return NextResponse.json(
       {
