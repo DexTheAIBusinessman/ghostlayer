@@ -1,5 +1,14 @@
 import { NextResponse } from "next/server";
 
+
+function encodeStoragePath(path: string) {
+  return path
+    .split("/")
+    .map((part) => encodeURIComponent(part))
+    .join("/");
+}
+
+
 type UploadRecord = {
   file_path: string;
 };
@@ -53,7 +62,7 @@ export async function GET(request: Request) {
     }
 
     const signedResponse = await fetch(
-      `${supabaseUrl}/storage/v1/object/sign/client-uploads/${encodeURIComponent(
+      `${supabaseUrl}/storage/v1/object/sign/client-uploads/${encodeStoragePath(
         filePath
       )}`,
       {
