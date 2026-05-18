@@ -59,11 +59,41 @@ function formatFileSize(value: number | null) {
 }
 
 function NightSkyBackground() {
+  const stars = [
+    { left: "6%", top: "10%", size: 2, delay: "0s", duration: "4.8s" },
+    { left: "12%", top: "32%", size: 2, delay: "1.1s", duration: "5.4s" },
+    { left: "25%", top: "18%", size: 3, delay: "1.6s", duration: "5.8s" },
+    { left: "42%", top: "12%", size: 2, delay: "2.5s", duration: "5.6s" },
+    { left: "51%", top: "38%", size: 3, delay: "1.3s", duration: "5.2s" },
+    { left: "68%", top: "20%", size: 2, delay: "2.9s", duration: "5.3s" },
+    { left: "77%", top: "50%", size: 3, delay: "1.8s", duration: "4.7s" },
+    { left: "86%", top: "16%", size: 2, delay: "0.4s", duration: "5.7s" },
+    { left: "94%", top: "70%", size: 2, delay: "2.2s", duration: "5.1s" },
+    { left: "30%", top: "88%", size: 2, delay: "2.4s", duration: "5.2s" },
+  ];
+
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#05070b]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(34,211,238,0.10),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.10),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.06),transparent_38%)]" />
-      <div className="absolute left-[-18%] top-[12%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-cyan-200/10 to-transparent blur-[105px]" />
-      <div className="absolute left-[-18%] top-[52%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-blue-300/10 to-transparent blur-[110px]" />
+    <div className="adminUploadsNightSky" aria-hidden="true">
+      <div className="adminUploadsMoon" />
+      <div className="adminUploadsFog adminUploadsFogA" />
+      <div className="adminUploadsFog adminUploadsFogB" />
+      <div className="adminUploadsOrb adminUploadsOrbA" />
+      <div className="adminUploadsOrb adminUploadsOrbB" />
+
+      {stars.map((star, index) => (
+        <span
+          key={index}
+          className="adminUploadsStar"
+          style={{
+            left: star.left,
+            top: star.top,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            animationDelay: star.delay,
+            animationDuration: star.duration,
+          }}
+        />
+      ))}
     </div>
   );
 }
@@ -253,6 +283,158 @@ export default async function AdminUploadsPage() {
       </section>
 
       <style>{`
+
+        .adminUploadsNightSky {
+          pointer-events: none;
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 20% 12%, rgba(59, 130, 246, 0.11), transparent 28%),
+            radial-gradient(circle at 82% 18%, rgba(147, 51, 234, 0.08), transparent 26%),
+            radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.045), transparent 34%),
+            #05070b;
+        }
+
+        .adminUploadsMoon {
+          position: absolute;
+          right: 3%;
+          top: 5%;
+          width: min(34vw, 30rem);
+          height: min(34vw, 30rem);
+          border-radius: 9999px;
+          background:
+            radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.92) 12%, rgba(226, 232, 240, 0.76) 30%, rgba(148, 163, 184, 0.42) 54%, rgba(30, 41, 59, 0.18) 78%, rgba(15, 23, 42, 0.04) 100%);
+          box-shadow:
+            0 0 44px rgba(255, 255, 255, 0.42),
+            0 0 95px rgba(191, 219, 254, 0.36),
+            0 0 165px rgba(96, 165, 250, 0.26),
+            inset -42px -34px 70px rgba(15, 23, 42, 0.42),
+            inset 18px 14px 44px rgba(255, 255, 255, 0.32);
+          opacity: 0.24;
+          animation: adminUploadsMoonGlow 4.8s ease-in-out infinite;
+        }
+
+        .adminUploadsStar {
+          position: absolute;
+          display: block;
+          border-radius: 9999px;
+          background: #ffffff;
+          box-shadow:
+            0 0 8px rgba(255, 255, 255, 0.95),
+            0 0 18px rgba(147, 197, 253, 0.62),
+            0 0 30px rgba(59, 130, 246, 0.35);
+          animation-name: adminUploadsTwinkle;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
+        }
+
+        .adminUploadsFog {
+          position: absolute;
+          left: -10%;
+          right: -10%;
+          height: 170px;
+          border-radius: 9999px;
+          filter: blur(92px);
+          opacity: 0.075;
+          mix-blend-mode: screen;
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0),
+            rgba(147, 197, 253, 0.12),
+            rgba(96, 165, 250, 0.11),
+            rgba(255, 255, 255, 0)
+          );
+        }
+
+        .adminUploadsFogA {
+          top: 18%;
+          animation: adminUploadsFogDriftOne 42s ease-in-out infinite;
+        }
+
+        .adminUploadsFogB {
+          top: 58%;
+          animation: adminUploadsFogDriftTwo 46s ease-in-out infinite;
+        }
+
+        .adminUploadsOrb {
+          position: absolute;
+          border-radius: 9999px;
+          filter: blur(92px);
+          opacity: 0.24;
+        }
+
+        .adminUploadsOrbA {
+          left: -10%;
+          top: -8%;
+          height: 26rem;
+          width: 26rem;
+          background: rgba(34, 211, 238, 0.07);
+          animation: adminUploadsFloatSlow 26s ease-in-out infinite;
+        }
+
+        .adminUploadsOrbB {
+          right: -10%;
+          top: 18%;
+          height: 22rem;
+          width: 22rem;
+          background: rgba(59, 130, 246, 0.07);
+          animation: adminUploadsFloatSlow 28s ease-in-out infinite;
+        }
+
+        @keyframes adminUploadsTwinkle {
+          0%, 100% {
+            transform: translateY(0px) scale(0.85);
+            opacity: 0.22;
+          }
+
+          50% {
+            transform: translateY(-4px) scale(1.18);
+            opacity: 1;
+          }
+        }
+
+        @keyframes adminUploadsFloatSlow {
+          0%, 100% {
+            transform: translate3d(0, 0, 0);
+          }
+
+          50% {
+            transform: translate3d(0, 10px, 0);
+          }
+        }
+
+        @keyframes adminUploadsFogDriftOne {
+          0%, 100% {
+            transform: translateX(-2%) translateY(0px) scaleX(1);
+          }
+
+          50% {
+            transform: translateX(3%) translateY(-4px) scaleX(1.04);
+          }
+        }
+
+        @keyframes adminUploadsFogDriftTwo {
+          0%, 100% {
+            transform: translateX(3%) translateY(0px) scaleX(1.02);
+          }
+
+          50% {
+            transform: translateX(-2%) translateY(5px) scaleX(1.06);
+          }
+        }
+
+        @keyframes adminUploadsMoonGlow {
+          0%, 100% {
+            opacity: 0.2;
+          }
+
+          50% {
+            opacity: 0.34;
+          }
+        }
+
         .adminUploadsLogoGlow {
           animation: adminUploadsLogoGlow 2.8s ease-in-out infinite;
           color: #ffffff;
