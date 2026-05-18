@@ -235,7 +235,10 @@ async function createMonitoringDraft({
   const periodEnd = todayDateOnly();
   const nextMonitoringDate = getNextMonitoringDate(report.monitoring_cycle);
 
+  const draftSubject = getDraftSubject(report);
+
   const draftPayload = {
+    title: draftSubject,
     report_id: report.report_id,
     client_email: report.email,
     client_name: report.client_name,
@@ -244,7 +247,7 @@ async function createMonitoringDraft({
     monitoring_cycle: report.monitoring_cycle || "Monthly",
     period_start: periodStart,
     period_end: periodEnd,
-    draft_subject: getDraftSubject(report),
+    draft_subject: draftSubject,
     draft_summary: getDraftSummary(report),
     draft_bottlenecks: fallbackList(report.top_bottlenecks, [
       "Review recent client messages and uploaded workflow files.",
