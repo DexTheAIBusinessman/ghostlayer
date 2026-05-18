@@ -487,9 +487,23 @@ export default async function AdminAnalyticsPage() {
 
           <MetricCard
             label="Monitoring Due"
-            value={monitoringDue.length}
-            detail="Monitoring clients with next review date due today or earlier."
-            tone={monitoringDue.length > 0 ? "red" : "default"}
+            value={monitoringCounts.dueClients}
+            detail="Active clients due for monitoring review today or earlier."
+            tone={monitoringCounts.dueClients > 0 ? "red" : "default"}
+          />
+
+          <MetricCard
+            label="Monitoring Drafts"
+            value={monitoringCounts.draftUpdates}
+            detail={`${monitoringCounts.needsReviewReports} report(s) currently need review.`}
+            tone={monitoringCounts.draftUpdates > 0 ? "yellow" : "default"}
+          />
+
+          <MetricCard
+            label="Monitoring Sent"
+            value={monitoringCounts.sentUpdates}
+            detail="Monitoring updates sent to clients."
+            tone="green"
           />
 
           <MetricCard
