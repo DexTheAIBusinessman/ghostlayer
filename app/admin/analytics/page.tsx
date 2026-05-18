@@ -266,9 +266,89 @@ function formatBytes(value: number) {
   return `${(value / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+
+type MonitoringCounts = {
+  dueClients: number;
+  draftUpdates: number;
+  sentUpdates: number;
+  needsReviewReports: number;
+};
+
+async function getMonitoringCounts(): Promise<MonitoringCounts> {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    throw new Error("Missing Supabase environment variables.");
+  }
+
+  const today = new Date().toISOString().slice(0, 10);
+
+  const [dueResponse, historyResponse, reportsResponse] = await Promise.all([
+    fetch(
+      `${supabaseUrl}/rest/v1/client_reports?monitoring_active=eq.true&archived=eq.false&next_monitoring_date=lte.${today}&select=report_id`,
+      {
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+        },
+        cache: "no-store",
+      }
+    ),
+    fetch(
+      `${supabaseUrl}/rest/v1/client_monitoring_history?select=status&limit=1000`,
+      {
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+        },
+        cache: "no-store",
+      }
+    ),
+    fetch(
+      `${supabaseUrl}/rest/v1/client_reports?monitoring_status=eq.Needs%20Review&select=report_id`,
+      {
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+        },
+        cache: "no-store",
+      }
+    ),
+  ]);
+
+  if (!dueResponse.ok) {
+    const errorText = await dueResponse.text();
+    throw new Error(`Could not load due monitoring clients: ${errorText}`);
+  }
+
+  if (!historyResponse.ok) {
+    const errorText = await historyResponse.text();
+    throw new Error(`Could not load monitoring history: ${errorText}`);
+  }
+
+  if (!reportsResponse.ok) {
+    const errorText = await reportsResponse.text();
+    throw new Error(`Could not load monitoring reports: ${errorText}`);
+  }
+
+  const dueClients = await dueResponse.json();
+  const history = await historyResponse.json();
+  const needsReviewReports = await reportsResponse.json();
+
+  return {
+    dueClients: dueClients.length,
+    draftUpdates: history.filter((item: { status?: string }) => item.status === "Draft").length,
+    sentUpdates: history.filter((item: { status?: string }) => item.status === "Sent").length,
+    needsReviewReports: needsReviewReports.length,
+  };
+}
+
+
 export default async function AdminAnalyticsPage() {
   const reports = await getReports();
   const portalCounts = await getPortalCounts();
+  const monitoringCounts = await getMonitoringCounts();
 
   const totalReports = reports.length;
   const draftReports = reports.filter(
@@ -435,7 +515,21 @@ export default async function AdminAnalyticsPage() {
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <div className="border-b border-white/10 px-6 py-5">
               
-          <div className="mt-8 grid gap-4 md:grid-cols-4">
+          <div className="mt-8 grid gap-4 md:grid-cols-5">
+
+            <Link
+              href="/admin/monitoring"
+              className="rounded-[1.5rem] border border-yellow-300/20 bg-yellow-300/10 p-5 text-yellow-100 transition hover:scale-[1.02] hover:bg-yellow-300/15"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
+                Monitoring
+              </p>
+              <p className="mt-3 text-2xl font-black">{monitoringCounts.draftUpdates}</p>
+              <p className="mt-2 text-xs text-yellow-100/75">
+                Review, approve, and send monthly monitoring updates.
+              </p>
+            </Link>
+
             <Link
               href="/admin/messages"
               className="rounded-[1.5rem] border border-blue-300/20 bg-blue-300/10 p-5 text-blue-100 transition hover:scale-[1.02] hover:bg-blue-300/15"
