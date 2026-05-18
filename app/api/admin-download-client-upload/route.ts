@@ -97,7 +97,11 @@ export async function GET(request: Request) {
       );
     }
 
-    return NextResponse.redirect(new URL(signedUrl, supabaseUrl), 303);
+    const redirectUrl = signedUrl.startsWith("http")
+      ? signedUrl
+      : `${supabaseUrl}/storage/v1${signedUrl}`;
+
+    return NextResponse.redirect(redirectUrl, 303);
   } catch (error) {
     return NextResponse.json(
       {
