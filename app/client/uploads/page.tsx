@@ -148,7 +148,7 @@ export default async function ClientUploadsPage({
   const clientEmail = cookieStore.get("ghostlayer_client_email")?.value;
 
   if (!clientEmail) {
-    redirect("/login?error=login-required");
+    redirect("/login?error=login-required&next=/client/uploads");
   }
 
   const resolvedSearchParams = searchParams ? await searchParams : {};

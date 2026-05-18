@@ -170,7 +170,7 @@ export default async function ClientDashboardPage() {
   const clientEmail = cookieStore.get("ghostlayer_client_email")?.value;
 
   if (!clientEmail) {
-    redirect("/login?error=login-required");
+    redirect("/login?error=login-required&next=/client/dashboard");
   }
 
   const reports = await getClientReports(clientEmail);

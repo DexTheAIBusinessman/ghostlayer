@@ -12,9 +12,13 @@ async function loginClient(formData: FormData) {
 
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
+  const nextPathRaw = String(formData.get("next") || "/client/dashboard").trim();
+  const nextPath = nextPathRaw.startsWith("/") && !nextPathRaw.startsWith("//")
+    ? nextPathRaw
+    : "/client/dashboard";
 
   if (!email || !password) {
-    redirect("/login?error=missing");
+    redirect(`/login?error=missing&next=${encodeURIComponent(nextPath)}`);
   }
 
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -80,7 +84,7 @@ async function loginClient(formData: FormData) {
     maxAge: 60 * 60 * 24 * 7,
   });
 
-  redirect("/client/dashboard");
+  redirect(nextPath);
 }
 
 function NightSkyBackground() {
@@ -179,7 +183,7 @@ function LoginStyles() {
 export default async function LoginPage({
   searchParams,
 }: {
-  searchParams?: Promise<{ error?: string; signup?: string; verified?: string }>;
+  searchParams?: Promise<{ error?: string; signup?: string; verified?: string; next?: string }>;
 }) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
 
@@ -238,6 +242,12 @@ export default async function LoginPage({
           ) : null}
 
           <form action={loginClient} className="mt-8 space-y-4">
+            <input
+              type="hidden"
+              name="next"
+              value={resolvedSearchParams.next || "/client/dashboard"}
+            />
+
             <label className="block">
               <span className="mb-2 block text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
                 Email

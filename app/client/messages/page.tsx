@@ -140,7 +140,7 @@ export default async function ClientMessagesPage({
   const clientEmail = cookieStore.get("ghostlayer_client_email")?.value;
 
   if (!clientEmail) {
-    redirect("/login?error=login-required");
+    redirect("/login?error=login-required&next=/client/messages");
   }
 
   const resolvedSearchParams = searchParams ? await searchParams : {};

@@ -76,7 +76,7 @@ export default async function ClientMonitoringPage() {
   const clientEmail = cookieStore.get("ghostlayer_client_email")?.value;
 
   if (!clientEmail) {
-    redirect("/login?error=login-required");
+    redirect("/login?error=login-required&next=/client/monitoring");
   }
 
   const history = await getMonitoringHistory(clientEmail);
