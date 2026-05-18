@@ -56,6 +56,53 @@ type PlanDetails = {
   reportSuffix: "workflow-scan" | "workflow-monitoring";
 };
 
+
+function getStripeBillingIds(event: StripeEvent) {
+  const object = event.data.object;
+
+  return {
+    stripe_customer_id: object.customer || null,
+    stripe_subscription_id: object.subscription || null,
+    stripe_checkout_session_id: object.id || event.id || null,
+  };
+}
+
+async function updateExistingClientReportBillingIds(
+  reportId: string,
+  event: StripeEvent
+) {
+  if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+    throw new Error("Missing Supabase environment variables");
+  }
+
+  const billingIds = getStripeBillingIds(event);
+
+  const response = await fetch(
+    `${SUPABASE_URL}/rest/v1/client_reports?report_id=eq.${encodeURIComponent(
+      reportId
+    )}`,
+    {
+      method: "PATCH",
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({
+        ...billingIds,
+        updated_at: new Date().toISOString(),
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Supabase billing ID update failed: ${errorText}`);
+  }
+}
+
+
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
@@ -484,6 +531,8 @@ async function createClientReportDraft(event: StripeEvent, email: string) {
   const existing = await findClientReportByEmail(email);
 
   if (existing && existing.status !== "Report Sent") {
+    await updateExistingClientReportBillingIds(existing.report_id, event);
+
     return {
       action: "existing_report_draft_found",
       reportId: existing.report_id,
@@ -510,6 +559,7 @@ async function createClientReportDraft(event: StripeEvent, email: string) {
       client_name: name,
       company,
       email,
+      ...getStripeBillingIds(event),
       risk_score: 0,
       estimated_loss: "$0/mo",
       time_lost: "0 hrs/week",
