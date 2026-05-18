@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 
+type UploadRecord = {
+  file_name: string;
+  file_path: string;
+  file_type: string | null;
+};
 
 function encodeStoragePath(path: string) {
   return path
@@ -8,10 +13,9 @@ function encodeStoragePath(path: string) {
     .join("/");
 }
 
-
-type UploadRecord = {
-  file_path: string;
-};
+function safeDownloadName(value: string) {
+  return value.replace(/["\\]/g, "").trim() || "ghostlayer-upload";
+}
 
 export async function GET(request: Request) {
   try {
@@ -35,7 +39,7 @@ export async function GET(request: Request) {
     const lookupResponse = await fetch(
       `${supabaseUrl}/rest/v1/client_uploads?id=eq.${encodeURIComponent(
         uploadId
-      )}&select=file_path&limit=1`,
+      )}&select=file_name,file_path,file_type&limit=1`,
       {
         headers: {
           apikey: serviceRoleKey,
@@ -49,59 +53,52 @@ export async function GET(request: Request) {
       const errorText = await lookupResponse.text();
 
       return NextResponse.json(
-        { error: `Could not load upload: ${errorText}` },
+        { error: `Could not load upload record: ${errorText}` },
         { status: 500 }
       );
     }
 
     const records = (await lookupResponse.json()) as UploadRecord[];
-    const filePath = records?.[0]?.file_path;
+    const upload = records?.[0];
 
-    if (!filePath) {
+    if (!upload?.file_path) {
       return NextResponse.json({ error: "Upload not found." }, { status: 404 });
     }
 
-    const signedResponse = await fetch(
-      `${supabaseUrl}/storage/v1/object/sign/client-uploads/${encodeStoragePath(
-        filePath
+    const storageResponse = await fetch(
+      `${supabaseUrl}/storage/v1/object/client-uploads/${encodeStoragePath(
+        upload.file_path
       )}`,
       {
-        method: "POST",
         headers: {
           apikey: serviceRoleKey,
           Authorization: `Bearer ${serviceRoleKey}`,
-          "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          expiresIn: 60 * 10,
-        }),
+        cache: "no-store",
       }
     );
 
-    if (!signedResponse.ok) {
-      const errorText = await signedResponse.text();
+    if (!storageResponse.ok) {
+      const errorText = await storageResponse.text();
 
       return NextResponse.json(
-        { error: `Could not create signed download link: ${errorText}` },
+        { error: `Could not download file: ${errorText}` },
         { status: 500 }
       );
     }
 
-    const data = await signedResponse.json();
-    const signedUrl = data.signedURL || data.signedUrl;
+    const fileBuffer = await storageResponse.arrayBuffer();
 
-    if (!signedUrl) {
-      return NextResponse.json(
-        { error: "Signed URL was not returned." },
-        { status: 500 }
-      );
-    }
-
-    const redirectUrl = signedUrl.startsWith("http")
-      ? signedUrl
-      : `${supabaseUrl}/storage/v1${signedUrl}`;
-
-    return NextResponse.redirect(redirectUrl, 303);
+    return new NextResponse(fileBuffer, {
+      status: 200,
+      headers: {
+        "Content-Type": upload.file_type || "application/octet-stream",
+        "Content-Disposition": `attachment; filename="${safeDownloadName(
+          upload.file_name
+        )}"`,
+        "Cache-Control": "no-store",
+      },
+    });
   } catch (error) {
     return NextResponse.json(
       {
