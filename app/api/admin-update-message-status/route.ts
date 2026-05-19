@@ -80,7 +80,7 @@ export async function POST(request: Request) {
         ? `Message from ${updatedMessage?.client_email || "unknown client"} was reopened.`
         : `Message from ${updatedMessage?.client_email || "unknown client"} was marked answered.`;
 
-    await fetch(`${SUPABASE_URL}/rest/v1/admin_activity_log`, {
+    const activityResponse = await fetch(`${SUPABASE_URL}/rest/v1/admin_activity_log`, {
       method: "POST",
       headers: {
         apikey: SUPABASE_SERVICE_ROLE_KEY,
@@ -95,9 +95,19 @@ export async function POST(request: Request) {
         client_email: updatedMessage?.client_email || null,
         event_type: "client_message_status",
       }),
-    }).catch(() => {
-      // Do not block status updates if activity logging fails.
     });
+
+    if (!activityResponse.ok) {
+      const activityErrorText = await activityResponse.text();
+
+      return jsonResponse(
+        {
+          error: `Message status updated, but activity log failed: ${activityErrorText}`,
+          updated,
+        },
+        500
+      );
+    }
 
     return jsonResponse({
       ok: true,
