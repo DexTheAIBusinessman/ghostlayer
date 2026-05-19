@@ -398,18 +398,7 @@ export default async function AdminAnalyticsPage() {
         <div className="mb-10 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="flex flex-wrap items-center gap-4">
-              <Link
-                href="/admin/merge-client"
-                className="min-h-[9.5rem] rounded-[1.5rem] border border-pink-300/20 bg-pink-300/10 p-5 text-pink-100 transition hover:scale-[1.02] hover:bg-pink-300/15"
-              >
-                <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em]">
-                  Merge Client
-                </p>
-                <p className="mt-3 text-2xl font-black">Email</p>
-                <p className="mt-2 text-xs leading-5 text-pink-100/75">
-                  Change client email or merge client account records.
-                </p>
-              </Link>
+              
 
               <Link
                 href="/"
@@ -582,6 +571,19 @@ export default async function AdminAnalyticsPage() {
                 Review uploaded workflow files.
               </p>
             </Link>
+
+              <Link
+                href="/admin/merge-client"
+                className="min-h-[9.5rem] rounded-[1.5rem] border border-pink-300/20 bg-pink-300/10 p-5 text-pink-100 transition hover:scale-[1.02] hover:bg-pink-300/15"
+              >
+                <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em]">
+                  Merge Client
+                </p>
+                <p className="mt-3 text-2xl font-black">Email</p>
+                <p className="mt-2 text-xs leading-5 text-pink-100/75">
+                  Change client email or merge client account records.
+                </p>
+              </Link>
 
             <Link
               href="/admin/activity"
