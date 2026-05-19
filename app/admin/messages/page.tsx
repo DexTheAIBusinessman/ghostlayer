@@ -317,7 +317,9 @@ export default async function AdminMessagesPage({
                   {item.admin_reply ? (
                     <div className="mt-5 rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-4">
                       <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-200">
-                        Ghostlayer Reply Sent
+                        {item.status === "Open"
+                          ? "Previous Ghostlayer Reply"
+                          : "Ghostlayer Reply Sent"}
                       </p>
 
                       <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-emerald-50">
@@ -330,13 +332,15 @@ export default async function AdminMessagesPage({
                         </p>
                       ) : null}
                     </div>
-                  ) : (
+                  ) : null}
+
+                  {item.status === "Open" ? (
                     <AdminMessageReplyForm
                       messageId={item.id}
                       clientEmail={item.client_email}
                       subject={item.subject || "Ghostlayer message"}
                     />
-                  )}
+                  ) : null}
                   </div>
 
                   <div className="flex flex-wrap gap-2 lg:justify-end">
