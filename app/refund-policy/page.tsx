@@ -62,7 +62,7 @@ export default function RefundPolicyPage() {
       <section className="relative z-10 mx-auto max-w-4xl px-6 py-16 sm:px-8 lg:px-10">
         <a
           href="/"
-          className="legalLogoGlow mb-10 inline-block text-sm font-semibold tracking-[0.22em] transition hover:text-white"
+          className="ghostlayerLogoGlow"
         >
           GHOSTLAYER
         </a>
