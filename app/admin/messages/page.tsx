@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminMessageReplyForm from "./_components/AdminMessageReplyForm";
 
 type ClientMessage = {
   id: string;
@@ -224,6 +225,12 @@ export default async function AdminMessagesPage() {
                     <p className="mt-5 whitespace-pre-wrap text-sm leading-7 text-gray-300">
                       {item.message}
                     </p>
+
+                  <AdminMessageReplyForm
+                    messageId={item.id}
+                    clientEmail={item.client_email}
+                    subject={item.subject || "Ghostlayer message"}
+                  />
                   </div>
 
                   <div className="flex flex-wrap gap-2 lg:justify-end">
@@ -236,14 +243,7 @@ export default async function AdminMessagesPage() {
                       </Link>
                     ) : null}
 
-                    <a
-                      href={`mailto:${item.client_email}?subject=${encodeURIComponent(
-                        `Re: ${item.subject || "Ghostlayer message"}`
-                      )}`}
-                      className="rounded-xl border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-xs font-bold text-emerald-100 transition hover:bg-emerald-300/15"
-                    >
-                      Reply by Email
-                    </a>
+                    
                   </div>
                 </div>
               </div>
