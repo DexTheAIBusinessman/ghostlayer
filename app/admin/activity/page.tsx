@@ -6,6 +6,7 @@ type Activity = {
   report_id: string | null;
   client_name: string | null;
   client_email: string | null;
+  event_type: string | null;
   details: string | null;
   created_at: string;
 };
@@ -161,7 +162,7 @@ export default async function AdminActivityPage() {
                   </p>
 
                   <p className="mt-1 text-sm text-gray-400">
-                    {item.client_name || "Unknown Client"}
+                    {item.event_type === "client_message_status" ? "Client Message" : item.client_name || "Unknown Client"}
                     {item.client_email ? ` · ${item.client_email}` : ""}
                   </p>
 
