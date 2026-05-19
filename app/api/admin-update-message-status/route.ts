@@ -68,6 +68,36 @@ export async function POST(request: Request) {
     }
 
     const updated = await response.json();
+    const updatedMessage = updated?.[0];
+
+    const activityTitle =
+      status === "Open"
+        ? "Client Message Reopened"
+        : "Client Message Marked Answered";
+
+    const activityDescription =
+      status === "Open"
+        ? `Message from ${updatedMessage?.client_email || "unknown client"} was reopened.`
+        : `Message from ${updatedMessage?.client_email || "unknown client"} was marked answered.`;
+
+    await fetch(`${SUPABASE_URL}/rest/v1/admin_activity`, {
+      method: "POST",
+      headers: {
+        apikey: SUPABASE_SERVICE_ROLE_KEY,
+        Authorization: `Bearer ${SUPABASE_SERVICE_ROLE_KEY}`,
+        "Content-Type": "application/json",
+        Prefer: "return=minimal",
+      },
+      body: JSON.stringify({
+        title: activityTitle,
+        description: activityDescription,
+        report_id: updatedMessage?.report_id || null,
+        client_email: updatedMessage?.client_email || null,
+        event_type: "client_message_status",
+      }),
+    }).catch(() => {
+      // Do not block status updates if activity logging fails.
+    });
 
     return jsonResponse({
       ok: true,
