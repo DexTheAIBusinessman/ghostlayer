@@ -55,7 +55,7 @@ export default function TermsPage() {
       <section className="relative z-10 mx-auto max-w-4xl px-6 py-16 sm:px-8 lg:px-10">
         <a
           href="/"
-          className="ghostlayerLogoGlow"
+          className="ghostlayerLogoGlow mb-8 block"
         >
           GHOSTLAYER
         </a>
