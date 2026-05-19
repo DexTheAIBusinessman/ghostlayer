@@ -92,11 +92,78 @@ function NightSkyBackground() {
   );
 }
 
-export default async function AdminMessagesPage() {
+
+function MessageFilterTabs({
+  activeFilter,
+  counts,
+}: {
+  activeFilter: string;
+  counts: {
+    all: number;
+    open: number;
+    answered: number;
+    report: number;
+    general: number;
+  };
+}) {
+  const filters = [
+    { key: "all", label: "All", count: counts.all, href: "/admin/messages" },
+    { key: "open", label: "Open", count: counts.open, href: "/admin/messages?filter=open" },
+    { key: "answered", label: "Answered", count: counts.answered, href: "/admin/messages?filter=answered" },
+    { key: "report", label: "Report Related", count: counts.report, href: "/admin/messages?filter=report" },
+    { key: "general", label: "General", count: counts.general, href: "/admin/messages?filter=general" },
+  ];
+
+  return (
+    <div className="mb-6 flex flex-wrap gap-3">
+      {filters.map((filter) => {
+        const isActive = activeFilter === filter.key;
+
+        return (
+          <Link
+            key={filter.key}
+            href={filter.href}
+            className={
+              isActive
+                ? "rounded-2xl border border-cyan-300/35 bg-cyan-300/15 px-4 py-3 text-sm font-bold text-cyan-100 shadow-[0_0_28px_rgba(34,211,238,0.12)] transition hover:bg-cyan-300/20"
+                : "rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 text-sm font-bold text-gray-300 transition hover:border-white/20 hover:bg-white/[0.07] hover:text-white"
+            }
+          >
+            <span>{filter.label}</span>
+            <span className="ml-2 rounded-full border border-white/10 bg-black/25 px-2 py-0.5 text-xs">
+              {filter.count}
+            </span>
+          </Link>
+        );
+      })}
+    </div>
+  );
+}
+
+export default async function AdminMessagesPage({
+  searchParams,
+}: {
+  searchParams?: Promise<{ filter?: string }>;
+}) {
   const messages = await getMessages();
+  const resolvedSearchParams = searchParams ? await searchParams : {};
+  const activeFilter = resolvedSearchParams.filter || "all";
 
   const openMessages = messages.filter((message) => message.status === "Open");
+  const answeredMessages = messages.filter((message) => message.status === "Answered");
   const reportMessages = messages.filter((message) => message.report_id);
+  const generalMessages = messages.filter((message) => !message.report_id);
+
+  const filteredMessages =
+    activeFilter === "open"
+      ? openMessages
+      : activeFilter === "answered"
+        ? answeredMessages
+        : activeFilter === "report"
+          ? reportMessages
+          : activeFilter === "general"
+            ? generalMessages
+            : messages;
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] text-white">
@@ -179,7 +246,18 @@ export default async function AdminMessagesPage() {
           </div>
         </div>
 
-        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
+        <MessageFilterTabs
+        activeFilter={activeFilter}
+        counts={{
+          all: messages.length,
+          open: openMessages.length,
+          answered: answeredMessages.length,
+          report: reportMessages.length,
+          general: generalMessages.length,
+        }}
+      />
+
+      <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
           <div className="border-b border-white/10 px-6 py-5">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">
               Inbox
@@ -188,7 +266,7 @@ export default async function AdminMessagesPage() {
           </div>
 
           <div className="divide-y divide-white/10">
-            {messages.map((item) => (
+            {filteredMessages.map((item) => (
               <div key={item.id} className="px-6 py-6">
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="max-w-4xl">
@@ -270,7 +348,7 @@ export default async function AdminMessagesPage() {
               </div>
             ))}
 
-            {messages.length === 0 ? (
+            {filteredMessages.length === 0 ? (
               <div className="px-6 py-16 text-center">
                 <p className="text-lg font-bold text-white">
                   No client messages yet.
