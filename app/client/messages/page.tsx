@@ -112,8 +112,6 @@ function PortalBackground() {
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#05070b]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(34,211,238,0.10),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.10),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.06),transparent_38%)]" />
 
-      <div className="clientMessagesMoon" />
-
       <div className="clientMessagesFog clientMessagesFogA" />
       <div className="clientMessagesFog clientMessagesFogB" />
 
@@ -136,25 +134,6 @@ function PortalBackground() {
       ))}
 
       <style>{`
-        .clientMessagesMoon {
-          position: absolute;
-          right: 3%;
-          top: 5%;
-          width: min(34vw, 30rem);
-          height: min(34vw, 30rem);
-          border-radius: 9999px;
-          background:
-            radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.92) 12%, rgba(226, 232, 240, 0.76) 30%, rgba(148, 163, 184, 0.42) 54%, rgba(30, 41, 59, 0.18) 78%, rgba(15, 23, 42, 0.04) 100%);
-          box-shadow:
-            0 0 44px rgba(255, 255, 255, 0.42),
-            0 0 95px rgba(191, 219, 254, 0.36),
-            0 0 165px rgba(96, 165, 250, 0.26),
-            inset -42px -34px 70px rgba(15, 23, 42, 0.42),
-            inset 18px 14px 44px rgba(255, 255, 255, 0.32);
-          opacity: 0.24;
-          animation: clientMessagesMoonGlow 4.8s ease-in-out infinite;
-        }
-
         .clientMessagesStar {
           position: absolute;
           display: block;
@@ -229,15 +208,36 @@ function PortalBackground() {
           }
         }
 
-        @keyframes clientMessagesMoonGlow {
+
+        .clientMessagesLogoGlow {
+          animation: clientMessagesLogoGlow 2.8s ease-in-out infinite;
+          color: #ffffff;
+          text-shadow:
+            0 0 8px rgba(255, 255, 255, 0.70),
+            0 0 18px rgba(255, 255, 255, 0.45),
+            0 0 34px rgba(96, 165, 250, 0.36),
+            0 0 52px rgba(59, 130, 246, 0.24);
+        }
+
+        @keyframes clientMessagesLogoGlow {
           0%, 100% {
-            opacity: 0.2;
+            opacity: 0.82;
+            text-shadow:
+              0 0 7px rgba(255, 255, 255, 0.46),
+              0 0 16px rgba(96, 165, 250, 0.24),
+              0 0 34px rgba(59, 130, 246, 0.16);
           }
 
           50% {
-            opacity: 0.34;
+            opacity: 1;
+            text-shadow:
+              0 0 12px rgba(255, 255, 255, 0.95),
+              0 0 26px rgba(255, 255, 255, 0.58),
+              0 0 48px rgba(147, 197, 253, 0.42),
+              0 0 76px rgba(59, 130, 246, 0.30);
           }
         }
+
       `}</style>
     </div>
   );
@@ -295,7 +295,7 @@ export default async function ClientMessagesPage({
           <div>
             <Link
               href="/"
-              className="inline-block text-lg font-bold tracking-[0.35em] text-white"
+              className="clientMessagesLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
             >
               GHOSTLAYER
             </Link>
