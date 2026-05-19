@@ -531,82 +531,82 @@ export default async function AdminAnalyticsPage() {
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <div className="border-b border-white/10 px-6 py-5">
               
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
 
             <Link
               href="/admin/monitoring"
-              className="min-h-[9.5rem] rounded-[1.5rem] border border-yellow-300/20 bg-yellow-300/10 p-5 text-yellow-100 transition hover:scale-[1.02] hover:bg-yellow-300/15"
+              className="min-h-[10.5rem] rounded-[2rem] border border-yellow-300/20 bg-yellow-300/10 p-6 text-yellow-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-yellow-300/15"
             >
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
                 Monitoring
               </p>
               <p className="mt-3 text-2xl font-black">{monitoringCounts.draftUpdates}</p>
-              <p className="mt-2 text-xs leading-5 text-yellow-100/75">
+              <p className="mt-3 text-sm leading-6 text-yellow-100/75">
                 Review, approve, and send monthly monitoring updates.
               </p>
             </Link>
 
             <Link
               href="/admin/messages"
-              className="min-h-[9.5rem] rounded-[1.5rem] border border-blue-300/20 bg-blue-300/10 p-5 text-blue-100 transition hover:scale-[1.02] hover:bg-blue-300/15"
+              className="min-h-[10.5rem] rounded-[2rem] border border-blue-300/20 bg-blue-300/10 p-6 text-blue-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-blue-300/15"
             >
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
                 Messages
               </p>
               <p className="mt-3 text-2xl font-black">{portalCounts.totalMessages}</p>
-              <p className="mt-2 text-xs leading-5 text-blue-100/75">
+              <p className="mt-3 text-sm leading-6 text-blue-100/75">
                 View client messages and reply by email.
               </p>
             </Link>
 
             <Link
               href="/admin/uploads"
-              className="min-h-[9.5rem] rounded-[1.5rem] border border-cyan-300/20 bg-cyan-300/10 p-5 text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
+              className="min-h-[10.5rem] rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 text-cyan-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-cyan-300/15"
             >
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
                 Uploads
               </p>
               <p className="mt-3 text-2xl font-black">{portalCounts.totalUploads}</p>
-              <p className="mt-2 text-xs leading-5 text-cyan-100/75">
+              <p className="mt-3 text-sm leading-6 text-cyan-100/75">
                 Review uploaded workflow files.
               </p>
             </Link>
 
               <Link
                 href="/admin/merge-client"
-                className="min-h-[9.5rem] rounded-[1.5rem] border border-pink-300/20 bg-pink-300/10 p-5 text-pink-100 transition hover:scale-[1.02] hover:bg-pink-300/15"
+                className="min-h-[10.5rem] rounded-[2rem] border border-pink-300/20 bg-pink-300/10 p-6 text-pink-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-pink-300/15"
               >
-                <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em]">
+                <p className="text-xs font-bold uppercase tracking-[0.22em]">
                   Merge Client
                 </p>
                 <p className="mt-3 text-2xl font-black">Email</p>
-                <p className="mt-2 text-xs leading-5 text-pink-100/75">
+                <p className="mt-3 text-sm leading-6 text-pink-100/75">
                   Change client email or merge client account records.
                 </p>
               </Link>
 
             <Link
               href="/admin/activity"
-              className="min-h-[9.5rem] rounded-[1.5rem] border border-purple-300/20 bg-purple-300/10 p-5 text-purple-100 transition hover:scale-[1.02] hover:bg-purple-300/15"
+              className="min-h-[10.5rem] rounded-[2rem] border border-purple-300/20 bg-purple-300/10 p-6 text-purple-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-purple-300/15"
             >
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
                 Activity
               </p>
               <p className="mt-3 text-2xl font-black">Logs</p>
-              <p className="mt-2 text-xs leading-5 text-purple-100/75">
+              <p className="mt-3 text-sm leading-6 text-purple-100/75">
                 See portal, report, upload, and message events.
               </p>
             </Link>
 
             <Link
               href="/admin/reports"
-              className="min-h-[9.5rem] rounded-[1.5rem] border border-emerald-300/20 bg-emerald-300/10 p-5 text-emerald-100 transition hover:scale-[1.02] hover:bg-emerald-300/15"
+              className="min-h-[10.5rem] rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6 text-emerald-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-emerald-300/15"
             >
-              <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em]">
+              <p className="text-xs font-bold uppercase tracking-[0.22em]">
                 Reports
               </p>
               <p className="mt-3 text-2xl font-black">{totalReports}</p>
-              <p className="mt-2 text-xs leading-5 text-emerald-100/75">
+              <p className="mt-3 text-sm leading-6 text-emerald-100/75">
                 Open the report command center.
               </p>
             </Link>
