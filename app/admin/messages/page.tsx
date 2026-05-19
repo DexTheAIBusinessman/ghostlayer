@@ -9,6 +9,9 @@ type ClientMessage = {
   subject: string | null;
   message: string;
   status: string;
+  admin_reply?: string | null;
+  admin_replied_at?: string | null;
+  admin_reply_email_id?: string | null;
   created_at: string;
 };
 
@@ -226,11 +229,29 @@ export default async function AdminMessagesPage() {
                       {item.message}
                     </p>
 
-                  <AdminMessageReplyForm
-                    messageId={item.id}
-                    clientEmail={item.client_email}
-                    subject={item.subject || "Ghostlayer message"}
-                  />
+                  {item.admin_reply ? (
+                    <div className="mt-5 rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-4">
+                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-200">
+                        Ghostlayer Reply Sent
+                      </p>
+
+                      <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-emerald-50">
+                        {item.admin_reply}
+                      </p>
+
+                      {item.admin_replied_at ? (
+                        <p className="mt-3 text-xs text-emerald-100/60">
+                          Sent {formatDate(item.admin_replied_at)}
+                        </p>
+                      ) : null}
+                    </div>
+                  ) : (
+                    <AdminMessageReplyForm
+                      messageId={item.id}
+                      clientEmail={item.client_email}
+                      subject={item.subject || "Ghostlayer message"}
+                    />
+                  )}
                   </div>
 
                   <div className="flex flex-wrap gap-2 lg:justify-end">
