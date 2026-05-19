@@ -88,11 +88,15 @@ export default function AdminPageShell({
           position: absolute;
           inset: 0;
           background-image:
-            radial-gradient(circle, rgba(255,255,255,0.95) 0 1px, transparent 1.5px),
-            radial-gradient(circle, rgba(125,249,255,0.75) 0 1px, transparent 1.6px);
-          background-size: 180px 180px, 260px 260px;
-          background-position: 32px 48px, 96px 132px;
-          opacity: 0.42;
+            radial-gradient(circle at 12% 14%, rgba(255,255,255,0.90) 0 1.2px, transparent 2px),
+            radial-gradient(circle at 26% 32%, rgba(255,255,255,0.72) 0 1px, transparent 2px),
+            radial-gradient(circle at 43% 18%, rgba(125,249,255,0.70) 0 1px, transparent 2px),
+            radial-gradient(circle at 69% 24%, rgba(255,255,255,0.78) 0 1.2px, transparent 2px),
+            radial-gradient(circle at 88% 68%, rgba(255,255,255,0.70) 0 1px, transparent 2px),
+            radial-gradient(circle at 31% 86%, rgba(125,249,255,0.62) 0 1px, transparent 2px),
+            radial-gradient(circle at 76% 78%, rgba(255,255,255,0.68) 0 1px, transparent 2px);
+          background-repeat: no-repeat;
+          opacity: 0.46;
           animation: adminTwinkle 4.8s ease-in-out infinite;
         }
 
@@ -153,8 +157,8 @@ export default function AdminPageShell({
         }
 
         @keyframes adminTwinkle {
-          0%, 100% { opacity: 0.28; }
-          50% { opacity: 0.72; }
+          0%, 100% { opacity: 0.34; }
+          50% { opacity: 0.58; }
         }
 
         @keyframes adminMoonGlow {
