@@ -89,6 +89,7 @@ export async function POST(request: Request) {
         Prefer: "return=minimal",
       },
       body: JSON.stringify({
+        action: activityTitle,
         title: activityTitle,
         description: activityDescription,
         report_id: updatedMessage?.report_id || null,
