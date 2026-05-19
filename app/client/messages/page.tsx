@@ -95,11 +95,150 @@ function formatDate(value: string) {
 }
 
 function PortalBackground() {
+  const stars = [
+    { left: "6%", top: "10%", size: 2, delay: "0s", duration: "4.8s" },
+    { left: "12%", top: "32%", size: 2, delay: "1.1s", duration: "5.4s" },
+    { left: "25%", top: "18%", size: 3, delay: "1.6s", duration: "5.8s" },
+    { left: "42%", top: "12%", size: 2, delay: "2.5s", duration: "5.6s" },
+    { left: "51%", top: "38%", size: 3, delay: "1.3s", duration: "5.2s" },
+    { left: "68%", top: "20%", size: 2, delay: "2.9s", duration: "5.3s" },
+    { left: "77%", top: "50%", size: 3, delay: "1.8s", duration: "4.7s" },
+    { left: "86%", top: "16%", size: 2, delay: "0.4s", duration: "5.7s" },
+    { left: "94%", top: "70%", size: 2, delay: "2.2s", duration: "5.1s" },
+    { left: "30%", top: "88%", size: 2, delay: "2.4s", duration: "5.2s" },
+  ];
+
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#05070b]">
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(34,211,238,0.10),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.10),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.06),transparent_38%)]" />
+
+      <div className="clientMessagesMoon" />
+
+      <div className="clientMessagesFog clientMessagesFogA" />
+      <div className="clientMessagesFog clientMessagesFogB" />
+
       <div className="absolute left-[-18%] top-[12%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-cyan-200/10 to-transparent blur-[105px]" />
       <div className="absolute left-[-18%] top-[52%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-blue-300/10 to-transparent blur-[110px]" />
+
+      {stars.map((star, index) => (
+        <span
+          key={index}
+          className="clientMessagesStar"
+          style={{
+            left: star.left,
+            top: star.top,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            animationDelay: star.delay,
+            animationDuration: star.duration,
+          }}
+        />
+      ))}
+
+      <style>{`
+        .clientMessagesMoon {
+          position: absolute;
+          right: 3%;
+          top: 5%;
+          width: min(34vw, 30rem);
+          height: min(34vw, 30rem);
+          border-radius: 9999px;
+          background:
+            radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.92) 12%, rgba(226, 232, 240, 0.76) 30%, rgba(148, 163, 184, 0.42) 54%, rgba(30, 41, 59, 0.18) 78%, rgba(15, 23, 42, 0.04) 100%);
+          box-shadow:
+            0 0 44px rgba(255, 255, 255, 0.42),
+            0 0 95px rgba(191, 219, 254, 0.36),
+            0 0 165px rgba(96, 165, 250, 0.26),
+            inset -42px -34px 70px rgba(15, 23, 42, 0.42),
+            inset 18px 14px 44px rgba(255, 255, 255, 0.32);
+          opacity: 0.24;
+          animation: clientMessagesMoonGlow 4.8s ease-in-out infinite;
+        }
+
+        .clientMessagesStar {
+          position: absolute;
+          display: block;
+          border-radius: 9999px;
+          background: #ffffff;
+          box-shadow:
+            0 0 8px rgba(255, 255, 255, 0.95),
+            0 0 18px rgba(147, 197, 253, 0.62),
+            0 0 30px rgba(59, 130, 246, 0.35);
+          animation-name: clientMessagesTwinkle;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
+        }
+
+        .clientMessagesFog {
+          position: absolute;
+          left: -10%;
+          right: -10%;
+          height: 170px;
+          border-radius: 9999px;
+          filter: blur(92px);
+          opacity: 0.075;
+          mix-blend-mode: screen;
+          background: linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0),
+            rgba(147, 197, 253, 0.12),
+            rgba(96, 165, 250, 0.11),
+            rgba(255, 255, 255, 0)
+          );
+        }
+
+        .clientMessagesFogA {
+          top: 18%;
+          animation: clientMessagesFogDriftOne 42s ease-in-out infinite;
+        }
+
+        .clientMessagesFogB {
+          top: 58%;
+          animation: clientMessagesFogDriftTwo 46s ease-in-out infinite;
+        }
+
+        @keyframes clientMessagesTwinkle {
+          0%, 100% {
+            transform: translateY(0px) scale(0.85);
+            opacity: 0.22;
+          }
+
+          50% {
+            transform: translateY(-4px) scale(1.18);
+            opacity: 1;
+          }
+        }
+
+        @keyframes clientMessagesFogDriftOne {
+          0%, 100% {
+            transform: translateX(-2%) translateY(0px) scaleX(1);
+          }
+
+          50% {
+            transform: translateX(3%) translateY(-4px) scaleX(1.04);
+          }
+        }
+
+        @keyframes clientMessagesFogDriftTwo {
+          0%, 100% {
+            transform: translateX(3%) translateY(0px) scaleX(1.02);
+          }
+
+          50% {
+            transform: translateX(-2%) translateY(5px) scaleX(1.06);
+          }
+        }
+
+        @keyframes clientMessagesMoonGlow {
+          0%, 100% {
+            opacity: 0.2;
+          }
+
+          50% {
+            opacity: 0.34;
+          }
+        }
+      `}</style>
     </div>
   );
 }
