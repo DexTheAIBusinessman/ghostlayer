@@ -405,7 +405,7 @@ export default async function ClientMessagesPage({
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                     <div>
                       <p className="font-bold text-white">
-                        {item.subject || "Client message"}
+                        {item.status === "Answered" ? "Answered by Ghostlayer" : item.subject || "Client message"}
                       </p>
 
                       <p className="mt-1 text-xs text-gray-500">
