@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AdminMessageReplyForm from "./_components/AdminMessageReplyForm";
+import AdminMessageStatusButton from "./_components/AdminMessageStatusButton";
 
 type ClientMessage = {
   id: string;
@@ -268,6 +269,12 @@ export default async function AdminMessagesPage({
           <div className="divide-y divide-white/10">
             {filteredMessages.map((item) => (
               <div key={item.id} className="px-6 py-6">
+              <div className="mb-4 flex justify-end">
+                <AdminMessageStatusButton
+                  messageId={item.id}
+                  currentStatus={item.status}
+                />
+              </div>
                 <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
                   <div className="max-w-4xl">
                     <div className="flex flex-wrap items-center gap-3">
