@@ -95,6 +95,7 @@ export default async function AdminActivityPage() {
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] text-white">
       <div className="activityMoon" aria-hidden="true" />
 
+
       <NightSkyBackground />
 
       <section className="relative z-10 mx-auto max-w-6xl px-6 py-10">
@@ -241,42 +242,44 @@ export default async function AdminActivityPage() {
           0%, 100% { opacity: 0.34; transform: translateY(0px) scale(1); }
           50% { opacity: 0.7; transform: translateY(-12px) scale(1.04); }
         }
-      `}</style>
-    
-      <style>{`
+
         .activityMoon {
           pointer-events: none;
           position: fixed;
           right: 3%;
           top: 5%;
-          z-index: 0;
+          z-index: 1;
           width: min(34vw, 30rem);
           height: min(34vw, 30rem);
           border-radius: 9999px;
           background:
-            radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.92) 12%, rgba(226, 232, 240, 0.76) 30%, rgba(148, 163, 184, 0.42) 54%, rgba(30, 41, 59, 0.18) 78%, rgba(15, 23, 42, 0.04) 100%);
+            radial-gradient(circle at 32% 28%, rgba(255, 255, 255, 0.95) 0%, rgba(248, 250, 252, 0.86) 12%, rgba(226, 232, 240, 0.68) 30%, rgba(148, 163, 184, 0.38) 54%, rgba(30, 41, 59, 0.18) 78%, rgba(15, 23, 42, 0.04) 100%);
           box-shadow:
-            0 0 44px rgba(255, 255, 255, 0.42),
-            0 0 95px rgba(191, 219, 254, 0.36),
-            0 0 165px rgba(96, 165, 250, 0.26),
+            0 0 44px rgba(255, 255, 255, 0.38),
+            0 0 95px rgba(191, 219, 254, 0.30),
+            0 0 165px rgba(96, 165, 250, 0.22),
             inset -42px -34px 70px rgba(15, 23, 42, 0.42),
-            inset 18px 14px 44px rgba(255, 255, 255, 0.32);
-          opacity: 0.24;
+            inset 18px 14px 44px rgba(255, 255, 255, 0.30);
+          opacity: 0.28;
           animation: activityMoonGlow 4.8s ease-in-out infinite;
         }
 
         @keyframes activityMoonGlow {
           0%, 100% {
             opacity: 0.22;
-            box-shadow:
-              0 0 34px rgba(255, 255, 255, 0.28),
-              0 0 75px rgba(191, 219, 254, 0.24),
-              0 0 135px rgba(96, 165, 250, 0.16),
-              inset -42px -34px 70px rgba(15, 23, 42, 0.42),
-              inset 18px 14px 44px rgba(255, 255, 255, 0.24);
+            transform: scale(1);
           }
 
           50% {
+            opacity: 0.38;
+            transform: scale(1.015);
+          }
+        }
+
+      `}</style>
+    
+      <style>{`
+50% {
             opacity: 0.36;
             box-shadow:
               0 0 52px rgba(255, 255, 255, 0.52),
