@@ -80,7 +80,7 @@ export async function POST(request: Request) {
         ? `Message from ${updatedMessage?.client_email || "unknown client"} was reopened.`
         : `Message from ${updatedMessage?.client_email || "unknown client"} was marked answered.`;
 
-    await fetch(`${SUPABASE_URL}/rest/v1/admin_activity`, {
+    await fetch(`${SUPABASE_URL}/rest/v1/admin_activity_log`, {
       method: "POST",
       headers: {
         apikey: SUPABASE_SERVICE_ROLE_KEY,
