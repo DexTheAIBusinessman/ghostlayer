@@ -15,6 +15,8 @@ type ClientMessage = {
   subject: string | null;
   message: string;
   status: string;
+  admin_reply?: string | null;
+  admin_replied_at?: string | null;
   created_at: string;
 };
 
@@ -37,7 +39,7 @@ async function getMessages(email: string): Promise<ClientMessage[]> {
   const response = await fetch(
     `${supabaseUrl}/rest/v1/client_messages?client_email=eq.${encodeURIComponent(
       email
-    )}&select=*&order=created_at.desc`,
+    )}&select=id,client_email,report_id,sender,subject,message,status,admin_reply,admin_replied_at,created_at&order=created_at.desc`,
     {
       headers: {
         apikey: serviceRoleKey,
@@ -425,6 +427,33 @@ export default async function ClientMessagesPage({
                   <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-gray-300">
                     {item.message}
                   </p>
+
+                    {item.admin_reply ? (
+                      <div className="mt-5 rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-4">
+                        <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-200">
+                          Ghostlayer Reply
+                        </p>
+
+                        <p className="mt-3 whitespace-pre-wrap text-sm leading-7 text-emerald-50">
+                          {item.admin_reply}
+                        </p>
+
+                        {item.admin_replied_at ? (
+                          <p className="mt-3 text-xs text-emerald-100/60">
+                            Sent {formatDate(item.admin_replied_at)}
+                          </p>
+                        ) : null}
+                      </div>
+                    ) : (
+                      <div className="mt-5 rounded-2xl border border-yellow-300/20 bg-yellow-300/10 p-4">
+                        <p className="text-xs font-bold uppercase tracking-[0.22em] text-yellow-200">
+                          Awaiting Ghostlayer Reply
+                        </p>
+                        <p className="mt-2 text-sm leading-6 text-yellow-100/70">
+                          Your message has been received. A Ghostlayer reply will appear here once sent.
+                        </p>
+                      </div>
+                    )}
                 </div>
               ))}
 
