@@ -399,6 +399,19 @@ export default async function AdminAnalyticsPage() {
           <div>
             <div className="flex flex-wrap items-center gap-4">
               <Link
+                href="/admin/merge-client"
+                className="min-h-[9.5rem] rounded-[1.5rem] border border-pink-300/20 bg-pink-300/10 p-5 text-pink-100 transition hover:scale-[1.02] hover:bg-pink-300/15"
+              >
+                <p className="text-[0.68rem] font-bold uppercase tracking-[0.16em]">
+                  Merge Client
+                </p>
+                <p className="mt-3 text-2xl font-black">Email</p>
+                <p className="mt-2 text-xs leading-5 text-pink-100/75">
+                  Change client email or merge client account records.
+                </p>
+              </Link>
+
+              <Link
                 href="/"
                 className="analyticsLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
               >
@@ -529,7 +542,7 @@ export default async function AdminAnalyticsPage() {
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
             <div className="border-b border-white/10 px-6 py-5">
               
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
 
             <Link
               href="/admin/monitoring"
