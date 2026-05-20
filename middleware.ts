@@ -13,7 +13,10 @@ function unauthorized() {
 export function middleware(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  if (!pathname.startsWith("/admin")) {
+  const isAdminPage = pathname.startsWith("/admin");
+  const isAdminApi = pathname.startsWith("/api/admin-");
+
+  if (!isAdminPage && !isAdminApi) {
     return NextResponse.next();
   }
 
@@ -44,5 +47,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*"],
+  matcher: ["/admin/:path*", "/api/admin-:path*"],
 };
