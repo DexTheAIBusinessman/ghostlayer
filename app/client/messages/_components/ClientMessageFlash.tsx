@@ -1,52 +1,46 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
 
-type ClientMessageFlashProps = {
-  type: "success" | "error";
-  message: string;
-};
-
-export default function ClientMessageFlash({
-  type,
-  message,
-}: ClientMessageFlashProps) {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-  const [visible, setVisible] = useState(true);
+export default function ClientMessageFlash() {
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-    const hideTimer = window.setTimeout(() => {
-      setVisible(false);
+    const url = new URL(window.location.href);
+    const sent = url.searchParams.get("sent");
+    const error = url.searchParams.get("error");
+
+    if (sent === "1") {
+      setMessage("Message sent successfully.");
+      url.searchParams.delete("sent");
+      window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+    }
+
+    if (error === "missing") {
+      setMessage("Please enter a message before sending.");
+      url.searchParams.delete("error");
+      window.history.replaceState({}, "", `${url.pathname}${url.search}${url.hash}`);
+    }
+
+    const timer = window.setTimeout(() => {
+      setMessage("");
     }, 3000);
 
-    const cleanUrlTimer = window.setTimeout(() => {
-      const params = new URLSearchParams(searchParams.toString());
-      params.delete("sent");
+    return () => window.clearTimeout(timer);
+  }, []);
 
-      const query = params.toString();
-      router.replace(query ? `/client/messages?${query}` : "/client/messages", {
-        scroll: false,
-      });
-    }, 3200);
-
-    return () => {
-      window.clearTimeout(hideTimer);
-      window.clearTimeout(cleanUrlTimer);
-    };
-  }, [router, searchParams]);
-
-  if (!visible) {
+  if (!message) {
     return null;
   }
+
+  const isError = message.toLowerCase().includes("please");
 
   return (
     <div
       className={
-        type === "success"
-          ? "mb-6 rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-5 text-emerald-100"
-          : "mb-6 rounded-2xl border border-red-300/25 bg-red-300/10 p-5 text-red-100"
+        isError
+          ? "mb-6 rounded-2xl border border-red-300/25 bg-red-300/10 p-5 text-red-100"
+          : "mb-6 rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-5 text-emerald-100"
       }
     >
       {message}

@@ -320,18 +320,7 @@ export default async function ClientMessagesPage({
 
           <NavLinks />
         </div>
-
-        {resolvedSearchParams.sent === "1" ? (
-          <div className="mb-6 rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-5 text-emerald-100">
-            Message sent successfully.
-          </div>
-        ) : null}
-
-        {resolvedSearchParams.error === "missing" ? (
-          <div className="mb-6 rounded-2xl border border-red-300/25 bg-red-300/10 p-5 text-red-100">
-            Please enter a message before sending.
-          </div>
-        ) : null}
+      <ClientMessageFlash />
 
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
