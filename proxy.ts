@@ -14,7 +14,12 @@ export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
   const isAdminPage = pathname.startsWith("/admin");
-  const isAdminApi = pathname.startsWith("/api/admin-");
+  const isAdminApi =
+    pathname.startsWith("/api/admin-") ||
+    pathname === "/api/archive-report" ||
+    pathname === "/api/duplicate-report" ||
+    pathname === "/api/regenerate-report-access-code" ||
+    pathname === "/api/send-report";
 
   if (!isAdminPage && !isAdminApi) {
     return NextResponse.next();
