@@ -204,13 +204,9 @@ function LockedReport({
           </h1>
 
           <p className="mt-5 text-sm leading-7 text-gray-300">
-            This report is protected. Enter the access code from your Ghostlayer
-            email to view the workflow scan for{" "}
-            <span className="font-semibold text-white">
-              {report.company || report.client_name}
-            </span>
-            .
-          </p>
+          This report is protected. Enter the access code from your Ghostlayer
+          email to view your workflow scan.
+        </p>
 
           <form action={unlockReport} className="mt-8 space-y-4">
             <input type="hidden" name="reportId" value={report.report_id} />
