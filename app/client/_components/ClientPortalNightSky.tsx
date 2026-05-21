@@ -18,7 +18,7 @@ export default function ClientPortalNightSky() {
 
   return (
     <div
-      className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#05070b]"
+      className="pointer-events-none fixed inset-0 z-[1] overflow-hidden bg-[#05070b]"
       aria-hidden="true"
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(34,211,238,0.07),transparent_32%),radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.06),transparent_34%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.04),transparent_42%)]" />
