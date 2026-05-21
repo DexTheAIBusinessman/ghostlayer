@@ -96,14 +96,8 @@ export default function ServiceAgreementPage() {
                 2. Service Description
               </h2>
               <p className="mt-3 leading-7">
-                Ghostlayer provides workflow scan and business operations review
-                services for service-based businesses. Ghostlayer’s services may
-                include reviewing client-submitted workflow details, identifying
-                possible bottlenecks, highlighting approval delays, identifying
-                unclear handoffs, reviewing missed follow-up risks, identifying
-                repeated manual work, reviewing operational friction points, and
-                preparing workflow improvement recommendations.
-              </p>
+              Ghostlayer provides workflow scan and business operations review services for service-based businesses. Ghostlayer services may include reviewing client-submitted workflow details, intake information, uploaded files, screenshots, client portal messages, monitoring history, prior reports, approval delays, unclear handoffs, missed follow-up risks, repeated manual work, operational friction points, and related business process information.
+            </p>
               <p className="mt-3 leading-7">
                 Ghostlayer’s services are intended to provide operational insight
                 and practical recommendations. They are not a substitute for
@@ -112,49 +106,45 @@ export default function ServiceAgreementPage() {
               </p>
             </section>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-white">
-                3. Scope of Work
-              </h2>
-              <p className="mt-3 leading-7">
-                Unless otherwise agreed in writing, a standard Ghostlayer
-                Workflow Scan may include review of the client’s submitted intake
-                information, identification of likely workflow friction points,
-                summary of operational risks or bottlenecks, suggested workflow
-                improvements, recommended next steps, optional follow-up
-                questions, and delivery of a written scan summary, report, or
-                recommendation document.
-              </p>
-              <p className="mt-3 leading-7">
-                The exact format of the deliverable may vary based on the
-                client’s business, submitted information, and purchased service.
-              </p>
-            </section>
+          <section>
+            <h2 className="text-2xl font-semibold text-white">
+              3. Scope of Work
+            </h2>
+            <p className="mt-3 leading-7">
+              Unless otherwise agreed in writing, a standard Ghostlayer Workflow Scan may include review of the client’s submitted intake information, uploaded files, portal messages, workflow notes, business context, and related materials; identification of likely workflow friction points; summary of operational risks or bottlenecks; suggested workflow improvements; recommended next steps; optional follow-up questions; and delivery of a written scan summary, report, recommendation document, or monitoring update.
+            </p>
+            <p className="mt-3 leading-7">
+              The exact format of the deliverable may vary based on the client’s business, submitted information, and purchased service.
+            </p>
+          </section>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-white">
-                4. What Is Not Included
-              </h2>
-              <p className="mt-3 leading-7">
-                Unless separately agreed in writing, Ghostlayer does not provide
-                legal advice, tax advice, accounting advice, financial advisory
-                services, investment advice, medical advice, employment law
-                advice, licensed engineering services, licensed cybersecurity
-                audit services, certified compliance audit services, software
-                implementation, custom software development, guaranteed business
-                outcomes, guaranteed revenue increase, guaranteed cost savings,
-                guaranteed time savings, or ongoing managed operations support.
-              </p>
-              <p className="mt-3 leading-7">
-                Ghostlayer may identify workflow issues or opportunities, but the
-                client is responsible for deciding whether and how to implement
-                any recommendations.
-              </p>
-            </section>
+          <section>
+            <h2 className="text-2xl font-semibold text-white">
+              4. Uploaded Materials and Client Portal Communications
+            </h2>
+            <p className="mt-3 leading-7">
+              The client may submit workflow details, files, screenshots, documents, messages, and related materials through Ghostlayer forms or the client portal. The client is responsible for ensuring submitted materials are accurate, lawful, relevant, owned or authorized for use, and appropriate for Ghostlayer to review.
+            </p>
+            <p className="mt-3 leading-7">
+              Ghostlayer may use uploaded files, client messages, admin replies, monitoring notes, and prior reports to prepare workflow analysis, follow-up questions, recommendations, summaries, and deliverables. Ghostlayer is not responsible for inaccurate recommendations caused by incomplete, outdated, misleading, or incorrect client-submitted information.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold text-white">
+              5. What Is Not Included
+            </h2>
+            <p className="mt-3 leading-7">
+              Unless separately agreed in writing, Ghostlayer does not provide legal advice, tax advice, accounting advice, financial advisory services, investment advice, medical advice, employment law advice, licensed engineering services, licensed cybersecurity audit services, certified compliance audit services, software implementation, custom software development, guaranteed business outcomes, guaranteed revenue increase, guaranteed cost savings, guaranteed time savings, or ongoing managed operations support.
+            </p>
+            <p className="mt-3 leading-7">
+              Ghostlayer may identify workflow issues or opportunities, but the client is responsible for deciding whether and how to implement any recommendations.
+            </p>
+          </section>
 
             <section className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-5">
               <h2 className="text-2xl font-semibold text-white">
-                5. No Professional Certification or Licensed Advice
+                6. No Professional Certification or Licensed Advice
               </h2>
               <p className="mt-3 leading-7">
                 Ghostlayer is a workflow analysis and business operations support
@@ -178,18 +168,11 @@ export default function ServiceAgreementPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white">
-                6. Client Responsibilities
+                7. Client Responsibilities
               </h2>
               <p className="mt-3 leading-7">
-                The client is responsible for providing accurate and complete
-                information, responding to reasonable follow-up questions,
-                reviewing Ghostlayer’s findings, deciding whether to implement
-                recommendations, ensuring recommendations are appropriate for the
-                client’s business, consulting licensed professionals when needed,
-                maintaining legal and regulatory compliance, and protecting
-                sensitive business, customer, employee, and financial
-                information.
-              </p>
+              The client is responsible for providing accurate, complete, and timely information; uploading only appropriate materials; responding to reasonable follow-up questions; reviewing Ghostlayer’s findings; deciding whether and how to implement recommendations; protecting report access links and codes; maintaining legal and regulatory compliance; and protecting sensitive business, customer, employee, financial, or third-party information.
+            </p>
               <p className="mt-3 leading-7">
                 Ghostlayer is not responsible for inaccurate recommendations
                 caused by incomplete, outdated, misleading, or inaccurate
@@ -199,7 +182,7 @@ export default function ServiceAgreementPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white">
-                7. Information Submitted by the Client
+                8. Information Submitted by the Client
               </h2>
               <p className="mt-3 leading-7">
                 The client may submit information about business processes,
@@ -222,19 +205,15 @@ export default function ServiceAgreementPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white">
-                8. Deliverables
+                9. Deliverables
               </h2>
               <p className="mt-3 leading-7">
-                Ghostlayer may provide deliverables such as a Workflow Scan
-                report, operational friction summary, bottleneck analysis,
-                suggested process improvements, follow-up questions, recommended
-                next steps, or executive summary. Deliverables are based on the
-                information available at the time of review.
-              </p>
+              Ghostlayer may provide deliverables such as a Workflow Scan report, operational friction summary, bottleneck analysis, suggested process improvements, follow-up questions, recommended next steps, executive summary, monitoring update, or related recommendation document. Deliverables are based on the information available at the time of review and are intended for business operations improvement, not guaranteed outcomes.
+            </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white">9. Timeline</h2>
+              <h2 className="text-2xl font-semibold text-white">10. Timeline</h2>
               <p className="mt-3 leading-7">
                 Ghostlayer will make reasonable efforts to deliver services
                 within the estimated timeline provided at purchase or during
@@ -247,7 +226,7 @@ export default function ServiceAgreementPage() {
 
             <section>
               <h2 className="text-2xl font-semibold text-white">
-                10. Revisions
+                11. Revisions
               </h2>
               <p className="mt-3 leading-7">
                 Unless otherwise agreed in writing, one reasonable clarification
@@ -274,7 +253,7 @@ export default function ServiceAgreementPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white">12. Refunds</h2>
+              <h2 className="text-2xl font-semibold text-white">13. Refunds</h2>
               <p className="mt-3 leading-7">
                 Refunds are handled according to Ghostlayer’s Refund Policy. The
                 client understands that once Ghostlayer begins reviewing
