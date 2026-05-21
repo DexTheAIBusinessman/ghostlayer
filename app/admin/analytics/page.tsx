@@ -558,6 +558,20 @@ export default async function AdminAnalyticsPage() {
                 View client messages and reply by email.
               </p>
             </Link>
+          <Link
+            href="/admin/trust-compliance"
+            className="min-h-[10.5rem] rounded-[2rem] border border-lime-300/20 bg-lime-300/10 p-6 text-lime-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-lime-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Trust
+            </p>
+            <p className="mt-3 text-2xl font-black">Compliance</p>
+            <p className="mt-3 text-sm leading-6 text-lime-100/75">
+              Review privacy, legal, upload, payment, and business-readiness status.
+            </p>
+          </Link>
+
+
 
             <Link
               href="/admin/uploads"
