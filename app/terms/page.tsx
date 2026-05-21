@@ -69,22 +69,35 @@ export default function TermsPage() {
             <section>
               <h2 className="text-2xl font-semibold text-white">1. Agreement to Terms</h2>
               <p className="mt-3 leading-7">
-                By accessing Ghostlayer, submitting a Workflow Scan request, purchasing a service, or using any Ghostlayer website, form, report, dashboard, or communication, you agree to these Terms of Service.
-              </p>
+              By accessing Ghostlayer, submitting a Workflow Scan request, purchasing a service, using the client portal, uploading files, sending messages, viewing reports, or using any Ghostlayer website, form, report, dashboard, or communication, you agree to these Terms of Service.
+            </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-white">2. Services</h2>
               <p className="mt-3 leading-7">
-                Ghostlayer provides workflow scan, business process review, operational analysis, and workflow improvement recommendation services for service-based businesses.
-              </p>
+              Ghostlayer provides workflow scan, business process review, operational analysis, client portal, file upload, client messaging, monitoring update, report delivery, and workflow improvement recommendation services for service-based businesses.
+            </p>
               <p className="mt-3 leading-7">
                 Ghostlayer may review information submitted by clients and provide summaries, observations, recommendations, reports, follow-up questions, or next-step suggestions related to workflow friction and operational bottlenecks.
               </p>
             </section>
 
-            <section className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-5">
-              <h2 className="text-2xl font-semibold text-white">3. No Licensed Professional Advice</h2>
+          <section>
+            <h2 className="text-2xl font-semibold text-white">3. Client Portal, Uploads, and Messages</h2>
+            <p className="mt-3 leading-7">
+              Clients may use Ghostlayer client portal features to submit workflow information, upload files, send messages, receive admin replies, view reports, and review monitoring updates. Clients are responsible for the accuracy, legality, ownership, and appropriateness of any information, files, screenshots, documents, messages, or materials they submit.
+            </p>
+            <p className="mt-3 leading-7">
+              Clients should not upload or submit unnecessary sensitive personal, financial, medical, legal, employee, security, password, private customer, or highly confidential third-party information unless specifically requested and appropriate safeguards have been discussed.
+            </p>
+            <p className="mt-3 leading-7">
+              Clients are responsible for keeping report access links, access codes, login access, and client portal access private. Ghostlayer is not responsible for unauthorized access caused by a client sharing, forwarding, publishing, or failing to protect access links, access codes, or login information.
+            </p>
+          </section>
+
+          <section className="rounded-2xl border border-cyan-400/20 bg-cyan-400/10 p-5">
+            <h2 className="text-2xl font-semibold text-white">4. No Licensed Professional Advice</h2>
               <p className="mt-3 leading-7">
                 Ghostlayer is not a law firm, accounting firm, financial advisory firm, tax advisory firm, medical provider, cybersecurity audit firm, HR compliance firm, or regulated professional services provider.
               </p>
@@ -94,7 +107,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white">4. No Certification Representation</h2>
+              <h2 className="text-2xl font-semibold text-white">5. No Certification Representation</h2>
               <p className="mt-3 leading-7">
                 Unless expressly stated in writing, Ghostlayer does not represent that its services are certified, licensed, accredited, or approved by any government agency, professional board, industry regulator, or certification authority.
               </p>
@@ -104,7 +117,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white">5. No Guaranteed Outcomes</h2>
+              <h2 className="text-2xl font-semibold text-white">6. No Guaranteed Outcomes</h2>
               <p className="mt-3 leading-7">
                 Ghostlayer does not guarantee revenue increases, profit increases, cost savings, recovered time, employee performance improvement, compliance outcomes, business growth, or any specific result.
               </p>
@@ -114,21 +127,24 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white">6. Client Responsibilities</h2>
+              <h2 className="text-2xl font-semibold text-white">7. Client Responsibilities</h2>
               <p className="mt-3 leading-7">
-                You are responsible for the accuracy of information you submit, business decisions made after receiving Ghostlayer recommendations, implementation of any recommendations, and compliance with applicable laws and regulations.
-              </p>
+              You are responsible for the accuracy of information you submit, files you upload, messages you send, business decisions made after receiving Ghostlayer recommendations, implementation of any recommendations, protecting report access links and codes, maintaining confidentiality of client portal access, and compliance with applicable laws and regulations.
+            </p>
+            <p className="mt-3 leading-7">
+              You may not misuse the website or client portal, attempt to access another client's reports, uploads, messages, or records, tamper with report identifiers or access controls, upload malicious files, interfere with Ghostlayer systems, or use Ghostlayer services for unlawful or abusive purposes.
+            </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white">7. Payments and Refunds</h2>
+              <h2 className="text-2xl font-semibold text-white">8. Payments and Refunds</h2>
               <p className="mt-3 leading-7">
                 Payments are processed through third-party payment providers such as Stripe. Refunds are handled according to Ghostlayer’s Refund Policy.
               </p>
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white">8. AI and Automation</h2>
+              <h2 className="text-2xl font-semibold text-white">9. AI and Automation</h2>
               <p className="mt-3 leading-7">
                 Ghostlayer may use software, automation, and AI-assisted tools to help organize information, summarize workflow details, identify patterns, draft reports, and support service delivery.
               </p>
@@ -138,7 +154,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white">9. Limitation of Liability</h2>
+              <h2 className="text-2xl font-semibold text-white">10. Limitation of Liability</h2>
               <p className="mt-3 leading-7">
                 To the fullest extent allowed by law, Ghostlayer is not liable for indirect, incidental, special, consequential, or punitive damages, including lost profits, lost revenue, lost business opportunities, operational losses, or data loss.
               </p>
@@ -148,7 +164,7 @@ export default function TermsPage() {
             </section>
 
             <section>
-              <h2 className="text-2xl font-semibold text-white">10. Changes to These Terms</h2>
+              <h2 className="text-2xl font-semibold text-white">11. Changes to These Terms</h2>
               <p className="mt-3 leading-7">
                 Ghostlayer may update these Terms from time to time. The version posted on the website will apply to use of the website and services after the update.
               </p>
