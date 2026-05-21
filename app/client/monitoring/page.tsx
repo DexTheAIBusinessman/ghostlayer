@@ -1,6 +1,7 @@
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import ClientPortalNightSky from "../_components/ClientPortalNightSky";
 
 export const metadata = {
   title: "Monitoring History | Ghostlayer",
@@ -83,14 +84,16 @@ export default async function ClientMonitoringPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] text-white">
-      <PortalBackground />
+      
+      <ClientPortalNightSky />
+<PortalBackground />
 
       <section className="relative z-10 mx-auto max-w-5xl px-6 py-10">
         <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <Link
               href="/"
-              className="inline-block text-lg font-bold tracking-[0.35em] text-white"
+              className="clientPortalLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
             >
               GHOSTLAYER
             </Link>
