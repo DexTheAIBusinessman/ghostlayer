@@ -23,6 +23,9 @@ export default function ClientPortalNightSky() {
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(34,211,238,0.07),transparent_32%),radial-gradient(circle_at_82%_18%,rgba(59,130,246,0.06),transparent_34%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.04),transparent_42%)]" />
 
+      <div className="absolute left-[-18%] top-[14%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-cyan-200/10 to-transparent blur-[105px] animate-[clientPortalFogOne_42s_ease-in-out_infinite]" />
+      <div className="absolute left-[-18%] top-[54%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-blue-300/10 to-transparent blur-[110px] animate-[clientPortalFogTwo_48s_ease-in-out_infinite]" />
+
       {stars.map(([left, top, size, delay], index) => (
         <span
           key={index}
@@ -76,6 +79,30 @@ export default function ClientPortalNightSky() {
           50% {
             transform: translateY(-4px) scale(1.18);
             opacity: 1;
+          }
+        }
+
+        @keyframes clientPortalFogOne {
+          0%, 100% {
+            transform: translateX(-3%) translateY(0px) scaleX(1);
+            opacity: 0.48;
+          }
+
+          50% {
+            transform: translateX(4%) translateY(-10px) scaleX(1.08);
+            opacity: 0.85;
+          }
+        }
+
+        @keyframes clientPortalFogTwo {
+          0%, 100% {
+            transform: translateX(4%) translateY(0px) scaleX(1.02);
+            opacity: 0.42;
+          }
+
+          50% {
+            transform: translateX(-3%) translateY(9px) scaleX(1.1);
+            opacity: 0.78;
           }
         }
       `}</style>
