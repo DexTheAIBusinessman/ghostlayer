@@ -3,6 +3,33 @@ import { NextResponse } from "next/server";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
 
+const ALLOWED_FILE_TYPES = new Set([
+  "application/pdf",
+  "image/png",
+  "image/jpeg",
+  "image/webp",
+  "text/plain",
+  "text/csv",
+  "application/msword",
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  "application/vnd.ms-excel",
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+]);
+
+const ALLOWED_FILE_EXTENSIONS = new Set([
+  ".pdf",
+  ".png",
+  ".jpg",
+  ".jpeg",
+  ".webp",
+  ".txt",
+  ".csv",
+  ".doc",
+  ".docx",
+  ".xls",
+  ".xlsx",
+]);
+
 function safeFileName(value: string) {
   return value
     .trim()
@@ -78,6 +105,19 @@ export async function POST(request: Request) {
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.redirect(
         new URL("/client/uploads?error=file-too-large", request.url),
+        303
+      );
+    }
+
+    const fileType = file.type || "application/octet-stream";
+    const lowerFileName = file.name.toLowerCase();
+    const hasAllowedExtension = Array.from(ALLOWED_FILE_EXTENSIONS).some(
+      (extension) => lowerFileName.endsWith(extension)
+    );
+
+    if (!ALLOWED_FILE_TYPES.has(fileType) && !hasAllowedExtension) {
+      return NextResponse.redirect(
+        new URL("/client/uploads?error=file-type-not-allowed", request.url),
         303
       );
     }
