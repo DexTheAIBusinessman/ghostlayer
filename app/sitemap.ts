@@ -1,7 +1,7 @@
 import type { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
-const baseUrl = 'https://ghostlayer-swart.vercel.app';
+const baseUrl = 'https://ghostlayerhq.com';
 
 return [
 {
@@ -18,6 +18,14 @@ lastModified: new Date(),
 },
 {
 url: `${baseUrl}/terms`,
+lastModified: new Date(),
+},
+{
+url: `${baseUrl}/refund-policy`,
+lastModified: new Date(),
+},
+{
+url: `${baseUrl}/service-agreement`,
 lastModified: new Date(),
 },
 ];
