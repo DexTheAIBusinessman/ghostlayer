@@ -179,7 +179,27 @@ export default function StartWorkflowScanPage() {
               </p>
             </div>
 
-            <div className="mt-6 flex flex-wrap gap-4 text-sm text-gray-400">
+            <p className="mt-6 text-xs leading-6 text-gray-400">
+            By submitting a Workflow Scan request or purchasing a Ghostlayer service, you agree to Ghostlayer&apos;s{" "}
+            <a href="/terms" className="text-cyan-200 transition hover:text-white">
+              Terms of Service
+            </a>
+            ,{" "}
+            <a href="/privacy" className="text-cyan-200 transition hover:text-white">
+              Privacy Policy
+            </a>
+            ,{" "}
+            <a href="/refund-policy" className="text-cyan-200 transition hover:text-white">
+              Refund Policy
+            </a>
+            , and{" "}
+            <a href="/service-agreement" className="text-cyan-200 transition hover:text-white">
+              Service Agreement
+            </a>
+            .
+          </p>
+
+          <div className="mt-4 flex flex-wrap gap-4 text-sm text-gray-400">
               <a href="/refund-policy" className="transition hover:text-white">
                 Refund Policy
               </a>
