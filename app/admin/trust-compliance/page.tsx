@@ -171,17 +171,63 @@ function ChecklistSection({
   );
 }
 
+
+function TrustComplianceNightSky() {
+  const stars = [
+    ["6%", "10%", "2px", "0s"],
+    ["12%", "32%", "2px", "1.1s"],
+    ["25%", "18%", "3px", "1.6s"],
+    ["42%", "12%", "2px", "2.5s"],
+    ["51%", "38%", "2px", "1.3s"],
+    ["68%", "20%", "2px", "2.9s"],
+    ["77%", "50%", "3px", "1.8s"],
+    ["86%", "16%", "2px", "0.4s"],
+    ["94%", "70%", "2px", "2.2s"],
+    ["30%", "88%", "2px", "2.4s"],
+    ["59%", "74%", "2px", "1.7s"],
+    ["90%", "40%", "2px", "0.9s"],
+    ["18%", "74%", "3px", "2.8s"],
+    ["73%", "82%", "2px", "1.4s"],
+  ];
+
+  return (
+    <div className="trustNightSky" aria-hidden="true">
+      <div className="trustSkyGradient" />
+      <div className="trustMoon" />
+      <div className="trustFog trustFogA" />
+      <div className="trustFog trustFogB" />
+      <div className="trustOrb trustOrbA" />
+      <div className="trustOrb trustOrbB" />
+
+      {stars.map(([left, top, size, delay], index) => (
+        <span
+          key={index}
+          className="trustStar"
+          style={{
+            left,
+            top,
+            width: size,
+            height: size,
+            animationDelay: delay,
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 export default function TrustCompliancePage() {
   const completedCount = completed.length;
   const pendingCount = pending.length;
   const recommendedCount = recommended.length;
 
   return (
-    <main className="min-h-screen bg-[#05070b] px-6 py-10 text-white sm:px-8 lg:px-10">
-      <section className="mx-auto max-w-6xl">
+    <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white sm:px-8 lg:px-10">
+      <TrustComplianceNightSky />
+      <section className="relative z-10 mx-auto max-w-6xl">
         <a
           href="/admin"
-          className="homepageLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
+          className="trustLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
         >
           GHOSTLAYER
         </a>
@@ -240,6 +286,200 @@ export default function TrustCompliancePage() {
           />
         </div>
       </section>
+
+      <style>{`
+        .trustNightSky {
+          pointer-events: none;
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 20% 12%, rgba(59,130,246,0.11), transparent 28%),
+            radial-gradient(circle at 82% 18%, rgba(147,51,234,0.10), transparent 30%),
+            radial-gradient(circle at 50% 100%, rgba(16,185,129,0.045), transparent 38%),
+            #05070b;
+        }
+
+        .trustSkyGradient {
+          position: absolute;
+          inset: 0;
+          background:
+            linear-gradient(180deg, rgba(2,6,23,0.08), rgba(0,0,0,0.42)),
+            radial-gradient(circle at center, transparent 0%, rgba(0,0,0,0.32) 78%);
+        }
+
+        .trustMoon {
+          position: absolute;
+          right: 7%;
+          top: 7%;
+          width: 24rem;
+          height: 24rem;
+          border-radius: 9999px;
+          background:
+            radial-gradient(circle at 34% 28%, rgba(255,255,255,0.42), rgba(255,255,255,0.18) 20%, rgba(148,163,184,0.16) 44%, rgba(15,23,42,0.20) 72%),
+            linear-gradient(145deg, rgba(255,255,255,0.22), rgba(30,41,59,0.28));
+          box-shadow:
+            0 0 80px rgba(255,255,255,0.16),
+            0 0 180px rgba(59,130,246,0.15),
+            inset -42px -38px 80px rgba(0,0,0,0.26);
+          opacity: 0.62;
+          animation: trustMoonGlow 8s ease-in-out infinite;
+        }
+
+        .trustFog {
+          position: absolute;
+          left: -10%;
+          right: -10%;
+          height: 190px;
+          border-radius: 9999px;
+          filter: blur(92px);
+          opacity: 0.08;
+          mix-blend-mode: screen;
+          background: linear-gradient(90deg, rgba(255,255,255,0), rgba(147,197,253,0.16), rgba(96,165,250,0.13), rgba(255,255,255,0));
+        }
+
+        .trustFogA {
+          top: 21%;
+          animation: trustFogDriftOne 42s ease-in-out infinite;
+        }
+
+        .trustFogB {
+          top: 64%;
+          animation: trustFogDriftTwo 48s ease-in-out infinite;
+        }
+
+        .trustOrb {
+          position: absolute;
+          border-radius: 9999px;
+          filter: blur(105px);
+          opacity: 0.22;
+        }
+
+        .trustOrbA {
+          left: -8%;
+          top: 2%;
+          width: 260px;
+          height: 260px;
+          background: rgba(34,211,238,0.08);
+          animation: trustFloatSlow 26s ease-in-out infinite;
+        }
+
+        .trustOrbB {
+          right: -10%;
+          bottom: 16%;
+          width: 260px;
+          height: 260px;
+          background: rgba(16,185,129,0.08);
+          animation: trustFloatSlow 30s ease-in-out infinite reverse;
+        }
+
+        .trustStar {
+          position: absolute;
+          display: block;
+          border-radius: 9999px;
+          background: #fff;
+          box-shadow:
+            0 0 8px rgba(255,255,255,0.95),
+            0 0 18px rgba(147,197,253,0.62),
+            0 0 34px rgba(34,211,238,0.25);
+          animation: trustTwinkle 5.5s ease-in-out infinite;
+        }
+
+        .trustLogoGlow {
+          color: #ffffff;
+          text-shadow:
+            0 0 8px rgba(255,255,255,0.70),
+            0 0 18px rgba(255,255,255,0.45),
+            0 0 34px rgba(96,165,250,0.36),
+            0 0 52px rgba(59,130,246,0.24);
+          animation: trustLogoPulseGlow 2.8s ease-in-out infinite;
+        }
+
+        @keyframes trustTwinkle {
+          0%, 100% {
+            transform: translateY(0px) scale(0.75);
+            opacity: 0.22;
+          }
+          25% {
+            transform: translateY(-4px) scale(1.18);
+            opacity: 1;
+          }
+          50% {
+            transform: translateY(0px) scale(0.95);
+            opacity: 0.42;
+          }
+          75% {
+            transform: translateY(3px) scale(1.08);
+            opacity: 0.78;
+          }
+        }
+
+        @keyframes trustFogDriftOne {
+          0%, 100% {
+            transform: translateX(-2%) translateY(0px) scaleX(1);
+          }
+          50% {
+            transform: translateX(3%) translateY(-4px) scaleX(1.04);
+          }
+        }
+
+        @keyframes trustFogDriftTwo {
+          0%, 100% {
+            transform: translateX(3%) translateY(0px) scaleX(1.02);
+          }
+          50% {
+            transform: translateX(-2%) translateY(5px) scaleX(1.06);
+          }
+        }
+
+        @keyframes trustFloatSlow {
+          0%, 100% {
+            transform: translate3d(0,0,0);
+          }
+          50% {
+            transform: translate3d(0,10px,0);
+          }
+        }
+
+        @keyframes trustMoonGlow {
+          0%, 100% {
+            opacity: 0.54;
+            transform: scale(1);
+            box-shadow:
+              0 0 70px rgba(255,255,255,0.12),
+              0 0 150px rgba(59,130,246,0.12),
+              inset -42px -38px 80px rgba(0,0,0,0.26);
+          }
+          50% {
+            opacity: 0.72;
+            transform: scale(1.015);
+            box-shadow:
+              0 0 95px rgba(255,255,255,0.18),
+              0 0 205px rgba(59,130,246,0.18),
+              inset -42px -38px 80px rgba(0,0,0,0.22);
+          }
+        }
+
+        @keyframes trustLogoPulseGlow {
+          0%, 100% {
+            opacity: 0.82;
+            text-shadow:
+              0 0 7px rgba(255,255,255,0.46),
+              0 0 16px rgba(96,165,250,0.24),
+              0 0 34px rgba(59,130,246,0.16);
+          }
+          50% {
+            opacity: 1;
+            text-shadow:
+              0 0 12px rgba(255,255,255,0.95),
+              0 0 26px rgba(255,255,255,0.58),
+              0 0 48px rgba(147,197,253,0.42),
+              0 0 76px rgba(59,130,246,0.30);
+          }
+        }
+      `}</style>
+
     </main>
   );
 }
