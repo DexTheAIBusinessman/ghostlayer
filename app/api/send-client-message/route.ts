@@ -39,6 +39,54 @@ async function logAdminActivity({
   });
 }
 
+
+async function reportBelongsToClient({
+  reportId,
+  clientEmail,
+  supabaseUrl,
+  serviceRoleKey,
+}: {
+  reportId: string;
+  clientEmail: string;
+  supabaseUrl: string;
+  serviceRoleKey: string;
+}) {
+  if (!reportId) {
+    return true;
+  }
+
+  const response = await fetch(
+    `${supabaseUrl}/rest/v1/client_reports?report_id=eq.${encodeURIComponent(
+      reportId
+    )}&select=report_id,email,client_email&limit=1`,
+    {
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+      },
+      cache: "no-store",
+    }
+  );
+
+  if (!response.ok) {
+    return false;
+  }
+
+  const data = await response.json();
+  const report = data?.[0];
+
+  if (!report) {
+    return false;
+  }
+
+  const reportEmail = String(report.client_email || report.email || "")
+    .trim()
+    .toLowerCase();
+
+  return reportEmail === clientEmail.trim().toLowerCase();
+}
+
+
 export async function POST(request: Request) {
   try {
     const cookieStore = await cookies();
@@ -71,6 +119,20 @@ export async function POST(request: Request) {
       return NextResponse.json(
         { error: "Missing Supabase environment variables." },
         { status: 500 }
+      );
+    }
+
+    const ownsReport = await reportBelongsToClient({
+      reportId,
+      clientEmail,
+      supabaseUrl,
+      serviceRoleKey,
+    });
+
+    if (!ownsReport) {
+      return NextResponse.redirect(
+        new URL("/client/messages?error=invalid-report", request.url),
+        303
       );
     }
 
