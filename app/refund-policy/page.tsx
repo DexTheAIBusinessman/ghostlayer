@@ -84,12 +84,8 @@ export default function RefundPolicyPage() {
             <section>
               <h2 className="text-2xl font-semibold text-white">1. Overview</h2>
               <p className="mt-3 leading-7">
-                Ghostlayer provides workflow scan, operational review, and
-                business process analysis services designed to help service
-                businesses identify workflow friction, bottlenecks, missed
-                follow-ups, approval delays, unclear handoffs, and other
-                operational inefficiencies.
-              </p>
+              Ghostlayer provides workflow scan, operational review, client portal, reporting, monitoring, and business process analysis services. Because Ghostlayer services involve time, review, analysis, preparation, and custom recommendations, refunds are limited as described in this policy.
+            </p>
               <p className="mt-3 leading-7">
                 Because Ghostlayer services involve time, review, analysis,
                 preparation, and custom recommendations, refunds are limited as
@@ -130,11 +126,8 @@ export default function RefundPolicyPage() {
                 4. Non-Refundable Situations
               </h2>
               <p className="mt-3 leading-7">
-                Refunds are generally not available once Ghostlayer has started
-                reviewing submitted information, begun preparing a workflow scan,
-                report, recommendation, or analysis, or sent a deliverable to the
-                client.
-              </p>
+              Refunds are generally not available once Ghostlayer has started reviewing submitted information, uploaded files, portal messages, monitoring history, business context, preparing a workflow scan, report, recommendation, analysis, follow-up question, monitoring update, or other deliverable for the client.
+            </p>
               <p className="mt-3 leading-7">
                 Refunds are also generally not available if the client fails to
                 provide requested information, changes their mind after work has
@@ -181,13 +174,8 @@ export default function RefundPolicyPage() {
                 7. Missed or Incomplete Client Information
               </h2>
               <p className="mt-3 leading-7">
-                If the client does not provide enough information for Ghostlayer
-                to complete the service, Ghostlayer may request additional
-                details. If the client does not respond within 14 calendar days,
-                the service may be considered inactive or completed based on the
-                information already provided. In that situation, the payment may
-                not be refundable.
-              </p>
+              If the client does not provide enough information, uploads, access, clarification, or context for Ghostlayer to complete the service, Ghostlayer may request additional details. If the client does not respond within 14 calendar days, the service may be considered inactive or completed based on the information already provided. In that situation, the payment may not be refundable.
+            </p>
             </section>
 
             <section>
@@ -195,13 +183,8 @@ export default function RefundPolicyPage() {
                 8. Chargebacks
               </h2>
               <p className="mt-3 leading-7">
-                Clients agree to contact Ghostlayer first before initiating a
-                chargeback or payment dispute. If a chargeback is filed after
-                Ghostlayer has started or completed the service, Ghostlayer may
-                provide the payment processor with records of the transaction,
-                service description, intake submission, communications, and
-                deliverables.
-              </p>
+              Clients agree to contact Ghostlayer first before initiating a chargeback or payment dispute. If a chargeback is filed after Ghostlayer has started or completed the service, Ghostlayer may provide the payment processor with records of the transaction, service description, intake submission, uploaded materials, portal messages, communications, reports, monitoring updates, and deliverables.
+            </p>
             </section>
 
             <section>
