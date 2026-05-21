@@ -76,15 +76,15 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-semibold text-white">2. Information We Collect</h2>
               <p className="mt-3 leading-7">
-                Ghostlayer may collect your name, email address, company name, business website, workflow details, operational challenges, payment status, communications, and information you voluntarily submit through forms or messages.
-              </p>
+              Ghostlayer may collect your name, email address, company name, business website, workflow details, operational challenges, payment status, uploaded files, client portal messages, admin replies, monitoring updates, report access activity, and information you voluntarily submit through forms, uploads, messages, or related communications.
+            </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-white">3. Business Workflow Information</h2>
               <p className="mt-3 leading-7">
-                Ghostlayer may collect business workflow information, including operational challenges, workflow descriptions, bottlenecks, follow-up issues, handoff issues, approval delays, tool usage, and related business process details.
-              </p>
+              Ghostlayer may collect business workflow information, including operational challenges, workflow descriptions, bottlenecks, follow-up issues, handoff issues, approval delays, tool usage, uploaded workflow files, client-submitted screenshots or documents, client messages, monitoring history, report details, and related business process details.
+            </p>
               <p className="mt-3 leading-7">
                 This information is used to provide workflow scan services, create reports, communicate with users, process payments, manage client records, and improve internal service delivery.
               </p>
@@ -100,8 +100,8 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-semibold text-white">5. How We Use Information</h2>
               <p className="mt-3 leading-7">
-                Ghostlayer uses information to respond to requests, create and manage client records, provide workflow scan services, prepare recommendations, process payments, communicate with clients, improve services, and comply with legal obligations.
-              </p>
+              Ghostlayer uses information to respond to requests, create and manage client records, process uploads, prepare workflow scan reports, provide monitoring updates, send and respond to client portal messages, prepare recommendations, process payments, communicate with clients, improve services, maintain operational records, and comply with legal obligations.
+            </p>
             </section>
 
             <section>
@@ -114,8 +114,8 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-semibold text-white">7. Third-Party Tools</h2>
               <p className="mt-3 leading-7">
-                Ghostlayer may use third-party services such as hosting providers, payment processors, database tools, form tools, analytics tools, automation services, and AI-assisted tools to operate the business and deliver services.
-              </p>
+              Ghostlayer may use third-party services such as hosting providers, payment processors, database and file storage tools, email or messaging tools, form tools, analytics tools, automation services, scheduling tools, and AI-assisted tools to operate the business and deliver services. These providers may include services such as Vercel, Supabase, Stripe, Resend, Cal.com, or similar vendors used to host the website, store client records and uploads, process payments, send communications, schedule calls, or support service delivery.
+            </p>
             </section>
 
             <section>
@@ -128,19 +128,24 @@ export default function PrivacyPage() {
             <section>
               <h2 className="text-2xl font-semibold text-white">9. Information Sharing</h2>
               <p className="mt-3 leading-7">
-                Ghostlayer does not knowingly sell client-submitted workflow information. Information may be shared with service providers only as needed to operate the website, process payments, provide services, maintain records, or comply with legal obligations.
-              </p>
+              Ghostlayer does not knowingly sell client-submitted workflow information, uploaded files, reports, messages, or monitoring records. Information may be shared with service providers only as needed to operate the website, process payments, store uploads, provide services, maintain records, communicate with clients, protect the business, or comply with legal obligations.
+            </p>
             </section>
 
             <section>
               <h2 className="text-2xl font-semibold text-white">10. Data Security</h2>
               <p className="mt-3 leading-7">
-                Ghostlayer uses reasonable administrative, technical, and operational measures to protect information. No system can be guaranteed completely secure, and users should avoid submitting unnecessary sensitive information.
-              </p>
-            </section>
+              Ghostlayer uses reasonable administrative, technical, and operational measures to protect information, including restricting administrative access and using private storage for client uploads where appropriate. No website, database, file storage system, email system, or third-party service can be guaranteed completely secure, and users should avoid submitting unnecessary sensitive personal, financial, medical, legal, employee, or highly confidential information unless specifically requested.
+            </p>
+            </section>          <section>
+            <h2 className="text-2xl font-semibold text-white">11. Retention and Deletion Requests</h2>
+            <p className="mt-3 leading-7">
+              Ghostlayer may retain client records, submitted workflow information, uploads, messages, reports, payment references, and operational logs for business, legal, security, dispute resolution, and service delivery purposes. Clients may contact Ghostlayer to request deletion or correction of information, and Ghostlayer will review requests subject to legal, contractual, security, payment, and recordkeeping obligations.
+            </p>
+          </section>
 
-            <section>
-              <h2 className="text-2xl font-semibold text-white">11. Contact</h2>
+          <section>
+            <h2 className="text-2xl font-semibold text-white">12. Contact</h2>
               <p className="mt-3 leading-7">
                 Questions about this Privacy Policy may be sent to Ghostlayer through the contact method listed on the website.
               </p>
