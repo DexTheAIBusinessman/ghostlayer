@@ -58,7 +58,7 @@ export default function StartWorkflowScanPage() {
       <section className="relative z-10 mx-auto max-w-6xl px-6 py-16 sm:px-8 lg:px-10">
         <a
           href="/"
-          className="paymentLogoGlow inline-block text-sm font-semibold tracking-[0.35em] transition hover:text-white"
+          className="homepageLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
         >
           GHOSTLAYER
         </a>
