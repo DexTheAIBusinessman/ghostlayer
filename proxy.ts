@@ -25,8 +25,8 @@ export function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const adminUsername = process.env.ADMIN_USERNAME;
-  const adminPassword = process.env.ADMIN_PASSWORD;
+  const adminUsername = process.env.ADMIN_USERNAME?.trim();
+  const adminPassword = process.env.ADMIN_PASSWORD?.trim();
 
   if (!adminUsername || !adminPassword) {
     return new NextResponse("Admin authentication is not configured.", {
@@ -42,7 +42,14 @@ export function proxy(request: NextRequest) {
 
   const base64Credentials = authorization.replace("Basic ", "");
   const credentials = atob(base64Credentials);
-  const [username, password] = credentials.split(":");
+  const separatorIndex = credentials.indexOf(":");
+
+  if (separatorIndex === -1) {
+    return unauthorized();
+  }
+
+  const username = credentials.slice(0, separatorIndex).trim();
+  const password = credentials.slice(separatorIndex + 1).trim();
 
   if (username !== adminUsername || password !== adminPassword) {
     return unauthorized();
