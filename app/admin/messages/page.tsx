@@ -194,7 +194,40 @@ export default async function AdminMessagesPage({
             </p>
           </div>
 
-          <div className="flex flex-wrap gap-3">
+          <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold">
+          <Link
+            href="/admin/analytics"
+            className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white transition hover:bg-white/[0.08]"
+          >
+            Admin Home
+          </Link>
+          <Link
+            href="/admin/uploads"
+            className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100 transition hover:bg-cyan-300/15"
+          >
+            Uploads
+          </Link>
+          <Link
+            href="/admin/reports"
+            className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100 transition hover:bg-emerald-300/15"
+          >
+            Reports
+          </Link>
+          <Link
+            href="/admin/activity"
+            className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100 transition hover:bg-purple-300/15"
+          >
+            Activity
+          </Link>
+          <Link
+            href="/admin/trust-compliance"
+            className="rounded-full border border-lime-300/20 bg-lime-300/10 px-4 py-2 text-lime-100 transition hover:bg-lime-300/15"
+          >
+            Trust & Compliance
+          </Link>
+        </div>
+
+        <div className="flex flex-wrap gap-3">
             <Link
               href="/admin/reports"
               className="rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:opacity-90"
