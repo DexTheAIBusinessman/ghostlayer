@@ -214,6 +214,16 @@ export default async function AdminUploadsPage() {
                       ) : null}
                     </div>
 
+                <span
+                  className={
+                    item.report_id
+                      ? "rounded-full border border-purple-300/20 bg-purple-300/10 px-3 py-1 text-xs font-bold text-purple-100"
+                      : "rounded-full border border-sky-300/20 bg-sky-300/10 px-3 py-1 text-xs font-bold text-sky-100"
+                  }
+                >
+                  {item.report_id ? "Report Linked" : "General Upload"}
+                </span>
+
                     <p className="mt-2 text-sm text-gray-400">
                       {item.client_email} · {formatDate(item.created_at)}
                     </p>
