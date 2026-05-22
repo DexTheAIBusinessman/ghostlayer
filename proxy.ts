@@ -13,7 +13,7 @@ function unauthorized() {
 export function proxy(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
 
-  const isAdminPage = pathname.startsWith("/admin");
+  const isAdminPage = pathname === "/admin" || pathname.startsWith("/admin/");
   const isAdminApi =
     pathname.startsWith("/api/admin-") ||
     pathname === "/api/archive-report" ||
