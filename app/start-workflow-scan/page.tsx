@@ -80,6 +80,26 @@ export default function StartWorkflowScanPage() {
               next steps.
             </p>
 
+            <p className="mt-6 text-xs leading-6 text-gray-400">
+              By continuing to secure Stripe checkout, you agree to Ghostlayer&apos;s{" "}
+              <a href="/terms" className="text-cyan-200 transition hover:text-white">
+                Terms of Service
+              </a>
+              {", "}
+              <a href="/privacy" className="text-cyan-200 transition hover:text-white">
+                Privacy Policy
+              </a>
+              {", "}
+              <a href="/refund-policy" className="text-cyan-200 transition hover:text-white">
+                Refund Policy
+              </a>
+              {" and "}
+              <a href="/service-agreement" className="text-cyan-200 transition hover:text-white">
+                Service Agreement
+              </a>
+              .
+            </p>
+
             <div className="mt-8 flex flex-wrap items-center gap-4">
               <a
                 href={STRIPE_PAYMENT_LINK}
