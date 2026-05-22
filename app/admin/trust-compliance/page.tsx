@@ -225,12 +225,21 @@ export default function TrustCompliancePage() {
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white sm:px-8 lg:px-10">
       <TrustComplianceNightSky />
       <section className="relative z-10 mx-auto max-w-6xl">
-        <a
-          href="/admin"
-          className="trustLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
-        >
-          GHOSTLAYER
-        </a>
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <a
+            href="/admin"
+            className="trustLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
+          >
+            GHOSTLAYER
+          </a>
+
+          <a
+            href="/admin/analytics"
+            className="rounded-2xl border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
+          >
+            Back to Analytics
+          </a>
+        </div>
 
         <div className="mt-10 rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-10">
           <p className="text-xs font-bold uppercase tracking-[0.32em] text-cyan-300">
