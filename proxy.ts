@@ -36,39 +36,6 @@ export function proxy(request: NextRequest) {
 
   const authorization = request.headers.get("authorization");
 
-  if (request.nextUrl.searchParams.get("debugAuth") === "1") {
-    let decoded = "";
-    let requestUsername = "";
-    let requestPassword = "";
-
-    if (authorization?.startsWith("Basic ")) {
-      try {
-        decoded = atob(authorization.replace("Basic ", ""));
-        const separatorIndex = decoded.indexOf(":");
-        if (separatorIndex !== -1) {
-          requestUsername = decoded.slice(0, separatorIndex).trim();
-          requestPassword = decoded.slice(separatorIndex + 1).trim();
-        }
-      } catch {
-        decoded = "";
-      }
-    }
-
-    return NextResponse.json({
-      adminUsernameExists: Boolean(adminUsername),
-      adminPasswordExists: Boolean(adminPassword),
-      adminUsernameLength: adminUsername?.length ?? 0,
-      adminPasswordLength: adminPassword?.length ?? 0,
-      authorizationExists: Boolean(authorization),
-      authorizationStartsBasic: Boolean(authorization?.startsWith("Basic ")),
-      decodedHasColon: decoded.includes(":"),
-      requestUsernameLength: requestUsername.length,
-      requestPasswordLength: requestPassword.length,
-      usernameMatches: requestUsername === adminUsername,
-      passwordMatches: requestPassword === adminPassword,
-    });
-  }
-
   if (!authorization || !authorization.startsWith("Basic ")) {
     return unauthorized();
   }
