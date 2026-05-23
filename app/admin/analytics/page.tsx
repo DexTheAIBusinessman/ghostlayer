@@ -559,6 +559,19 @@ export default async function AdminAnalyticsPage() {
               </p>
             </Link>
           <Link
+            href="/admin/bookkeeping"
+            className="min-h-[10.5rem] rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6 text-amber-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-amber-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Bookkeeping
+            </p>
+            <p className="mt-3 text-2xl font-black">Workflow</p>
+            <p className="mt-3 text-sm leading-6 text-amber-100/75">
+              Track income, Stripe payouts, expenses, and monthly bookkeeping readiness.
+            </p>
+          </Link>
+
+          <Link
             href="/admin/trust-compliance"
             className="min-h-[10.5rem] rounded-[2rem] border border-lime-300/20 bg-lime-300/10 p-6 text-lime-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-lime-300/15"
           >
