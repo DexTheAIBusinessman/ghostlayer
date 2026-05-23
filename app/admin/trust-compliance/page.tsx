@@ -1,3 +1,4 @@
+import Link from "next/link";
 export const metadata = {
   title: "Trust & Compliance | Ghostlayer Admin",
   description: "Internal Ghostlayer trust and compliance checklist.",
