@@ -253,7 +253,44 @@ export default function TrustCompliancePage() {
             This page is internal only and should be used as a practical operating checklist.
           </p>
 
-          <div className="mt-8 grid gap-4 md:grid-cols-3">
+          <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold">
+          <Link
+            href="/admin/analytics"
+            className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white transition hover:bg-white/[0.08]"
+          >
+            Admin Home
+          </Link>
+
+          <Link
+            href="/admin/reports"
+            className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100 transition hover:bg-emerald-300/15"
+          >
+            Reports
+          </Link>
+
+          <Link
+            href="/admin/uploads"
+            className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100 transition hover:bg-cyan-300/15"
+          >
+            Uploads
+          </Link>
+
+          <Link
+            href="/admin/messages"
+            className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100 transition hover:bg-blue-300/15"
+          >
+            Messages
+          </Link>
+
+          <Link
+            href="/admin/activity"
+            className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100 transition hover:bg-purple-300/15"
+          >
+            Activity
+          </Link>
+        </div>
+
+        <div className="mt-8 grid gap-4 md:grid-cols-3">
             <div className="rounded-2xl border border-emerald-300/25 bg-emerald-300/10 p-5">
               <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-100">
                 Complete
