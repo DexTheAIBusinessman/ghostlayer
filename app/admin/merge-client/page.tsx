@@ -113,6 +113,27 @@ export default async function MergeClientPage({
             >
               Uploads
             </Link>
+
+          <Link
+            href="/admin/activity"
+            className="rounded-2xl border border-purple-300/20 bg-purple-300/10 px-5 py-3 text-sm font-semibold text-purple-100 transition hover:scale-[1.02] hover:bg-purple-300/15"
+          >
+            Activity
+          </Link>
+
+          <Link
+            href="/admin/trust-compliance"
+            className="rounded-2xl border border-lime-300/20 bg-lime-300/10 px-5 py-3 text-sm font-semibold text-lime-100 transition hover:scale-[1.02] hover:bg-lime-300/15"
+          >
+            Trust & Compliance
+          </Link>
+
+          <Link
+            href="/admin/bookkeeping"
+            className="rounded-2xl border border-amber-300/20 bg-amber-300/10 px-5 py-3 text-sm font-semibold text-amber-100 transition hover:scale-[1.02] hover:bg-amber-300/15"
+          >
+            Bookkeeping
+          </Link>
           </div>
         </div>
 
