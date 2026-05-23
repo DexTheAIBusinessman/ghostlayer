@@ -66,16 +66,26 @@ const monthlyChecklist = [
 
 function NightSkyBackground() {
   const stars = [
-    { left: "6%", top: "10%", size: 2, delay: "0s", duration: "4.8s" },
-    { left: "12%", top: "32%", size: 2, delay: "1.1s", duration: "5.4s" },
-    { left: "25%", top: "18%", size: 3, delay: "1.6s", duration: "5.8s" },
-    { left: "42%", top: "12%", size: 2, delay: "2.5s", duration: "5.6s" },
-    { left: "51%", top: "38%", size: 3, delay: "1.3s", duration: "5.2s" },
-    { left: "68%", top: "20%", size: 2, delay: "2.9s", duration: "5.3s" },
-    { left: "77%", top: "50%", size: 3, delay: "1.8s", duration: "4.7s" },
-    { left: "86%", top: "16%", size: 2, delay: "0.4s", duration: "5.7s" },
-    { left: "94%", top: "70%", size: 2, delay: "2.2s", duration: "5.1s" },
-    { left: "30%", top: "88%", size: 2, delay: "2.4s", duration: "5.2s" },
+    { left: "5%", top: "9%", size: 2, delay: "0s", duration: "4.8s" },
+    { left: "9%", top: "24%", size: 2, delay: "0.7s", duration: "5.2s" },
+    { left: "12%", top: "42%", size: 2, delay: "1.1s", duration: "5.4s" },
+    { left: "18%", top: "16%", size: 2, delay: "1.4s", duration: "5.7s" },
+    { left: "23%", top: "62%", size: 3, delay: "1.9s", duration: "5.1s" },
+    { left: "28%", top: "31%", size: 2, delay: "2.2s", duration: "5.8s" },
+    { left: "33%", top: "84%", size: 2, delay: "2.7s", duration: "5.3s" },
+    { left: "38%", top: "19%", size: 3, delay: "0.9s", duration: "5.5s" },
+    { left: "43%", top: "48%", size: 2, delay: "1.6s", duration: "4.9s" },
+    { left: "49%", top: "72%", size: 2, delay: "2.4s", duration: "5.6s" },
+    { left: "54%", top: "12%", size: 2, delay: "0.4s", duration: "5.7s" },
+    { left: "59%", top: "38%", size: 3, delay: "1.3s", duration: "5.2s" },
+    { left: "64%", top: "81%", size: 2, delay: "2.1s", duration: "5.4s" },
+    { left: "69%", top: "22%", size: 2, delay: "2.9s", duration: "5.3s" },
+    { left: "74%", top: "55%", size: 3, delay: "1.8s", duration: "4.7s" },
+    { left: "79%", top: "34%", size: 2, delay: "0.8s", duration: "5.6s" },
+    { left: "84%", top: "15%", size: 2, delay: "0.4s", duration: "5.7s" },
+    { left: "88%", top: "76%", size: 2, delay: "2.5s", duration: "5.2s" },
+    { left: "93%", top: "66%", size: 2, delay: "2.2s", duration: "5.1s" },
+    { left: "96%", top: "39%", size: 2, delay: "0.6s", duration: "4.9s" },
   ];
 
   return (
@@ -344,7 +354,9 @@ export default function AdminBookkeepingPage() {
         .bookkeepingLogoGlow {
           text-shadow:
             0 0 8px rgba(255, 255, 255, 0.70),
-            0 0 18px rgba(96, 165, 250, 0.24);
+            0 0 18px rgba(96, 165, 250, 0.24),
+            0 0 34px rgba(6, 182, 212, 0.18);
+          animation: bookkeepingLogoPulse 3.4s ease-in-out infinite;
         }
 
         @keyframes bookkeepingTwinkle {
@@ -360,12 +372,39 @@ export default function AdminBookkeepingPage() {
 
         @keyframes bookkeepingMoonGlow {
           0%, 100% {
-            transform: translateY(0px) scale(0.98);
-            opacity: 0.2;
+            opacity: 0.22;
+            box-shadow:
+              0 0 44px rgba(255, 255, 255, 0.34),
+              0 0 95px rgba(191, 219, 254, 0.28),
+              0 0 165px rgba(96, 165, 250, 0.20),
+              inset -42px -34px 70px rgba(15, 23, 42, 0.42),
+              inset 18px 14px 44px rgba(255, 255, 255, 0.28);
           }
           50% {
-            transform: translateY(-3px) scale(1.02);
-            opacity: 0.3;
+            opacity: 0.34;
+            box-shadow:
+              0 0 58px rgba(255, 255, 255, 0.48),
+              0 0 120px rgba(191, 219, 254, 0.42),
+              0 0 190px rgba(96, 165, 250, 0.30),
+              inset -42px -34px 70px rgba(15, 23, 42, 0.38),
+              inset 18px 14px 44px rgba(255, 255, 255, 0.36);
+          }
+        }
+
+        @keyframes bookkeepingLogoPulse {
+          0%, 100% {
+            opacity: 0.78;
+            text-shadow:
+              0 0 8px rgba(255, 255, 255, 0.62),
+              0 0 18px rgba(96, 165, 250, 0.22),
+              0 0 34px rgba(6, 182, 212, 0.14);
+          }
+          50% {
+            opacity: 1;
+            text-shadow:
+              0 0 10px rgba(255, 255, 255, 0.92),
+              0 0 26px rgba(147, 197, 253, 0.42),
+              0 0 48px rgba(6, 182, 212, 0.28);
           }
         }
 
