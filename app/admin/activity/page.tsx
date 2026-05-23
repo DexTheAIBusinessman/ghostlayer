@@ -158,6 +158,13 @@ export default async function AdminActivityPage() {
           >
             Trust & Compliance
           </Link>
+
+          <Link
+            href="/admin/bookkeeping"
+            className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-amber-100 transition hover:bg-amber-300/15"
+          >
+            Bookkeeping
+          </Link>
         </div>
         </div>
 
