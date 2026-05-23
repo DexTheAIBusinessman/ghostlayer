@@ -80,7 +80,11 @@ export async function POST(request: Request) {
 
     if (!response.ok) {
       const errorText = await response.text();
-      throw new Error(`Stripe billing portal failed: ${errorText}`);
+      console.error("Stripe billing portal failed:", errorText);
+      return NextResponse.json(
+        { error: "Billing portal unavailable." },
+        { status: 500 }
+      );
     }
 
     const data = await response.json();
@@ -89,7 +93,7 @@ export async function POST(request: Request) {
   } catch (error) {
     return NextResponse.json(
       {
-        error: error instanceof Error ? error.message : "Unknown error",
+        error: "Billing portal unavailable.",
       },
       { status: 500 }
     );
