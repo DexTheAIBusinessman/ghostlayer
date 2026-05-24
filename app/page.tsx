@@ -452,7 +452,11 @@ export default function GhostlayerHomepageLivePreview() {
               Legal
             </p>
             <nav className="mt-5 grid gap-3 text-sm text-gray-400">
-              <a href="/privacy" className="transition hover:text-white">
+              <a href="/contact" className="transition hover:text-white">
+              Contact
+            </a>
+
+            <a href="/privacy" className="transition hover:text-white">
                 Privacy
               </a>
               <a href="/terms" className="transition hover:text-white">
