@@ -559,6 +559,32 @@ export default async function AdminAnalyticsPage() {
               </p>
             </Link>
           <Link
+            href="/admin/data-requests"
+            className="min-h-[10.5rem] rounded-[2rem] border border-sky-300/20 bg-sky-300/10 p-6 text-sky-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-sky-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Data Requests
+            </p>
+            <p className="mt-3 text-2xl font-black">Client Data</p>
+            <p className="mt-3 text-sm leading-6 text-sky-100/75">
+              Handle deletion, correction, and client data review requests.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/incident-response"
+            className="min-h-[10.5rem] rounded-[2rem] border border-red-300/20 bg-red-300/10 p-6 text-red-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-red-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Incident Response
+            </p>
+            <p className="mt-3 text-2xl font-black">Response Note</p>
+            <p className="mt-3 text-sm leading-6 text-red-100/75">
+              Track security, payment, upload, report, and access incidents.
+            </p>
+          </Link>
+
+          <Link
             href="/admin/bookkeeping"
             className="min-h-[10.5rem] rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6 text-amber-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-amber-300/15"
           >
