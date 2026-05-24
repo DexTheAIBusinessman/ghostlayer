@@ -12,6 +12,17 @@ type ChecklistItem = {
 
 const completed: ChecklistItem[] = [
   {
+    label: "Client data deletion process",
+    status: "complete",
+    note: "Internal admin process page exists for client data deletion, correction, review, and retention handling.",
+  },
+  {
+    label: "Incident response note",
+    status: "complete",
+    note: "Internal admin response note exists for access, upload, payment, report, credential, and security incidents.",
+  },
+
+  {
     label: "Private client uploads bucket",
     status: "complete",
     note: "client-uploads bucket is not public.",
@@ -101,16 +112,6 @@ const recommended: ChecklistItem[] = [
     label: "Add admin trust checklist link",
     status: "recommended",
     note: "Add this page to the admin navigation so it is easy to revisit.",
-  },
-  {
-    label: "Create client data deletion process",
-    status: "recommended",
-    note: "Document how to handle deletion/correction requests for uploads, reports, messages, and records.",
-  },
-  {
-    label: "Create incident response note",
-    status: "recommended",
-    note: "Keep a short internal process for security incidents, mistaken access, upload problems, or payment disputes.",
   },
 ];
 
