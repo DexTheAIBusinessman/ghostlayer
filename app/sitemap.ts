@@ -13,6 +13,10 @@ url: `${baseUrl}/dashboard`,
 lastModified: new Date(),
 },
 {
+url: `${baseUrl}/contact`,
+lastModified: new Date(),
+},
+{
 url: `${baseUrl}/privacy`,
 lastModified: new Date(),
 },
