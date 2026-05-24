@@ -12,6 +12,12 @@ type ChecklistItem = {
 
 const completed: ChecklistItem[] = [
   {
+    label: "Contact/support page",
+    status: "complete",
+    note: "Public support page exists for billing, refund, upload, report, privacy, and data request questions.",
+  },
+
+  {
     label: "Client data deletion process",
     status: "complete",
     note: "Internal admin process page exists for client data deletion, correction, review, and retention handling.",
