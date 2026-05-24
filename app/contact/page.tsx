@@ -59,7 +59,7 @@ export default function ContactPage() {
         <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <a
             href="/"
-            className="legalLogoGlow inline-block text-sm font-bold tracking-[0.35em] text-white transition hover:text-white"
+            className="legalLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white transition hover:text-white"
           >
             GHOSTLAYER
           </a>
