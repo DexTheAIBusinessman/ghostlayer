@@ -20,7 +20,7 @@ const agents = [
   },
   {
     name: "Message Triage Agent",
-    href: "/admin/messages",
+    href: "/admin/agents/message-triage",
     status: "Planned",
     mode: "Draft-only",
     description:

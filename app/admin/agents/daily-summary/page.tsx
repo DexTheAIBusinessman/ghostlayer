@@ -376,7 +376,7 @@ function buildAgentActionQueue({
       priority: "High",
       title: "Client messages may need replies",
       detail: `${messages.rows.length} recent client message record(s) found. Review for billing, report, refund, upload, or data-request questions.`,
-      href: "/admin/messages",
+      href: "/admin/agents/message-triage",
       approvalRequired: "Admin must approve any client-facing reply.",
     });
   }
