@@ -167,7 +167,7 @@ const manualChecks = [
   },
   {
     area: "Monitoring",
-    href: "/admin/monitoring",
+    href: "/admin/agents/monitoring",
     whatToCheck: "Active client monitoring, stale updates, follow-up needs.",
     action: "Suggest follow-up tasks.",
   },
@@ -411,7 +411,7 @@ function buildAgentActionQueue({
       priority: "Medium",
       title: "Monitoring updates may need follow-up",
       detail: `${monitoring.rows.length} recent monitoring update(s) found. Review whether any client needs a follow-up action.`,
-      href: "/admin/monitoring",
+      href: "/admin/agents/monitoring",
       approvalRequired: "Admin must approve client-facing follow-ups.",
     });
   }

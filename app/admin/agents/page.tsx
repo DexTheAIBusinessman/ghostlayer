@@ -56,7 +56,7 @@ const agents = [
   },
   {
     name: "Monitoring Agent",
-    href: "/admin/monitoring",
+    href: "/admin/agents/monitoring",
     status: "Planned",
     mode: "Reminder-only",
     description:

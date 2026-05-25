@@ -585,6 +585,19 @@ export default async function AdminAnalyticsPage() {
           </Link>
 
           <Link
+            href="/admin/agents/monitoring"
+            className="min-h-[10.5rem] rounded-[2rem] border border-purple-300/20 bg-purple-300/10 p-6 text-purple-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-purple-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Monitoring Agent
+            </p>
+            <p className="mt-3 text-2xl font-black">Follow-Up</p>
+            <p className="mt-3 text-sm leading-6 text-purple-100/75">
+              Review monitoring records, flag stale items, and suggest follow-up actions.
+            </p>
+          </Link>
+
+          <Link
             href="/admin/agents/report-prep"
             className="min-h-[10.5rem] rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6 text-emerald-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-emerald-300/15"
           >
