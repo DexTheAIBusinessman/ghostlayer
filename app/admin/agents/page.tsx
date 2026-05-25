@@ -92,7 +92,7 @@ const agents = [
   },
   {
     name: "Data Request Agent",
-    href: "/admin/data-requests",
+    href: "/admin/agents/data-request",
     status: "Planned",
     mode: "Assist-only",
     description:

@@ -585,6 +585,19 @@ export default async function AdminAnalyticsPage() {
           </Link>
 
           <Link
+            href="/admin/agents/data-request"
+            className="min-h-[10.5rem] rounded-[2rem] border border-sky-300/20 bg-sky-300/10 p-6 text-sky-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-sky-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Data Agent
+            </p>
+            <p className="mt-3 text-2xl font-black">Requests</p>
+            <p className="mt-3 text-sm leading-6 text-sky-100/75">
+              Flag deletion, correction, privacy, access, and data handling requests.
+            </p>
+          </Link>
+
+          <Link
             href="/admin/agents/trust-compliance"
             className="min-h-[10.5rem] rounded-[2rem] border border-lime-300/20 bg-lime-300/10 p-6 text-lime-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-lime-300/15"
           >
