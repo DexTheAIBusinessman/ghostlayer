@@ -160,7 +160,7 @@ const manualChecks = [
   },
   {
     area: "Reports",
-    href: "/admin/reports",
+    href: "/admin/agents/report-prep",
     whatToCheck:
       "Reports needing creation, review, delivery, correction, or follow-up.",
     action: "Prepare next report task. Admin reviews final report.",
@@ -398,7 +398,7 @@ function buildAgentActionQueue({
       priority: "Medium",
       title: "Recent report activity needs review",
       detail: `${reports.rows.length} recent report record(s) found. Check whether any report needs delivery, correction, or follow-up.`,
-      href: "/admin/reports",
+      href: "/admin/agents/report-prep",
       approvalRequired: "Admin must approve publishing or sending reports.",
     });
   }

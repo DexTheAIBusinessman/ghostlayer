@@ -44,7 +44,7 @@ const agents = [
   },
   {
     name: "Report Prep Agent",
-    href: "/admin/reports",
+    href: "/admin/agents/report-prep",
     status: "Planned",
     mode: "Draft-only",
     description:
