@@ -31,6 +31,16 @@ type RecentScan = {
   status?: string | null;
 };
 
+type GenericAdminRow = Record<string, string | number | boolean | null | undefined>;
+
+type RecentAdminGroup = {
+  label: string;
+  table: string;
+  href: string;
+  rows: GenericAdminRow[];
+  error?: string;
+};
+
 const tableChecks = [
   {
     label: "Leads",
@@ -94,6 +104,34 @@ const tableChecks = [
     href: "/admin/activity",
     description: "Admin activity events, operational history, and audit trail.",
     action: "Review recent activity for unexpected or suspicious events.",
+  },
+];
+
+const recentAdminTables = [
+  {
+    label: "Recent uploads",
+    table: "client_uploads",
+    href: "/admin/uploads",
+  },
+  {
+    label: "Recent messages",
+    table: "client_messages",
+    href: "/admin/messages",
+  },
+  {
+    label: "Recent reports",
+    table: "client_reports",
+    href: "/admin/reports",
+  },
+  {
+    label: "Recent monitoring updates",
+    table: "client_monitoring_history",
+    href: "/admin/monitoring",
+  },
+  {
+    label: "Recent activity events",
+    table: "admin_activity",
+    href: "/admin/activity",
   },
 ];
 
@@ -254,6 +292,101 @@ function formatDate(value?: string | null) {
   }).format(new Date(value));
 }
 
+function getRowDate(row: GenericAdminRow) {
+  const value =
+    row.created_at ||
+    row.updated_at ||
+    row.sent_at ||
+    row.uploaded_at ||
+    row.timestamp ||
+    row.createdAt ||
+    null;
+
+  return typeof value === "string" ? value : null;
+}
+
+function summarizeAdminRow(row: GenericAdminRow) {
+  const primary =
+    row.client_email ||
+    row.email ||
+    row.file_name ||
+    row.report_id ||
+    row.title ||
+    row.type ||
+    row.event_type ||
+    row.status ||
+    row.id ||
+    "Record";
+
+  const secondary =
+    row.status ||
+    row.file_type ||
+    row.action ||
+    row.subject ||
+    row.message_status ||
+    row.client_name ||
+    row.business_name ||
+    null;
+
+  const date = getRowDate(row);
+
+  return {
+    primary: String(primary),
+    secondary: secondary ? String(secondary) : null,
+    date,
+  };
+}
+
+async function getRecentAdminRows(
+  table: string,
+  limit = 5
+): Promise<{ rows: GenericAdminRow[]; error?: string }> {
+  const { supabaseUrl, serviceRoleKey, error } = getSupabaseConfig();
+
+  if (error || !supabaseUrl || !serviceRoleKey) {
+    return { rows: [], error: error || "Missing Supabase config." };
+  }
+
+  const baseUrl = `${supabaseUrl}/rest/v1/${table}?select=*&limit=${limit}`;
+
+  try {
+    const orderedResponse = await fetch(`${baseUrl}&order=created_at.desc`, {
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+      },
+      cache: "no-store",
+    });
+
+    if (orderedResponse.ok) {
+      return { rows: await orderedResponse.json() };
+    }
+
+    const fallbackResponse = await fetch(baseUrl, {
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+      },
+      cache: "no-store",
+    });
+
+    if (!fallbackResponse.ok) {
+      const errorText = await fallbackResponse.text().catch(() => "");
+      return {
+        rows: [],
+        error: errorText || `Could not read recent rows from ${table}.`,
+      };
+    }
+
+    return { rows: await fallbackResponse.json() };
+  } catch (err) {
+    return {
+      rows: [],
+      error: err instanceof Error ? err.message : "Unknown error.",
+    };
+  }
+}
+
 function AgentNightSkyBackground() {
   const stars = [
     { left: "5%", top: "9%", size: 2, delay: "0s", duration: "4.8s" },
@@ -327,6 +460,18 @@ export default async function DailySummaryAgentPage() {
     "scans",
     "id,email,client_email,status,created_at",
     5
+  );
+
+  const recentAdminGroups: RecentAdminGroup[] = await Promise.all(
+    recentAdminTables.map(async (item) => {
+      const result = await getRecentAdminRows(item.table, 5);
+
+      return {
+        ...item,
+        rows: result.rows,
+        error: result.error,
+      };
+    })
   );
 
   const urgentItems = liveChecks.filter((item) => item.error);
@@ -493,6 +638,81 @@ export default async function DailySummaryAgentPage() {
             </div>
           </section>
         </div>
+
+        <section className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300">
+            Recent admin records
+          </p>
+
+          <h2 className="mt-3 text-2xl font-black text-white">
+            What happened recently
+          </h2>
+
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+            These are live read-only previews from the key admin tables. Use them to quickly
+            spot new uploads, messages, reports, monitoring updates, and activity events.
+          </p>
+
+          <div className="mt-5 grid gap-4 lg:grid-cols-2">
+            {recentAdminGroups.map((group) => (
+              <Link
+                key={group.table}
+                href={group.href}
+                className="block rounded-2xl border border-white/10 bg-black/20 p-4 transition hover:bg-white/[0.04]"
+              >
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-300">
+                      {group.table}
+                    </p>
+                    <h3 className="mt-2 text-lg font-black text-white">{group.label}</h3>
+                  </div>
+
+                  <span className="rounded-full border border-white/10 px-3 py-1 text-xs font-bold text-gray-300">
+                    {group.error ? "Error" : `${group.rows.length} recent`}
+                  </span>
+                </div>
+
+                {group.error ? (
+                  <p className="mt-4 text-sm leading-6 text-red-200">
+                    {group.error}
+                  </p>
+                ) : group.rows.length ? (
+                  <div className="mt-4 space-y-3">
+                    {group.rows.map((row, index) => {
+                      const summary = summarizeAdminRow(row);
+
+                      return (
+                        <div
+                          key={String(row.id || index)}
+                          className="rounded-xl border border-white/10 bg-white/[0.035] p-3"
+                        >
+                          <p className="break-all text-sm font-bold text-white">
+                            {summary.primary}
+                          </p>
+
+                          {summary.secondary ? (
+                            <p className="mt-1 text-xs text-gray-400">
+                              {summary.secondary}
+                            </p>
+                          ) : null}
+
+                          <p className="mt-1 text-xs text-gray-500">
+                            {formatDate(summary.date)}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  <p className="mt-4 text-sm text-gray-400">
+                    No recent records found.
+                  </p>
+                )}
+              </Link>
+            ))}
+          </div>
+        </section>
 
         <section className="mt-8 rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 backdrop-blur-xl">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-300">
