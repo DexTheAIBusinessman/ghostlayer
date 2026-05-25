@@ -187,7 +187,7 @@ const manualChecks = [
   },
   {
     area: "Trust & Compliance",
-    href: "/admin/trust-compliance",
+    href: "/admin/agents/trust-compliance",
     whatToCheck:
       "Pending business setup, contact/support, legal pages, process pages, security reminders.",
     action: "Flag checklist items needing admin confirmation.",

@@ -80,7 +80,7 @@ const agents = [
   },
   {
     name: "Trust & Compliance Agent",
-    href: "/admin/trust-compliance",
+    href: "/admin/agents/trust-compliance",
     status: "Planned",
     mode: "Checklist review",
     description:
