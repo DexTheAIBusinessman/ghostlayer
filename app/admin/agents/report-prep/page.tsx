@@ -374,6 +374,36 @@ export default async function ReportPrepAgentPage() {
           </Link>
         </div>
 
+        <div className="mt-4 flex flex-wrap gap-3 text-xs font-bold">
+          <Link href="/admin/agents/daily-summary" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
+            Daily Summary
+          </Link>
+          <Link href="/admin/agents/message-triage" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100">
+            Message Triage
+          </Link>
+          <Link href="/admin/agents/upload-review" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100">
+            Upload Review
+          </Link>
+          <Link href="/admin/agents/report-prep" className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100">
+            Report Prep
+          </Link>
+          <Link href="/admin/agents/monitoring" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
+            Monitoring
+          </Link>
+          <Link href="/admin/agents/billing-bookkeeping" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-amber-100">
+            Billing
+          </Link>
+          <Link href="/admin/agents/trust-compliance" className="rounded-full border border-lime-300/20 bg-lime-300/10 px-4 py-2 text-lime-100">
+            Trust
+          </Link>
+          <Link href="/admin/agents/data-request" className="rounded-full border border-sky-300/20 bg-sky-300/10 px-4 py-2 text-sky-100">
+            Data Request
+          </Link>
+          <Link href="/admin/agents/incident-response" className="rounded-full border border-red-300/20 bg-red-300/10 px-4 py-2 text-red-100">
+            Incident
+          </Link>
+        </div>
+
         <div className="mt-8 grid gap-5 sm:grid-cols-5">
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-5 backdrop-blur-xl">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-gray-300">
