@@ -572,6 +572,32 @@ export default async function AdminAnalyticsPage() {
           </Link>
 
           <Link
+            href="/admin/agents/message-triage"
+            className="min-h-[10.5rem] rounded-[2rem] border border-blue-300/20 bg-blue-300/10 p-6 text-blue-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-blue-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Message Agent
+            </p>
+            <p className="mt-3 text-2xl font-black">Triage</p>
+            <p className="mt-3 text-sm leading-6 text-blue-100/75">
+              Classify client messages, prioritize replies, and suggest safe next actions.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/agents/upload-review"
+            className="min-h-[10.5rem] rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 text-cyan-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-cyan-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Upload Agent
+            </p>
+            <p className="mt-3 text-2xl font-black">Review</p>
+            <p className="mt-3 text-sm leading-6 text-cyan-100/75">
+              Review upload metadata, flag risky files, and identify unlinked uploads.
+            </p>
+          </Link>
+
+          <Link
             href="/admin/agents/daily-summary"
             className="min-h-[10.5rem] rounded-[2rem] border border-purple-300/20 bg-purple-300/10 p-6 text-purple-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-purple-300/15"
           >

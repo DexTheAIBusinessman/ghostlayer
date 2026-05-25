@@ -153,7 +153,7 @@ const manualChecks = [
   },
   {
     area: "Uploads",
-    href: "/admin/uploads",
+    href: "/admin/agents/upload-review",
     whatToCheck:
       "New uploads, unlinked uploads, large files, suspicious filenames, report-linked files.",
     action: "Flag items needing admin review.",
@@ -387,7 +387,7 @@ function buildAgentActionQueue({
       priority: "High",
       title: "Client uploads need review",
       detail: `${uploads.rows.length} recent upload record(s) found. Check file type, file size, client email, and report association.`,
-      href: "/admin/uploads",
+      href: "/admin/agents/upload-review",
       approvalRequired: "Admin must approve deleting, using, or attaching files to reports.",
     });
   }

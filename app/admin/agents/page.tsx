@@ -32,7 +32,7 @@ const agents = [
   },
   {
     name: "Upload Review Agent",
-    href: "/admin/uploads",
+    href: "/admin/agents/upload-review",
     status: "Planned",
     mode: "Flag-only",
     description:
