@@ -41,6 +41,14 @@ type RecentAdminGroup = {
   error?: string;
 };
 
+type AgentQueueItem = {
+  priority: "High" | "Medium" | "Low";
+  title: string;
+  detail: string;
+  href: string;
+  approvalRequired: string;
+};
+
 const tableChecks = [
   {
     label: "Leads",
@@ -337,6 +345,130 @@ function summarizeAdminRow(row: GenericAdminRow) {
   };
 }
 
+function buildAgentActionQueue({
+  liveChecks,
+  recentAdminGroups,
+  recentLeads,
+  recentScans,
+}: {
+  liveChecks: TableSummary[];
+  recentAdminGroups: RecentAdminGroup[];
+  recentLeads: RecentLead[];
+  recentScans: RecentScan[];
+}): AgentQueueItem[] {
+  const queue: AgentQueueItem[] = [];
+
+  const readErrors = liveChecks.filter((item) => item.error);
+
+  if (readErrors.length) {
+    queue.push({
+      priority: "High",
+      title: "Live data source needs review",
+      detail: `${readErrors.length} Supabase table read issue(s) were found. Review the Daily Summary live cards for table-name or permission problems.`,
+      href: "/admin/agents/daily-summary",
+      approvalRequired: "Admin should inspect before relying on the summary.",
+    });
+  }
+
+  const messages = recentAdminGroups.find((group) => group.table === "client_messages");
+  if (messages?.rows.length) {
+    queue.push({
+      priority: "High",
+      title: "Client messages may need replies",
+      detail: `${messages.rows.length} recent client message record(s) found. Review for billing, report, refund, upload, or data-request questions.`,
+      href: "/admin/messages",
+      approvalRequired: "Admin must approve any client-facing reply.",
+    });
+  }
+
+  const uploads = recentAdminGroups.find((group) => group.table === "client_uploads");
+  if (uploads?.rows.length) {
+    queue.push({
+      priority: "High",
+      title: "Client uploads need review",
+      detail: `${uploads.rows.length} recent upload record(s) found. Check file type, file size, client email, and report association.`,
+      href: "/admin/uploads",
+      approvalRequired: "Admin must approve deleting, using, or attaching files to reports.",
+    });
+  }
+
+  const reports = recentAdminGroups.find((group) => group.table === "client_reports");
+  if (reports?.rows.length) {
+    queue.push({
+      priority: "Medium",
+      title: "Recent report activity needs review",
+      detail: `${reports.rows.length} recent report record(s) found. Check whether any report needs delivery, correction, or follow-up.`,
+      href: "/admin/reports",
+      approvalRequired: "Admin must approve publishing or sending reports.",
+    });
+  }
+
+  const monitoring = recentAdminGroups.find(
+    (group) => group.table === "client_monitoring_history"
+  );
+  if (monitoring?.rows.length) {
+    queue.push({
+      priority: "Medium",
+      title: "Monitoring updates may need follow-up",
+      detail: `${monitoring.rows.length} recent monitoring update(s) found. Review whether any client needs a follow-up action.`,
+      href: "/admin/monitoring",
+      approvalRequired: "Admin must approve client-facing follow-ups.",
+    });
+  }
+
+  const activity = recentAdminGroups.find((group) => group.table === "admin_activity");
+  if (activity?.rows.length) {
+    queue.push({
+      priority: "Medium",
+      title: "Recent activity should be checked",
+      detail: `${activity.rows.length} recent activity event(s) found. Look for unexpected admin actions or operational issues.`,
+      href: "/admin/activity",
+      approvalRequired: "Admin should escalate suspicious items to Incident Response.",
+    });
+  }
+
+  if (recentScans.length) {
+    queue.push({
+      priority: "Medium",
+      title: "Workflow scans may need report prep",
+      detail: `${recentScans.length} recent scan submission(s) found. Review scan details and decide whether a report needs to be prepared.`,
+      href: "/admin/scans",
+      approvalRequired: "Admin must approve report creation and delivery.",
+    });
+  }
+
+  if (recentLeads.length) {
+    queue.push({
+      priority: "Low",
+      title: "New leads may need review",
+      detail: `${recentLeads.length} recent lead record(s) found. Review for possible follow-up or conversion interest.`,
+      href: "/admin/leads",
+      approvalRequired: "Admin decides whether follow-up is appropriate.",
+    });
+  }
+
+  queue.push({
+    priority: "Low",
+    title: "Bookkeeping check",
+    detail: "Review payments, payouts, refunds, expenses, and monthly close reminders if money moved today.",
+    href: "/admin/bookkeeping",
+    approvalRequired: "Admin or bookkeeper handles accounting decisions.",
+  });
+
+  queue.push({
+    priority: "Low",
+    title: "Trust and compliance check",
+    detail: "Review pending business setup items and confirm no security/legal checklist items are stale.",
+    href: "/admin/trust-compliance",
+    approvalRequired: "Admin confirms real-world business tasks before marking complete.",
+  });
+
+  return queue.sort((a, b) => {
+    const order = { High: 0, Medium: 1, Low: 2 };
+    return order[a.priority] - order[b.priority];
+  });
+}
+
 async function getRecentAdminRows(
   table: string,
   limit = 5
@@ -474,6 +606,13 @@ export default async function DailySummaryAgentPage() {
     })
   );
 
+  const actionQueue = buildAgentActionQueue({
+    liveChecks,
+    recentAdminGroups,
+    recentLeads,
+    recentScans,
+  });
+
   const urgentItems = liveChecks.filter((item) => item.error);
   const totalKnownRecords = liveChecks.reduce(
     (sum, item) => sum + (item.count || 0),
@@ -543,6 +682,70 @@ export default async function DailySummaryAgentPage() {
             <p className="mt-4 text-3xl font-black text-white">{urgentItems.length}</p>
           </div>
         </div>
+
+        <section className="mt-8 rounded-[2rem] border border-fuchsia-300/20 bg-fuchsia-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-fuchsia-200">
+                Agent Action Queue
+              </p>
+              <h2 className="mt-3 text-2xl font-black text-white">
+                What to handle first
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+                The agent ranks today’s admin work by priority. It only recommends next actions.
+                You still approve anything client-facing, destructive, financial, or sensitive.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white">
+              {actionQueue.length} items
+            </span>
+          </div>
+
+          <div className="mt-6 grid gap-4">
+            {actionQueue.map((item, index) => {
+              const priorityClass =
+                item.priority === "High"
+                  ? "border-red-300/25 bg-red-300/10 text-red-100"
+                  : item.priority === "Medium"
+                    ? "border-amber-300/25 bg-amber-300/10 text-amber-100"
+                    : "border-cyan-300/20 bg-cyan-300/10 text-cyan-100";
+
+              return (
+                <Link
+                  key={`${item.priority}-${item.title}-${index}`}
+                  href={item.href}
+                  className={`block rounded-2xl border p-4 transition hover:scale-[1.005] ${priorityClass}`}
+                >
+                  <div className="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-bold uppercase tracking-[0.18em]">
+                        {item.priority} Priority
+                      </p>
+                      <h3 className="mt-2 text-lg font-black text-white">
+                        {item.title}
+                      </h3>
+                    </div>
+
+                    <span className="rounded-full border border-white/10 bg-black/20 px-3 py-1 text-xs font-bold text-white">
+                      Review
+                    </span>
+                  </div>
+
+                  <p className="mt-3 text-sm leading-6 text-gray-200">
+                    {item.detail}
+                  </p>
+
+                  <p className="mt-3 rounded-xl border border-white/10 bg-black/20 p-3 text-xs leading-5 text-gray-300">
+                    <span className="font-bold text-white">Approval rule: </span>
+                    {item.approvalRequired}
+                  </p>
+                </Link>
+              );
+            })}
+          </div>
+        </section>
 
         <div className="mt-8 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]">
           <section className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
