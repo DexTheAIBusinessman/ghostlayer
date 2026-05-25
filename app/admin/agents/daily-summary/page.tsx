@@ -60,6 +60,41 @@ const tableChecks = [
     description: "Call-to-action click tracking.",
     action: "Review conversion behavior and landing-page interest.",
   },
+  {
+    label: "Client Uploads",
+    table: "client_uploads",
+    href: "/admin/uploads",
+    description: "Client-uploaded files, notes, screenshots, SOPs, and workflow documents.",
+    action: "Review new uploads, unlinked uploads, file sizes, and report associations.",
+  },
+  {
+    label: "Client Reports",
+    table: "client_reports",
+    href: "/admin/reports",
+    description: "Client report records and workflow scan deliverables.",
+    action: "Review reports needing creation, correction, delivery, or follow-up.",
+  },
+  {
+    label: "Client Messages",
+    table: "client_messages",
+    href: "/admin/messages",
+    description: "Client portal messages and admin replies.",
+    action: "Review unanswered messages and draft replies for approval.",
+  },
+  {
+    label: "Monitoring History",
+    table: "client_monitoring_history",
+    href: "/admin/monitoring",
+    description: "Client monitoring updates and follow-up history.",
+    action: "Review stale monitoring items and follow-up needs.",
+  },
+  {
+    label: "Activity Log",
+    table: "admin_activity",
+    href: "/admin/activity",
+    description: "Admin activity events, operational history, and audit trail.",
+    action: "Review recent activity for unexpected or suspicious events.",
+  },
 ];
 
 const manualChecks = [
