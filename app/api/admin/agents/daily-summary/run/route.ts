@@ -1,0 +1,312 @@
+import { NextResponse } from "next/server";
+
+export const dynamic = "force-dynamic";
+
+type CountResult = {
+  table: string;
+  label: string;
+  count: number | null;
+  error?: string;
+};
+
+type RecentResult = {
+  table: string;
+  label: string;
+  rows: Record<string, unknown>[];
+  error?: string;
+};
+
+const tableChecks = [
+  { table: "leads", label: "Leads" },
+  { table: "scans", label: "Scans" },
+  { table: "feedback", label: "Feedback" },
+  { table: "cta_clicks", label: "CTA Clicks" },
+  { table: "client_uploads", label: "Client Uploads" },
+  { table: "client_messages", label: "Client Messages" },
+  { table: "client_reports", label: "Client Reports" },
+  { table: "client_monitoring_history", label: "Monitoring History" },
+  { table: "admin_activity", label: "Activity Log" },
+];
+
+const recentTables = [
+  { table: "client_messages", label: "Recent Messages" },
+  { table: "client_uploads", label: "Recent Uploads" },
+  { table: "client_reports", label: "Recent Reports" },
+  { table: "client_monitoring_history", label: "Recent Monitoring" },
+  { table: "admin_activity", label: "Recent Activity" },
+];
+
+function getSupabaseConfig() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    return {
+      supabaseUrl: null,
+      serviceRoleKey: null,
+      error: "Missing Supabase environment variables.",
+    };
+  }
+
+  return { supabaseUrl, serviceRoleKey, error: null };
+}
+
+function isAuthorized(request: Request) {
+  const cronSecret = process.env.CRON_SECRET;
+
+  if (!cronSecret) {
+    return {
+      ok: false,
+      error: "Missing CRON_SECRET environment variable.",
+    };
+  }
+
+  const authHeader = request.headers.get("authorization");
+  const expected = `Bearer ${cronSecret}`;
+
+  if (authHeader !== expected) {
+    return {
+      ok: false,
+      error: "Unauthorized cron request.",
+    };
+  }
+
+  return { ok: true, error: null };
+}
+
+async function getTableCount(table: string): Promise<{ count: number | null; error?: string }> {
+  const { supabaseUrl, serviceRoleKey, error } = getSupabaseConfig();
+
+  if (error || !supabaseUrl || !serviceRoleKey) {
+    return { count: null, error: error || "Missing Supabase config." };
+  }
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/${table}?select=id`, {
+      method: "HEAD",
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        Prefer: "count=exact",
+      },
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      return {
+        count: null,
+        error: errorText || `Could not read ${table}.`,
+      };
+    }
+
+    const contentRange = response.headers.get("content-range");
+    const countText = contentRange?.split("/")?.[1];
+    const count = countText && countText !== "*" ? Number(countText) : null;
+
+    return {
+      count: Number.isFinite(count) ? count : null,
+    };
+  } catch (err) {
+    return {
+      count: null,
+      error: err instanceof Error ? err.message : "Unknown count error.",
+    };
+  }
+}
+
+async function getRecentRows(
+  table: string,
+  limit = 5
+): Promise<{ rows: Record<string, unknown>[]; error?: string }> {
+  const { supabaseUrl, serviceRoleKey, error } = getSupabaseConfig();
+
+  if (error || !supabaseUrl || !serviceRoleKey) {
+    return { rows: [], error: error || "Missing Supabase config." };
+  }
+
+  const baseUrl = `${supabaseUrl}/rest/v1/${table}?select=*&limit=${limit}`;
+
+  try {
+    const orderedResponse = await fetch(`${baseUrl}&order=created_at.desc`, {
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+      },
+      cache: "no-store",
+    });
+
+    if (orderedResponse.ok) {
+      return { rows: await orderedResponse.json() };
+    }
+
+    const fallbackResponse = await fetch(baseUrl, {
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+      },
+      cache: "no-store",
+    });
+
+    if (!fallbackResponse.ok) {
+      const errorText = await fallbackResponse.text().catch(() => "");
+      return {
+        rows: [],
+        error: errorText || `Could not read recent rows from ${table}.`,
+      };
+    }
+
+    return { rows: await fallbackResponse.json() };
+  } catch (err) {
+    return {
+      rows: [],
+      error: err instanceof Error ? err.message : "Unknown recent-row error.",
+    };
+  }
+}
+
+function rowSummary(row: Record<string, unknown>) {
+  const primary =
+    row.client_email ||
+    row.email ||
+    row.file_name ||
+    row.subject ||
+    row.title ||
+    row.event_type ||
+    row.action ||
+    row.status ||
+    row.id ||
+    "Record";
+
+  const date =
+    row.created_at ||
+    row.updated_at ||
+    row.sent_at ||
+    row.uploaded_at ||
+    row.timestamp ||
+    null;
+
+  return {
+    primary: String(primary),
+    date: date ? String(date) : null,
+  };
+}
+
+function buildRecommendedActions(counts: CountResult[], recent: RecentResult[]) {
+  const actions: string[] = [];
+
+  const readErrors = [...counts, ...recent].filter((item) => item.error);
+
+  if (readErrors.length) {
+    actions.push(
+      `Review ${readErrors.length} data source read error(s). Check table names or Supabase permissions.`
+    );
+  }
+
+  const messages = recent.find((item) => item.table === "client_messages");
+  if (messages?.rows.length) {
+    actions.push("Open Message Triage Agent and review recent client messages.");
+  }
+
+  const uploads = recent.find((item) => item.table === "client_uploads");
+  if (uploads?.rows.length) {
+    actions.push("Open Upload Review Agent and review recent client uploads.");
+  }
+
+  const reports = recent.find((item) => item.table === "client_reports");
+  if (reports?.rows.length) {
+    actions.push("Open Report Prep Agent and review recent report records.");
+  }
+
+  const monitoring = recent.find((item) => item.table === "client_monitoring_history");
+  if (monitoring?.rows.length) {
+    actions.push("Open Monitoring Agent and review follow-up needs.");
+  }
+
+  const activity = recent.find((item) => item.table === "admin_activity");
+  if (activity?.rows.length) {
+    actions.push("Open Incident Response Agent if recent activity looks unusual.");
+  }
+
+  actions.push("Review Billing / Bookkeeping Agent if payments, refunds, or payouts changed.");
+  actions.push("Review Trust & Compliance Agent for pending business setup items.");
+
+  return actions;
+}
+
+export async function GET(request: Request) {
+  const auth = isAuthorized(request);
+
+  if (!auth.ok) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: auth.error,
+      },
+      { status: auth.error?.includes("Missing") ? 500 : 401 }
+    );
+  }
+
+  const startedAt = new Date().toISOString();
+
+  const counts: CountResult[] = await Promise.all(
+    tableChecks.map(async (item) => {
+      const result = await getTableCount(item.table);
+
+      return {
+        ...item,
+        count: result.count,
+        error: result.error,
+      };
+    })
+  );
+
+  const recent: RecentResult[] = await Promise.all(
+    recentTables.map(async (item) => {
+      const result = await getRecentRows(item.table, 5);
+
+      return {
+        ...item,
+        rows: result.rows,
+        error: result.error,
+      };
+    })
+  );
+
+  const recommendedActions = buildRecommendedActions(counts, recent);
+
+  const summary = {
+    ok: true,
+    agent: "Daily Summary Cron Agent",
+    mode: "read-only",
+    startedAt,
+    finishedAt: new Date().toISOString(),
+    totals: {
+      tablesChecked: counts.length,
+      recentGroupsChecked: recent.length,
+      readErrors: [...counts, ...recent].filter((item) => item.error).length,
+      knownRecords: counts.reduce((sum, item) => sum + (item.count || 0), 0),
+    },
+    counts,
+    recent: recent.map((group) => ({
+      table: group.table,
+      label: group.label,
+      error: group.error,
+      rows: group.rows.map(rowSummary),
+    })),
+    recommendedActions,
+    guardrails: [
+      "No client messages sent.",
+      "No reports published.",
+      "No uploads deleted.",
+      "No clients merged.",
+      "No refunds issued.",
+      "No billing records changed.",
+      "No real-world business tasks marked complete.",
+    ],
+  };
+
+  console.log("[Daily Summary Cron Agent]", JSON.stringify(summary, null, 2));
+
+  return NextResponse.json(summary);
+}
