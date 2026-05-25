@@ -559,6 +559,45 @@ export default async function AdminAnalyticsPage() {
               </p>
             </Link>
           <Link
+            href="/admin/agents"
+            className="min-h-[10.5rem] rounded-[2rem] border border-fuchsia-300/20 bg-fuchsia-300/10 p-6 text-fuchsia-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-fuchsia-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Agents
+            </p>
+            <p className="mt-3 text-2xl font-black">Control Panel</p>
+            <p className="mt-3 text-sm leading-6 text-fuchsia-100/75">
+              Manage admin agents, permissions, and automation readiness.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/agents/daily-summary"
+            className="min-h-[10.5rem] rounded-[2rem] border border-purple-300/20 bg-purple-300/10 p-6 text-purple-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-purple-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Daily Agent
+            </p>
+            <p className="mt-3 text-2xl font-black">Admin Summary</p>
+            <p className="mt-3 text-sm leading-6 text-purple-100/75">
+              Review messages, uploads, reports, monitoring, bookkeeping, and trust items.
+            </p>
+          </Link>
+
+          <Link
+            href="/admin/agent-rules"
+            className="min-h-[10.5rem] rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6 text-amber-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-amber-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Agent Rules
+            </p>
+            <p className="mt-3 text-2xl font-black">Guardrails</p>
+            <p className="mt-3 text-sm leading-6 text-amber-100/75">
+              Review what agents may do, must approve, and may never do.
+            </p>
+          </Link>
+
+          <Link
             href="/admin/data-requests"
             className="min-h-[10.5rem] rounded-[2rem] border border-sky-300/20 bg-sky-300/10 p-6 text-sky-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-sky-300/15"
           >
