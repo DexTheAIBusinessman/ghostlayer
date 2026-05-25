@@ -180,7 +180,7 @@ const manualChecks = [
   },
   {
     area: "Bookkeeping",
-    href: "/admin/bookkeeping",
+    href: "/admin/agents/billing-bookkeeping",
     whatToCheck:
       "Stripe payments, payouts, refunds, expenses, and monthly close reminders.",
     action: "Create bookkeeping reminders. No accounting decisions.",

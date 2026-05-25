@@ -68,7 +68,7 @@ const agents = [
   },
   {
     name: "Billing / Bookkeeping Agent",
-    href: "/admin/bookkeeping",
+    href: "/admin/agents/billing-bookkeeping",
     status: "Planned",
     mode: "Summary-only",
     description:

@@ -585,6 +585,19 @@ export default async function AdminAnalyticsPage() {
           </Link>
 
           <Link
+            href="/admin/agents/billing-bookkeeping"
+            className="min-h-[10.5rem] rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6 text-amber-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-amber-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Billing Agent
+            </p>
+            <p className="mt-3 text-2xl font-black">Bookkeeping</p>
+            <p className="mt-3 text-sm leading-6 text-amber-100/75">
+              Organize Stripe, payout, refund, expense, and monthly bookkeeping review tasks.
+            </p>
+          </Link>
+
+          <Link
             href="/admin/agents/monitoring"
             className="min-h-[10.5rem] rounded-[2rem] border border-purple-300/20 bg-purple-300/10 p-6 text-purple-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-purple-300/15"
           >
