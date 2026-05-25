@@ -194,7 +194,7 @@ const manualChecks = [
   },
   {
     area: "Incident Response",
-    href: "/admin/incident-response",
+    href: "/admin/agents/incident-response",
     whatToCheck:
       "Billing portal failures, wrong-client risks, upload issues, exposed credential concerns.",
     action: "Escalate to admin before action.",

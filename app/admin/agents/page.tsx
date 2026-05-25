@@ -104,7 +104,7 @@ const agents = [
   },
   {
     name: "Incident Response Agent",
-    href: "/admin/incident-response",
+    href: "/admin/agents/incident-response",
     status: "Planned",
     mode: "Alert-only",
     description:

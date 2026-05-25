@@ -585,6 +585,19 @@ export default async function AdminAnalyticsPage() {
           </Link>
 
           <Link
+            href="/admin/agents/incident-response"
+            className="min-h-[10.5rem] rounded-[2rem] border border-red-300/20 bg-red-300/10 p-6 text-red-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-red-300/15"
+          >
+            <p className="text-xs font-bold uppercase tracking-[0.22em]">
+              Incident Agent
+            </p>
+            <p className="mt-3 text-2xl font-black">Response</p>
+            <p className="mt-3 text-sm leading-6 text-red-100/75">
+              Flag possible incidents, classify severity, and suggest containment steps.
+            </p>
+          </Link>
+
+          <Link
             href="/admin/agents/data-request"
             className="min-h-[10.5rem] rounded-[2rem] border border-sky-300/20 bg-sky-300/10 p-6 text-sky-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-sky-300/15"
           >
