@@ -82,6 +82,69 @@ function formatDate(value?: string | null) {
   }).format(new Date(value));
 }
 
+function hoursSince(value?: string | null) {
+  if (!value) return null;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  return Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60));
+}
+
+function getCronHealth(
+  latest: CronSummaryRow | null,
+  readError?: string
+): {
+  label: "Healthy" | "Warning" | "Stale" | "Error";
+  detail: string;
+  className: string;
+} {
+  if (readError) {
+    return {
+      label: "Error",
+      detail: "Cron history could not be read.",
+      className: "border-red-300/25 bg-red-300/10 text-red-100",
+    };
+  }
+
+  if (!latest) {
+    return {
+      label: "Stale",
+      detail: "No saved cron run yet.",
+      className: "border-orange-300/25 bg-orange-300/10 text-orange-100",
+    };
+  }
+
+  const finishedAt = latest.finished_at || latest.created_at;
+  const ageHours = hoursSince(finishedAt);
+  const readErrors = latest.totals?.readErrors ?? 0;
+
+  if (ageHours === null || ageHours > 36) {
+    return {
+      label: "Stale",
+      detail:
+        ageHours === null
+          ? "Latest cron run has an unknown timestamp."
+          : `Latest run is ${ageHours} hours old.`,
+      className: "border-orange-300/25 bg-orange-300/10 text-orange-100",
+    };
+  }
+
+  if (readErrors > 0) {
+    return {
+      label: "Warning",
+      detail: `${readErrors} read error(s) found in latest run.`,
+      className: "border-amber-300/25 bg-amber-300/10 text-amber-100",
+    };
+  }
+
+  return {
+    label: "Healthy",
+    detail: `Latest run completed ${ageHours} hour(s) ago with no read errors.`,
+    className: "border-emerald-300/25 bg-emerald-300/10 text-emerald-100",
+  };
+}
+
 export const metadata = {
   title: "Agents | Ghostlayer Admin",
   description: "Internal Ghostlayer admin agent control panel.",
@@ -252,6 +315,7 @@ function AgentNightSkyBackground() {
 export default async function AgentsPage() {
   const cronSummaryResult = await getCronSummaries(5);
   const lastCronSummary = cronSummaryResult.rows[0] || null;
+  const cronHealth = getCronHealth(lastCronSummary, cronSummaryResult.error);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white sm:px-8 lg:px-10">\n      <AgentNightSkyBackground />
@@ -306,13 +370,32 @@ export default async function AgentsPage() {
               </p>
             </div>
 
-            <Link
-              href="/admin/agents/daily-summary"
-              className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
-            >
-              Open Daily Summary
-            </Link>
+            <div className="flex flex-col items-start gap-3 sm:items-end">
+              <span className={`rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.16em] ${cronHealth.className}`}>
+                {cronHealth.label}
+              </span>
+              <p className="max-w-xs text-left text-xs leading-5 text-gray-300 sm:text-right">
+                {cronHealth.detail}
+              </p>
+              <Link
+                href="/admin/agents/daily-summary"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Open Daily Summary
+              </Link>
+            </div>
           </div>
+
+          {cronHealth.label === "Stale" || cronHealth.label === "Error" ? (
+            <div className="mt-5 rounded-2xl border border-orange-300/20 bg-orange-300/10 p-4 text-sm leading-6 text-orange-100">
+              <p className="font-bold text-white">
+                Agent health needs attention.
+              </p>
+              <p className="mt-2">
+                {cronHealth.detail} Open Daily Summary and run it manually, then confirm Vercel Cron is configured.
+              </p>
+            </div>
+          ) : null}
 
           {cronSummaryResult.error ? (
             <p className="mt-5 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm leading-6 text-red-100">
