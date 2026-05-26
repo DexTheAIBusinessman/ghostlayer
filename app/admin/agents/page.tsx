@@ -316,6 +316,10 @@ export default async function AgentsPage() {
   const cronSummaryResult = await getCronSummaries(5);
   const lastCronSummary = cronSummaryResult.rows[0] || null;
   const cronHealth = getCronHealth(lastCronSummary, cronSummaryResult.error);
+  const emailNotificationsConfigured =
+    Boolean(process.env.RESEND_API_KEY) &&
+    Boolean(process.env.ADMIN_NOTIFICATION_EMAIL) &&
+    Boolean(process.env.RESEND_FROM_EMAIL);
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white sm:px-8 lg:px-10">\n      <AgentNightSkyBackground />
@@ -366,12 +370,18 @@ export default async function AgentsPage() {
                 Scheduled Email Summary
               </h2>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
-                The Daily Summary Cron Agent can already run, store summaries, and show history. Email notification is not enabled yet.
+                The Daily Summary Cron Agent can run, store summaries, show history, and email the admin when Resend is configured.
               </p>
             </div>
 
-            <span className="rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-amber-100">
-              Not Enabled
+            <span
+              className={`rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.16em] ${
+                emailNotificationsConfigured
+                  ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"
+                  : "border-amber-300/25 bg-amber-300/10 text-amber-100"
+              }`}
+            >
+              {emailNotificationsConfigured ? "Enabled" : "Not Configured"}
             </span>
           </div>
 
@@ -396,7 +406,7 @@ export default async function AgentsPage() {
                 Email Provider
               </p>
               <p className="mt-2 text-sm leading-6 text-gray-300">
-                Choose Resend, SendGrid, Postmark, or another email provider before enabling daily email.
+                Resend is selected. Configure RESEND_API_KEY, ADMIN_NOTIFICATION_EMAIL, and RESEND_FROM_EMAIL in Vercel.
               </p>
             </div>
 

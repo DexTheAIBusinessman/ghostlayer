@@ -728,6 +728,10 @@ export default async function DailySummaryAgentPage() {
   const cronSummaryResult = await getCronSummaries(5);
   const lastCronSummary = cronSummaryResult.rows[0] || null;
   const cronHealth = getCronHealth(lastCronSummary, cronSummaryResult.error);
+  const emailNotificationsConfigured =
+    Boolean(process.env.RESEND_API_KEY) &&
+    Boolean(process.env.ADMIN_NOTIFICATION_EMAIL) &&
+    Boolean(process.env.RESEND_FROM_EMAIL);
 
   const actionQueue = buildAgentActionQueue({
     liveChecks,
@@ -1000,12 +1004,18 @@ export default async function DailySummaryAgentPage() {
                 Scheduled Email Summary
               </h2>
               <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
-                Daily Summary Cron runs are saved and visible here. Email notification is not enabled yet.
+                Daily Summary Cron runs are saved here and can email the admin when Resend is configured.
               </p>
             </div>
 
-            <span className="rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-amber-100">
-              Not Enabled
+            <span
+              className={`rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.16em] ${
+                emailNotificationsConfigured
+                  ? "border-emerald-300/25 bg-emerald-300/10 text-emerald-100"
+                  : "border-amber-300/25 bg-amber-300/10 text-amber-100"
+              }`}
+            >
+              {emailNotificationsConfigured ? "Enabled" : "Not Configured"}
             </span>
           </div>
 
