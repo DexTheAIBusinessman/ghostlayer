@@ -1,5 +1,87 @@
 import Link from "next/link";
 
+type CronSummaryRow = {
+  id?: string;
+  agent?: string;
+  mode?: string;
+  started_at?: string | null;
+  finished_at?: string | null;
+  totals?: {
+    tablesChecked?: number;
+    recentGroupsChecked?: number;
+    readErrors?: number;
+    knownRecords?: number;
+  } | null;
+  recommended_actions?: string[] | null;
+  created_at?: string | null;
+};
+
+function getSupabaseConfig() {
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+  if (!supabaseUrl || !serviceRoleKey) {
+    return {
+      supabaseUrl: null,
+      serviceRoleKey: null,
+      error: "Missing Supabase environment variables.",
+    };
+  }
+
+  return { supabaseUrl, serviceRoleKey, error: null };
+}
+
+async function getCronSummaries(limit = 5): Promise<{
+  rows: CronSummaryRow[];
+  error?: string;
+}> {
+  const { supabaseUrl, serviceRoleKey, error } = getSupabaseConfig();
+
+  if (error || !supabaseUrl || !serviceRoleKey) {
+    return { rows: [], error: error || "Missing Supabase config." };
+  }
+
+  try {
+    const response = await fetch(
+      `${supabaseUrl}/rest/v1/admin_agent_cron_summaries?select=id,agent,mode,started_at,finished_at,totals,recommended_actions,created_at&order=created_at.desc&limit=${limit}`,
+      {
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      return {
+        rows: [],
+        error: errorText || "Could not read cron summaries.",
+      };
+    }
+
+    return { rows: await response.json() };
+  } catch (err) {
+    return {
+      rows: [],
+      error: err instanceof Error ? err.message : "Unknown cron summary read error.",
+    };
+  }
+}
+
+function formatDate(value?: string | null) {
+  if (!value) return "Unknown date";
+
+  return new Intl.DateTimeFormat("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+    hour: "numeric",
+    minute: "2-digit",
+  }).format(new Date(value));
+}
+
 export const metadata = {
   title: "Agents | Ghostlayer Admin",
   description: "Internal Ghostlayer admin agent control panel.",
@@ -167,7 +249,10 @@ function AgentNightSkyBackground() {
   );
 }
 
-export default function AgentsPage() {
+export default async function AgentsPage() {
+  const cronSummaryResult = await getCronSummaries(5);
+  const lastCronSummary = cronSummaryResult.rows[0] || null;
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white sm:px-8 lg:px-10">\n      <AgentNightSkyBackground />
       <section className="relative z-10 mx-auto max-w-7xl">
@@ -206,6 +291,108 @@ export default function AgentsPage() {
             Trust & Compliance
           </Link>
         </div>
+
+        <section className="mt-8 rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-emerald-200">
+                Latest Agent Runs
+              </p>
+              <h2 className="mt-3 text-2xl font-black text-white">
+                Cron History
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+                Saved background runs from the Daily Summary Cron Agent. This helps confirm the automation is running and storing summaries.
+              </p>
+            </div>
+
+            <Link
+              href="/admin/agents/daily-summary"
+              className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+            >
+              Open Daily Summary
+            </Link>
+          </div>
+
+          {cronSummaryResult.error ? (
+            <p className="mt-5 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm leading-6 text-red-100">
+              {cronSummaryResult.error}
+            </p>
+          ) : lastCronSummary ? (
+            <div className="mt-6 grid gap-4 lg:grid-cols-[0.85fr_1.15fr]">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-200">
+                  Latest Run
+                </p>
+
+                <dl className="mt-4 space-y-3 text-sm text-gray-300">
+                  <div className="flex justify-between gap-4">
+                    <dt>Agent</dt>
+                    <dd className="text-right text-white">{lastCronSummary.agent || "Daily Summary Cron Agent"}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt>Finished</dt>
+                    <dd className="text-right text-white">{formatDate(lastCronSummary.finished_at || lastCronSummary.created_at)}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt>Known records</dt>
+                    <dd className="text-right text-white">{lastCronSummary.totals?.knownRecords ?? "—"}</dd>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <dt>Read errors</dt>
+                    <dd className="text-right text-white">{lastCronSummary.totals?.readErrors ?? "—"}</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-200">
+                  Latest Recommended Actions
+                </p>
+
+                {lastCronSummary.recommended_actions?.length ? (
+                  <ul className="mt-4 space-y-2 text-sm leading-6 text-gray-300">
+                    {lastCronSummary.recommended_actions.slice(0, 5).map((action, index) => (
+                      <li key={`${action}-${index}`}>• {action}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p className="mt-4 text-sm text-gray-400">
+                    No recommended actions were saved for the latest run.
+                  </p>
+                )}
+              </div>
+            </div>
+          ) : (
+            <p className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-gray-300">
+              No saved cron runs yet. Open Daily Summary and click “Run Daily Summary Now,” or wait for the scheduled cron.
+            </p>
+          )}
+
+          {cronSummaryResult.rows.length > 1 ? (
+            <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-200">
+                Previous Runs
+              </p>
+
+              <div className="mt-4 grid gap-3 md:grid-cols-2">
+                {cronSummaryResult.rows.slice(1).map((summary) => (
+                  <div
+                    key={summary.id}
+                    className="rounded-xl border border-white/10 bg-white/[0.035] p-3 text-sm text-gray-300"
+                  >
+                    <p className="font-bold text-white">
+                      {formatDate(summary.finished_at || summary.created_at)}
+                    </p>
+                    <p className="mt-1">
+                      Records: {summary.totals?.knownRecords ?? "—"} · Errors: {summary.totals?.readErrors ?? "—"}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </section>
 
         <div className="mt-8 grid gap-5 lg:grid-cols-2">
           {agents.map((agent) => (
