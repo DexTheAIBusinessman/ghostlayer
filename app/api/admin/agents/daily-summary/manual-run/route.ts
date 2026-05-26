@@ -7,7 +7,89 @@ function getBaseUrl(request: Request) {
   return `${url.protocol}//${url.host}`;
 }
 
+function isAdminAuthorized(request: Request) {
+  const adminUser = process.env.ADMIN_USERNAME?.trim();
+  const adminPassword = process.env.ADMIN_PASSWORD?.trim();
+
+  if (!adminUser || !adminPassword) {
+    return {
+      ok: false,
+      status: 500,
+      error: "Missing admin auth environment variables.",
+    };
+  }
+
+  const authHeader = request.headers.get("authorization");
+
+  if (!authHeader?.startsWith("Basic ")) {
+    return {
+      ok: false,
+      status: 401,
+      error: "Unauthorized.",
+    };
+  }
+
+  const encoded = authHeader.slice("Basic ".length);
+
+  let decoded = "";
+
+  try {
+    decoded = Buffer.from(encoded, "base64").toString("utf8");
+  } catch {
+    return {
+      ok: false,
+      status: 401,
+      error: "Unauthorized.",
+    };
+  }
+
+  const separatorIndex = decoded.indexOf(":");
+
+  if (separatorIndex === -1) {
+    return {
+      ok: false,
+      status: 401,
+      error: "Unauthorized.",
+    };
+  }
+
+  const username = decoded.slice(0, separatorIndex);
+  const password = decoded.slice(separatorIndex + 1);
+
+  if (username !== adminUser || password !== adminPassword) {
+    return {
+      ok: false,
+      status: 401,
+      error: "Unauthorized.",
+    };
+  }
+
+  return {
+    ok: true,
+    status: 200,
+    error: null,
+  };
+}
+
 export async function POST(request: Request) {
+  const adminAuth = isAdminAuthorized(request);
+
+  if (!adminAuth.ok) {
+    return NextResponse.json(
+      {
+        ok: false,
+        error: adminAuth.error,
+      },
+      {
+        status: adminAuth.status,
+        headers:
+          adminAuth.status === 401
+            ? { "WWW-Authenticate": 'Basic realm="Ghostlayer Admin"' }
+            : undefined,
+      }
+    );
+  }
+
   const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
