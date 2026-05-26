@@ -192,6 +192,95 @@ function rowSummary(row: Record<string, unknown>) {
   };
 }
 
+async function cleanupCronSummaries(agent = "Daily Summary Cron Agent", keepLatest = 90) {
+  const { supabaseUrl, serviceRoleKey, error } = getSupabaseConfig();
+
+  if (error || !supabaseUrl || !serviceRoleKey) {
+    return {
+      ok: false,
+      deleted: 0,
+      error: error || "Missing Supabase config.",
+    };
+  }
+
+  try {
+    const listResponse = await fetch(
+      `${supabaseUrl}/rest/v1/admin_agent_cron_summaries?select=id,created_at&agent=eq.${encodeURIComponent(
+        agent
+      )}&order=created_at.desc&offset=${keepLatest}`,
+      {
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!listResponse.ok) {
+      const errorText = await listResponse.text().catch(() => "");
+      return {
+        ok: false,
+        deleted: 0,
+        error: errorText || "Could not list old cron summaries.",
+      };
+    }
+
+    const oldRows = await listResponse.json().catch(() => []);
+
+    if (!Array.isArray(oldRows) || oldRows.length === 0) {
+      return {
+        ok: true,
+        deleted: 0,
+      };
+    }
+
+    const oldIds = oldRows
+      .map((row) => row?.id)
+      .filter((id): id is string => typeof id === "string" && id.length > 0);
+
+    if (!oldIds.length) {
+      return {
+        ok: true,
+        deleted: 0,
+      };
+    }
+
+    const deleteResponse = await fetch(
+      `${supabaseUrl}/rest/v1/admin_agent_cron_summaries?id=in.(${oldIds.join(",")})`,
+      {
+        method: "DELETE",
+        headers: {
+          apikey: serviceRoleKey,
+          Authorization: `Bearer ${serviceRoleKey}`,
+          Prefer: "return=minimal",
+        },
+        cache: "no-store",
+      }
+    );
+
+    if (!deleteResponse.ok) {
+      const errorText = await deleteResponse.text().catch(() => "");
+      return {
+        ok: false,
+        deleted: 0,
+        error: errorText || "Could not delete old cron summaries.",
+      };
+    }
+
+    return {
+      ok: true,
+      deleted: oldIds.length,
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      deleted: 0,
+      error: err instanceof Error ? err.message : "Unknown cron cleanup error.",
+    };
+  }
+}
+
 async function storeCronSummary(summary: {
   agent: string;
   mode: string;
@@ -373,10 +462,15 @@ export async function GET(request: Request) {
   };
 
   const storage = await storeCronSummary(summary);
+  const retention = await cleanupCronSummaries("Daily Summary Cron Agent", 90);
 
   const responseSummary = {
     ...summary,
     storage,
+    retention: {
+      ...retention,
+      keepLatest: 90,
+    },
   };
 
   console.log("[Daily Summary Cron Agent]", JSON.stringify(responseSummary, null, 2));

@@ -818,6 +818,9 @@ export default async function DailySummaryAgentPage() {
               <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
                 This shows the latest saved run from the Daily Summary Cron Agent.
               </p>
+              <p className="mt-2 max-w-3xl text-xs leading-6 text-emerald-100/80">
+                Retention policy: keeps the latest 90 saved Daily Summary Cron runs and removes older rows after each successful run.
+              </p>
             </div>
 
             <div className="flex flex-col items-start gap-3 sm:items-end">
