@@ -317,6 +317,69 @@ function formatDate(value?: string | null) {
   }).format(new Date(value));
 }
 
+function hoursSince(value?: string | null) {
+  if (!value) return null;
+
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return null;
+
+  return Math.floor((Date.now() - date.getTime()) / (1000 * 60 * 60));
+}
+
+function getCronHealth(
+  latest: CronSummaryRow | null,
+  readError?: string
+): {
+  label: "Healthy" | "Warning" | "Stale" | "Error";
+  detail: string;
+  className: string;
+} {
+  if (readError) {
+    return {
+      label: "Error",
+      detail: "Cron history could not be read.",
+      className: "border-red-300/25 bg-red-300/10 text-red-100",
+    };
+  }
+
+  if (!latest) {
+    return {
+      label: "Stale",
+      detail: "No saved cron run yet.",
+      className: "border-orange-300/25 bg-orange-300/10 text-orange-100",
+    };
+  }
+
+  const finishedAt = latest.finished_at || latest.created_at;
+  const ageHours = hoursSince(finishedAt);
+  const readErrors = latest.totals?.readErrors ?? 0;
+
+  if (ageHours === null || ageHours > 36) {
+    return {
+      label: "Stale",
+      detail:
+        ageHours === null
+          ? "Latest cron run has an unknown timestamp."
+          : `Latest run is ${ageHours} hours old.`,
+      className: "border-orange-300/25 bg-orange-300/10 text-orange-100",
+    };
+  }
+
+  if (readErrors > 0) {
+    return {
+      label: "Warning",
+      detail: `${readErrors} read error(s) found in latest run.`,
+      className: "border-amber-300/25 bg-amber-300/10 text-amber-100",
+    };
+  }
+
+  return {
+    label: "Healthy",
+    detail: `Latest run completed ${ageHours} hour(s) ago with no read errors.`,
+    className: "border-emerald-300/25 bg-emerald-300/10 text-emerald-100",
+  };
+}
+
 function getRowDate(row: GenericAdminRow) {
   const value =
     row.created_at ||
@@ -664,6 +727,7 @@ export default async function DailySummaryAgentPage() {
 
   const cronSummaryResult = await getCronSummaries(5);
   const lastCronSummary = cronSummaryResult.rows[0] || null;
+  const cronHealth = getCronHealth(lastCronSummary, cronSummaryResult.error);
 
   const actionQueue = buildAgentActionQueue({
     liveChecks,
@@ -757,12 +821,33 @@ export default async function DailySummaryAgentPage() {
             </div>
 
             <div className="flex flex-col items-start gap-3 sm:items-end">
-              <span className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white">
-                {lastCronSummary ? "Saved" : "No saved run"}
+              <span className={`rounded-full border px-4 py-2 text-xs font-black uppercase tracking-[0.16em] ${cronHealth.className}`}>
+                {cronHealth.label}
               </span>
+              <p className="max-w-xs text-left text-xs leading-5 text-gray-300 sm:text-right">
+                {cronHealth.detail}
+              </p>
               <RunDailySummaryButton />
             </div>
           </div>
+
+          {cronHealth.label === "Stale" || cronHealth.label === "Error" ? (
+            <div className="mt-5 rounded-2xl border border-orange-300/20 bg-orange-300/10 p-5 text-sm leading-6 text-orange-100">
+              <p className="text-lg font-black text-white">
+                Cron not running?
+              </p>
+              <p className="mt-2">
+                {cronHealth.detail}
+              </p>
+              <ol className="mt-4 list-decimal space-y-2 pl-5 text-gray-200">
+                <li>Click “Run Daily Summary Now” to confirm the agent works manually.</li>
+                <li>Confirm <span className="font-mono text-white">CRON_SECRET</span> exists in Vercel Production.</li>
+                <li>Confirm <span className="font-mono text-white">vercel.json</span> points to <span className="font-mono text-white">/api/admin/agents/daily-summary/run</span>.</li>
+                <li>Check Vercel Cron logs for the Daily Summary route.</li>
+                <li>Confirm <span className="font-mono text-white">admin_agent_cron_summaries</span> is receiving rows.</li>
+              </ol>
+            </div>
+          ) : null}
 
           {cronSummaryResult.error ? (
             <p className="mt-5 rounded-2xl border border-red-300/20 bg-red-300/10 p-4 text-sm leading-6 text-red-100">
