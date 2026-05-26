@@ -356,6 +356,122 @@ export default async function AgentsPage() {
           </Link>
         </div>
 
+        <section className="mt-8 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-amber-200">
+                Admin Notification Readiness
+              </p>
+              <h2 className="mt-3 text-2xl font-black text-white">
+                Scheduled Email Summary
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+                The Daily Summary Cron Agent can already run, store summaries, and show history. Email notification is not enabled yet.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-amber-300/25 bg-amber-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-amber-100">
+              Not Enabled
+            </span>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-200">
+                Current
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                UI + Logs
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Summaries are stored in Supabase and shown on the admin pages.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-200">
+                Next
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                Email Provider
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Choose Resend, SendGrid, Postmark, or another email provider before enabling daily email.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-200">
+                Rule
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                Admin Only
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Daily summaries should go only to the admin email, not clients.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <section className="mt-8 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
+                Agent Retention Status
+              </p>
+              <h2 className="mt-3 text-2xl font-black text-white">
+                Cron History Cleanup
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+                The Daily Summary Cron Agent stores run summaries in Supabase, then automatically cleans up older rows.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-emerald-100">
+              Active
+            </span>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                Retention
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                Latest 90 Runs
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Keeps the newest 90 saved Daily Summary Cron Agent records.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                Cleanup Timing
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                After Each Run
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Cleanup runs after each successful cron or manual Daily Summary run.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                Purpose
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                Prevent Growth
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Prevents unlimited Supabase cron history growth while preserving useful recent history.
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section className="mt-8 rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
