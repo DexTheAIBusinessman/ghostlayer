@@ -932,6 +932,64 @@ export default async function DailySummaryAgentPage() {
           ) : null}
         </section>
 
+        <section className="mt-8 rounded-[2rem] border border-blue-300/20 bg-blue-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-blue-200">
+                Email Notification Status
+              </p>
+              <h2 className="mt-3 text-2xl font-black text-white">
+                Resend Admin Summary
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+                The Daily Summary Cron Agent can email the saved daily summary to the admin only when Resend environment variables are configured.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-blue-300/25 bg-blue-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-blue-100">
+              Admin Only
+            </span>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-200">
+                Required
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                Resend Env Vars
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                RESEND_API_KEY, ADMIN_NOTIFICATION_EMAIL, and RESEND_FROM_EMAIL must exist in Vercel.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-200">
+                Recipient
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                Admin Only
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                The cron email is for the Ghostlayer admin, not clients.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-200">
+                Safety
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                Read-Only
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Email notification does not send client replies, delete records, refund payments, or publish reports.
+              </p>
+            </div>
+          </div>
+        </section>
+
         <section className="mt-8 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>

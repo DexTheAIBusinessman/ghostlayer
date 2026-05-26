@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { Resend } from "resend";
 
 export const dynamic = "force-dynamic";
 
@@ -190,6 +191,117 @@ function rowSummary(row: Record<string, unknown>) {
     primary: String(primary),
     date: date ? String(date) : null,
   };
+}
+
+async function sendAdminSummaryEmail(summary: {
+  agent: string;
+  startedAt: string;
+  finishedAt: string;
+  totals: Record<string, unknown>;
+  recommendedActions: string[];
+  guardrails: string[];
+}) {
+  const apiKey = process.env.RESEND_API_KEY;
+  const to = process.env.ADMIN_NOTIFICATION_EMAIL;
+  const from = process.env.RESEND_FROM_EMAIL;
+
+  if (!apiKey || !to || !from) {
+    return {
+      ok: false,
+      skipped: true,
+      error:
+        "Missing RESEND_API_KEY, ADMIN_NOTIFICATION_EMAIL, or RESEND_FROM_EMAIL.",
+    };
+  }
+
+  const resend = new Resend(apiKey);
+
+  const knownRecords =
+    typeof summary.totals.knownRecords === "number"
+      ? summary.totals.knownRecords
+      : "—";
+
+  const readErrors =
+    typeof summary.totals.readErrors === "number"
+      ? summary.totals.readErrors
+      : "—";
+
+  const tablesChecked =
+    typeof summary.totals.tablesChecked === "number"
+      ? summary.totals.tablesChecked
+      : "—";
+
+  const actionsHtml = summary.recommendedActions.length
+    ? summary.recommendedActions
+        .map((action) => `<li>${escapeHtml(action)}</li>`)
+        .join("")
+    : "<li>No recommended actions were generated.</li>";
+
+  const guardrailsHtml = summary.guardrails.length
+    ? summary.guardrails.map((item) => `<li>${escapeHtml(item)}</li>`).join("")
+    : "<li>No guardrails listed.</li>";
+
+  try {
+    const result = await resend.emails.send({
+      from,
+      to,
+      subject: "Ghostlayer Daily Admin Summary",
+      html: `
+        <div style="font-family:Arial,sans-serif;line-height:1.6;color:#111827;">
+          <h1>Ghostlayer Daily Admin Summary</h1>
+          <p><strong>Agent:</strong> ${escapeHtml(summary.agent)}</p>
+          <p><strong>Finished:</strong> ${escapeHtml(summary.finishedAt)}</p>
+
+          <h2>Run Totals</h2>
+          <ul>
+            <li><strong>Known records:</strong> ${knownRecords}</li>
+            <li><strong>Read errors:</strong> ${readErrors}</li>
+            <li><strong>Tables checked:</strong> ${tablesChecked}</li>
+          </ul>
+
+          <h2>Recommended Actions</h2>
+          <ul>${actionsHtml}</ul>
+
+          <h2>Guardrails</h2>
+          <ul>${guardrailsHtml}</ul>
+
+          <p style="margin-top:24px;color:#6b7280;font-size:13px;">
+            This email is admin-only. The agent did not send client messages, delete records,
+            issue refunds, merge clients, or publish reports.
+          </p>
+        </div>
+      `,
+    });
+
+    if (result.error) {
+      return {
+        ok: false,
+        skipped: false,
+        error: result.error.message,
+      };
+    }
+
+    return {
+      ok: true,
+      skipped: false,
+      id: result.data?.id || null,
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      skipped: false,
+      error: err instanceof Error ? err.message : "Unknown Resend error.",
+    };
+  }
+}
+
+function escapeHtml(value: string) {
+  return value
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 async function cleanupCronSummaries(agent = "Daily Summary Cron Agent", keepLatest = 90) {
@@ -463,6 +575,7 @@ export async function GET(request: Request) {
 
   const storage = await storeCronSummary(summary);
   const retention = await cleanupCronSummaries("Daily Summary Cron Agent", 90);
+  const email = await sendAdminSummaryEmail(summary);
 
   const responseSummary = {
     ...summary,
@@ -471,6 +584,7 @@ export async function GET(request: Request) {
       ...retention,
       keepLatest: 90,
     },
+    email,
   };
 
   console.log("[Daily Summary Cron Agent]", JSON.stringify(responseSummary, null, 2));
