@@ -1,4 +1,5 @@
 import Link from "next/link";
+import RunDailySummaryButton from "./components/RunDailySummaryButton";
 
 export const metadata = {
   title: "Daily Admin Summary Agent | Ghostlayer Admin",
@@ -755,9 +756,12 @@ export default async function DailySummaryAgentPage() {
               </p>
             </div>
 
-            <span className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white">
-              {lastCronSummary ? "Saved" : "No saved run"}
-            </span>
+            <div className="flex flex-col items-start gap-3 sm:items-end">
+              <span className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white">
+                {lastCronSummary ? "Saved" : "No saved run"}
+              </span>
+              <RunDailySummaryButton />
+            </div>
           </div>
 
           {cronSummaryResult.error ? (
