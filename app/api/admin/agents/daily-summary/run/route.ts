@@ -192,6 +192,72 @@ function rowSummary(row: Record<string, unknown>) {
   };
 }
 
+async function storeCronSummary(summary: {
+  agent: string;
+  mode: string;
+  startedAt: string;
+  finishedAt: string;
+  totals: Record<string, unknown>;
+  counts: CountResult[];
+  recent: unknown[];
+  recommendedActions: string[];
+  guardrails: string[];
+}) {
+  const { supabaseUrl, serviceRoleKey, error } = getSupabaseConfig();
+
+  if (error || !supabaseUrl || !serviceRoleKey) {
+    return {
+      ok: false,
+      error: error || "Missing Supabase config.",
+    };
+  }
+
+  try {
+    const response = await fetch(`${supabaseUrl}/rest/v1/admin_agent_cron_summaries`, {
+      method: "POST",
+      headers: {
+        apikey: serviceRoleKey,
+        Authorization: `Bearer ${serviceRoleKey}`,
+        "Content-Type": "application/json",
+        Prefer: "return=representation",
+      },
+      body: JSON.stringify({
+        agent: summary.agent,
+        mode: summary.mode,
+        started_at: summary.startedAt,
+        finished_at: summary.finishedAt,
+        totals: summary.totals,
+        counts: summary.counts,
+        recent: summary.recent,
+        recommended_actions: summary.recommendedActions,
+        guardrails: summary.guardrails,
+      }),
+      cache: "no-store",
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text().catch(() => "");
+      return {
+        ok: false,
+        error: errorText || "Could not store cron summary.",
+      };
+    }
+
+    const rows = await response.json().catch(() => []);
+    const saved = Array.isArray(rows) ? rows[0] : null;
+
+    return {
+      ok: true,
+      id: saved?.id || null,
+    };
+  } catch (err) {
+    return {
+      ok: false,
+      error: err instanceof Error ? err.message : "Unknown storage error.",
+    };
+  }
+}
+
 function buildRecommendedActions(counts: CountResult[], recent: RecentResult[]) {
   const actions: string[] = [];
 
@@ -306,7 +372,14 @@ export async function GET(request: Request) {
     ],
   };
 
-  console.log("[Daily Summary Cron Agent]", JSON.stringify(summary, null, 2));
+  const storage = await storeCronSummary(summary);
 
-  return NextResponse.json(summary);
+  const responseSummary = {
+    ...summary,
+    storage,
+  };
+
+  console.log("[Daily Summary Cron Agent]", JSON.stringify(responseSummary, null, 2));
+
+  return NextResponse.json(responseSummary);
 }
