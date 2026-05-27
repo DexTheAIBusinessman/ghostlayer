@@ -65,6 +65,40 @@ export default function ContactPage() {
           </a>
         </div>
 
+        
+        <nav className="mb-8 flex flex-wrap gap-3 text-xs font-bold">
+          <a
+            href="/contact"
+            className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100 transition hover:bg-cyan-300/15"
+          >
+            Contact Support
+          </a>
+          <a
+            href="/privacy"
+            className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-gray-300 transition hover:text-white"
+          >
+            Privacy
+          </a>
+          <a
+            href="/terms"
+            className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-gray-300 transition hover:text-white"
+          >
+            Terms
+          </a>
+          <a
+            href="/refund-policy"
+            className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-gray-300 transition hover:text-white"
+          >
+            Refund Policy
+          </a>
+          <a
+            href="/service-agreement"
+            className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-gray-300 transition hover:text-white"
+          >
+            Service Agreement
+          </a>
+        </nav>
+
         <article className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
             Contact & Support
@@ -194,36 +228,6 @@ export default function ContactPage() {
             </ul>
           </section>
 
-          <section className="mt-8">
-            <h2 className="text-xl font-bold text-white">Related pages</h2>
-
-            <div className="mt-4 flex flex-wrap gap-3">
-              <a
-                href="/privacy"
-                className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
-              >
-                Privacy Policy
-              </a>
-              <a
-                href="/terms"
-                className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
-              >
-                Terms
-              </a>
-              <a
-                href="/refund-policy"
-                className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
-              >
-                Refund Policy
-              </a>
-              <a
-                href="/service-agreement"
-                className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
-              >
-                Service Agreement
-              </a>
-            </div>
-          </section>
         </article>
       </section>
 
