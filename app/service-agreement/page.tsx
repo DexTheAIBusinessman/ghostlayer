@@ -68,6 +68,39 @@ export default function ServiceAgreementPage() {
           GHOSTLAYER
         </a>
 
+        <nav className="mb-8 flex flex-wrap gap-3 text-xs font-bold">
+          <a
+            href="/contact"
+            className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100 transition hover:bg-cyan-300/15"
+          >
+            Contact Support
+          </a>
+          <a
+            href="/privacy"
+            className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-gray-300 transition hover:text-white"
+          >
+            Privacy
+          </a>
+          <a
+            href="/terms"
+            className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-gray-300 transition hover:text-white"
+          >
+            Terms
+          </a>
+          <a
+            href="/refund-policy"
+            className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-gray-300 transition hover:text-white"
+          >
+            Refund Policy
+          </a>
+          <a
+            href="/service-agreement"
+            className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-gray-300 transition hover:text-white"
+          >
+            Service Agreement
+          </a>
+        </nav>
+
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur sm:p-10">
           <p className="text-xs uppercase tracking-[0.28em] text-cyan-300">
             Agreement
