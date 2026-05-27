@@ -67,20 +67,21 @@ export default function ContactPage() {
 
         <article className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-10">
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
-            Contact Support
+            Contact & Support
           </p>
 
           <h1 className="mt-5 text-4xl font-black tracking-tight sm:text-5xl">
-            Contact Ghostlayer
+            Need help with Ghostlayer?
           </h1>
 
-          <p className="mt-5 text-sm leading-7 text-gray-300">
+          <p className="mt-5 max-w-3xl text-sm leading-7 text-gray-300">
             Contact Ghostlayer for billing questions, upload issues, report access,
             refund questions, privacy requests, data correction requests, or general
-            support.
+            support. For the fastest help, email from the same address used for your
+            purchase or Ghostlayer request.
           </p>
 
-          <div className="mt-8 rounded-2xl border border-white/10 bg-black/20 p-5">
+          <div className="mt-8 rounded-2xl border border-cyan-300/20 bg-cyan-300/10 p-5">
             <h2 className="text-xl font-bold text-white">Support email</h2>
 
             <a
@@ -96,62 +97,133 @@ export default function ContactPage() {
             </p>
           </div>
 
-          <div className="mt-8 space-y-6 text-sm leading-7 text-gray-300">
-            <section>
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                Response Time
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                1–2 Business Days
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Urgent billing, access, privacy, or security issues should be clearly
+                marked in the subject line.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                Include
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                Request Email
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Use the email connected to the payment, upload, report, or client
+                request.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                Safety
+              </p>
+              <p className="mt-2 text-xl font-black text-white">
+                No Secrets
+              </p>
+              <p className="mt-2 text-sm leading-6 text-gray-300">
+                Do not email passwords, API keys, private tokens, or sensitive
+                credentials.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-8 grid gap-5 md:grid-cols-2">
+            <section className="rounded-2xl border border-white/10 bg-black/20 p-5">
               <h2 className="text-xl font-bold text-white">Billing and refunds</h2>
-              <p className="mt-2">
-                For payment, billing portal, refund, or Stripe-related questions,
-                contact support using the email connected to your purchase.
+              <p className="mt-2 text-sm leading-7 text-gray-300">
+                For payment, billing portal, refund, failed payment, receipt, or
+                Stripe-related questions, contact support using the email connected
+                to your purchase.
               </p>
             </section>
 
-            <section>
-              <h2 className="text-xl font-bold text-white">Reports and uploads</h2>
-              <p className="mt-2">
-                For report access, uploaded files, client portal issues, or delivery
-                questions, include the client email used with Ghostlayer.
+            <section className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <h2 className="text-xl font-bold text-white">Uploads and files</h2>
+              <p className="mt-2 text-sm leading-7 text-gray-300">
+                For upload issues, missing files, supported file types, or files
+                attached to the wrong request, include the file name and client email.
               </p>
             </section>
 
-            <section>
+            <section className="rounded-2xl border border-white/10 bg-black/20 p-5">
+              <h2 className="text-xl font-bold text-white">Reports and monitoring</h2>
+              <p className="mt-2 text-sm leading-7 text-gray-300">
+                For report access, uploaded files, monitoring updates, client portal
+                issues, or delivery questions, include the client email used with
+                Ghostlayer.
+              </p>
+            </section>
+
+            <section className="rounded-2xl border border-white/10 bg-black/20 p-5">
               <h2 className="text-xl font-bold text-white">Privacy and data requests</h2>
-              <p className="mt-2">
+              <p className="mt-2 text-sm leading-7 text-gray-300">
                 You may request review, correction, or deletion of client information
                 where legally and operationally appropriate. Some records may need to
                 be retained for payment, tax, security, dispute, or legal reasons.
               </p>
             </section>
-
-            <section>
-              <h2 className="text-xl font-bold text-white">Related pages</h2>
-              <div className="mt-4 flex flex-wrap gap-3">
-                <a
-                  href="/privacy"
-                  className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
-                >
-                  Privacy Policy
-                </a>
-                <a
-                  href="/terms"
-                  className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
-                >
-                  Terms
-                </a>
-                <a
-                  href="/refund-policy"
-                  className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
-                >
-                  Refund Policy
-                </a>
-                <a
-                  href="/service-agreement"
-                  className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
-                >
-                  Service Agreement
-                </a>
-              </div>
-            </section>
           </div>
+
+          <section className="mt-8 rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
+            <h2 className="text-xl font-bold text-white">Helpful details to include</h2>
+
+            <ul className="mt-4 grid gap-3 text-sm leading-6 text-gray-300 md:grid-cols-2">
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                The email address used for your payment or request.
+              </li>
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                Whether the issue is about billing, upload, report, monitoring, privacy, or access.
+              </li>
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                Any report link, file name, access code, or request detail that helps identify the issue.
+              </li>
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                A short explanation of what happened and what outcome you are requesting.
+              </li>
+            </ul>
+          </section>
+
+          <section className="mt-8">
+            <h2 className="text-xl font-bold text-white">Related pages</h2>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href="/privacy"
+                className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
+              >
+                Privacy Policy
+              </a>
+              <a
+                href="/terms"
+                className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
+              >
+                Terms
+              </a>
+              <a
+                href="/refund-policy"
+                className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
+              >
+                Refund Policy
+              </a>
+              <a
+                href="/service-agreement"
+                className="rounded-full border border-white/10 px-4 py-2 text-gray-300 transition hover:text-white"
+              >
+                Service Agreement
+              </a>
+            </div>
+          </section>
         </article>
       </section>
 
