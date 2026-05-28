@@ -256,7 +256,62 @@ export default async function ClientDashboardPage() {
               Logout
             </Link>
           </div>
+          <Link
+            href="/contact"
+            className="rounded-2xl border border-white/10 bg-black/20 px-5 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] hover:bg-white/[0.08]"
+          >
+            Contact Support
+          </Link>
+
         </div>
+
+        <section className="mt-8 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
+            Getting Started
+          </p>
+
+          <h2 className="mt-3 text-2xl font-black text-white">
+            How to use your Ghostlayer portal
+          </h2>
+
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+            Use this dashboard to review your Ghostlayer request, upload files,
+            read admin messages, access reports, check monitoring updates, and manage billing.
+          </p>
+
+          <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Step 1</p>
+              <h3 className="mt-2 text-lg font-black text-white">Review</h3>
+              <p className="mt-2 text-sm leading-6 text-gray-300">Check your dashboard for current reports and portal updates.</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Step 2</p>
+              <h3 className="mt-2 text-lg font-black text-white">Upload</h3>
+              <p className="mt-2 text-sm leading-6 text-gray-300">Add requested files or screenshots so Ghostlayer has enough context.</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Step 3</p>
+              <h3 className="mt-2 text-lg font-black text-white">Message</h3>
+              <p className="mt-2 text-sm leading-6 text-gray-300">Read admin replies and send follow-up details if something changes.</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Step 4</p>
+              <h3 className="mt-2 text-lg font-black text-white">Reports</h3>
+              <p className="mt-2 text-sm leading-6 text-gray-300">View completed reports and review recommendations when available.</p>
+            </div>
+
+            <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Help</p>
+              <h3 className="mt-2 text-lg font-black text-white">Support</h3>
+              <p className="mt-2 text-sm leading-6 text-gray-300">Use Contact Support for billing, access, upload, report, or privacy questions.</p>
+            </div>
+          </div>
+        </section>
+
 
         <div className="mb-8 grid gap-4 md:grid-cols-3">
           <div className="rounded-[1.5rem] border border-cyan-300/25 bg-cyan-300/10 p-5 backdrop-blur-xl">
