@@ -265,7 +265,7 @@ export default async function ClientDashboardPage() {
 
         </div>
 
-        <section className="mt-8 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+        <section className="mt-8 rounded-[1.5rem] border border-cyan-300/20 bg-cyan-300/10 p-5 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
           <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
             Getting Started
           </p>
