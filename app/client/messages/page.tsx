@@ -328,7 +328,88 @@ export default async function ClientMessagesPage({
               New Message
             </p>
 
-            <form action="/api/send-client-message" className="mt-6 space-y-4" method="post">
+    
+        <section className="mt-8 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
+            Message Guidance
+          </p>
+
+          <h2 className="mt-3 text-2xl font-black text-white">
+            How to send a useful message
+          </h2>
+
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+            Use messages to send follow-up details, answer Ghostlayer questions, clarify uploaded files,
+            or explain what changed in your workflow. Clear, specific messages help Ghostlayer review your request faster.
+          </p>
+
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Good message details
+              </h3>
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-gray-300">
+                <li>• What changed since your original request.</li>
+                <li>• Which upload, report, process, or tool your message is about.</li>
+                <li>• What outcome you want Ghostlayer to review or clarify.</li>
+                <li>• Any missing context that would help explain the issue.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Response timing
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-gray-300">
+                Messages are reviewed during normal Ghostlayer admin review windows. For urgent billing,
+                access, privacy, or security issues, use Contact Support and clearly mark the issue as urgent.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-red-300/20 bg-red-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Do not send
+              </h3>
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-gray-300">
+                <li>• Passwords or login credentials.</li>
+                <li>• API keys, private tokens, or secret keys.</li>
+                <li>• Full bank/card numbers or unnecessary sensitive personal data.</li>
+                <li>• Files or information you do not have permission to share.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-5">
+            <h3 className="text-lg font-black text-white">
+              Message template
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-gray-300">
+              A useful message usually includes: what this is about, what changed, what file/report it connects to,
+              and what you need Ghostlayer to review next.
+            </p>
+
+            <div className="mt-4 rounded-2xl border border-cyan-300/15 bg-cyan-300/10 p-4 text-sm leading-7 text-cyan-100">
+              Example: “This is about my uploaded sales intake screenshot. The issue is that new leads are being copied manually from email into the CRM. I uploaded the screenshot named sales-intake-flow.png. Please review whether this can be simplified.”
+            </div>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href="/contact"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Contact Support
+              </a>
+              <a
+                href="/client/uploads"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Upload Files
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <form action="/api/send-client-message" className="mt-6 space-y-4" method="post">
               <label className="block">
                 <span className="mb-2 block text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
                   Related Report
