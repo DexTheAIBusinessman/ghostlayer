@@ -217,7 +217,78 @@ export default async function ClientUploadsPage({
               New Upload
             </p>
 
-            <form
+    
+        <section className="mt-8 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
+            Upload Guidance
+          </p>
+
+          <h2 className="mt-3 text-2xl font-black text-white">
+            What to upload
+          </h2>
+
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+            Upload files that help Ghostlayer understand your workflow, tools, bottlenecks,
+            reports, handoffs, or business process. Clear screenshots and short documents are usually more useful than large unrelated files.
+          </p>
+
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Good files to upload
+              </h3>
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-gray-300">
+                <li>• Workflow screenshots or screen recordings exported as files.</li>
+                <li>• SOPs, process notes, checklists, or handoff instructions.</li>
+                <li>• Tool screenshots from CRMs, spreadsheets, project boards, or dashboards.</li>
+                <li>• Reports, spreadsheets, forms, intake details, or operational documents.</li>
+                <li>• Images or documents that show where work slows down or gets confusing.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-red-300/20 bg-red-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                What not to upload
+              </h3>
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-gray-300">
+                <li>• Passwords, API keys, private tokens, or login credentials.</li>
+                <li>• Full bank account numbers, full card numbers, or unnecessary financial records.</li>
+                <li>• Private personal information that is not needed for the workflow review.</li>
+                <li>• Files you do not own or do not have permission to share.</li>
+                <li>• Extremely large unrelated files that do not explain your workflow.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-5">
+            <h3 className="text-lg font-black text-white">
+              Upload tips
+            </h3>
+            <p className="mt-3 text-sm leading-7 text-gray-300">
+              Use clear file names like <span className="font-mono text-cyan-100">sales-intake-screenshot.png</span>,
+              <span className="font-mono text-cyan-100"> booking-workflow-notes.pdf</span>, or
+              <span className="font-mono text-cyan-100"> monthly-report-example.xlsx</span>.
+              If you upload the wrong file, contact support and include the file name.
+            </p>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href="/contact"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Contact Support
+              </a>
+              <a
+                href="/privacy"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Privacy Policy
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <form
               action="/api/upload-client-file"
               method="post"
               encType="multipart/form-data"
