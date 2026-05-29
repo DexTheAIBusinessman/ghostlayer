@@ -196,7 +196,97 @@ export default async function ClientReportsPortalPage() {
             the access code from your email.
           </p>
 
-          <div className="mt-8 space-y-4">
+  
+        <section className="mt-8 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
+            Report Guidance
+          </p>
+
+          <h2 className="mt-3 text-2xl font-black text-white">
+            How to use your reports
+          </h2>
+
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+            Reports show Ghostlayer’s review of your workflow, bottlenecks, risks, time loss,
+            drag, and recommended improvements. Use this page to view completed reports and track report access.
+          </p>
+
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Available reports
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-gray-300">
+                If a report is marked ready or sent, open it and review the recommendations, risk score,
+                estimated drag, and next-step notes.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Reports in progress
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-gray-300">
+                If a report is not available yet, Ghostlayer may still be reviewing uploads,
+                messages, workflow details, or monitoring context.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-red-300/20 bg-red-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Something looks wrong?
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-gray-300">
+                If a report is missing, outdated, linked to the wrong email, or appears incorrect,
+                contact support with the report name and client email.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-5">
+            <h3 className="text-lg font-black text-white">
+              What to check before asking for help
+            </h3>
+
+            <ul className="mt-4 grid gap-3 text-sm leading-6 text-gray-300 md:grid-cols-2">
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                Confirm you are signed in with the same email used for the request or purchase.
+              </li>
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                Check whether Ghostlayer requested more files or follow-up details.
+              </li>
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                Review any client messages for admin replies or clarifying questions.
+              </li>
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                Include the report name, report link, or access code when contacting support.
+              </li>
+            </ul>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href="/contact"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Contact Support
+              </a>
+              <a
+                href="/client/messages"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Send Message
+              </a>
+              <a
+                href="/client/uploads"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Upload Files
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <div className="mt-8 space-y-4">
             {unlockedReports.map((report) => (
               <Link
                 key={report.id}
