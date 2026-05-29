@@ -160,7 +160,97 @@ export default async function ClientBillingPage({
               Use the secure Stripe billing portal to update payment details, view billing information, or manage your subscription when available.
             </p>
 
-            <form action="/api/create-billing-portal-session" method="post" className="mt-6">
+    
+        <section className="mt-8 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
+            Billing Guidance
+          </p>
+
+          <h2 className="mt-3 text-2xl font-black text-white">
+            Billing and payment guidance
+          </h2>
+
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+            Use this page to manage billing-related access, review payment status, and open the billing portal
+            when available. Billing actions are handled securely through Stripe or Ghostlayer support.
+          </p>
+
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Billing portal
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-gray-300">
+                If billing portal access is available, use it to review payment method, billing status,
+                receipts, subscription details, or customer billing records.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Refunds and receipts
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-gray-300">
+                Refund requests are reviewed under the Ghostlayer refund policy. Include the payment email,
+                receipt details, and reason when contacting support.
+              </p>
+            </div>
+
+            <div className="rounded-2xl border border-red-300/20 bg-red-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Billing safety
+              </h3>
+              <p className="mt-4 text-sm leading-7 text-gray-300">
+                Do not send full card numbers, bank details, passwords, or private tokens through messages
+                or email. Use secure Stripe billing links when payment action is required.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-5">
+            <h3 className="text-lg font-black text-white">
+              When to contact support
+            </h3>
+
+            <ul className="mt-4 grid gap-3 text-sm leading-6 text-gray-300 md:grid-cols-2">
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                You cannot access the billing portal or your receipt.
+              </li>
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                Your payment succeeded but your client dashboard does not show the expected access.
+              </li>
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                You believe a payment, refund, or billing status is incorrect.
+              </li>
+              <li className="rounded-xl border border-white/10 bg-black/20 p-3">
+                You need help matching a payment email to a Ghostlayer request.
+              </li>
+            </ul>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href="/contact"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Contact Support
+              </a>
+              <a
+                href="/refund-policy"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Refund Policy
+              </a>
+              <a
+                href="/terms"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Terms
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <form action="/api/create-billing-portal-session" method="post" className="mt-6">
               <button
                 type="submit"
                 className="rounded-2xl bg-white px-6 py-3 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:opacity-90"
