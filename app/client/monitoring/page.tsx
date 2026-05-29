@@ -120,6 +120,96 @@ export default async function ClientMonitoringPage() {
           </Link>
         </div>
 
+
+        <section className="mt-8 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
+            Monitoring Guidance
+          </p>
+
+          <h2 className="mt-3 text-2xl font-black text-white">
+            What monitoring means
+          </h2>
+
+          <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+            Monitoring helps Ghostlayer review follow-up context, workflow changes, report updates,
+            and ongoing bottlenecks after your original workflow review. Monitoring is review-focused;
+            it does not automatically change your accounts, tools, payments, files, or business systems.
+          </p>
+
+          <div className="mt-5 grid gap-4 md:grid-cols-3">
+            <div className="rounded-2xl border border-emerald-300/20 bg-emerald-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                What gets reviewed
+              </h3>
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-gray-300">
+                <li>• New uploads connected to your workflow.</li>
+                <li>• Client messages and follow-up notes.</li>
+                <li>• Report changes, open recommendations, or unresolved bottlenecks.</li>
+                <li>• Monitoring status, priority, and next review timing.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-amber-300/20 bg-amber-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                What you may need to do
+              </h3>
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-gray-300">
+                <li>• Upload new screenshots, files, or process notes when something changes.</li>
+                <li>• Send a message if a recommendation no longer matches your workflow.</li>
+                <li>• Review updated report notes when Ghostlayer posts them.</li>
+                <li>• Contact support if access, billing, privacy, or report delivery looks wrong.</li>
+              </ul>
+            </div>
+
+            <div className="rounded-2xl border border-red-300/20 bg-red-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                What is not automatic
+              </h3>
+              <ul className="mt-4 space-y-2 text-sm leading-6 text-gray-300">
+                <li>• Ghostlayer does not log in to your tools for you.</li>
+                <li>• Ghostlayer does not change your accounts, billing, passwords, or systems.</li>
+                <li>• Ghostlayer does not publish reports or send messages without admin review.</li>
+                <li>• Ghostlayer does not guarantee a specific business outcome.</li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-5">
+            <h3 className="text-lg font-black text-white">
+              When to send an update
+            </h3>
+
+            <p className="mt-3 text-sm leading-7 text-gray-300">
+              Send an update when your workflow changes, a tool is replaced, a bottleneck is resolved,
+              a recommendation does not fit anymore, or you have new files that explain what is happening.
+              Include the report name, file name, or workflow area when possible.
+            </p>
+
+            <div className="mt-4 flex flex-wrap gap-3">
+              <a
+                href="/client/messages"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Send Message
+              </a>
+              <a
+                href="/client/uploads"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Upload Files
+              </a>
+              <a
+                href="/contact"
+                className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+              >
+                Contact Support
+              </a>
+            </div>
+          </div>
+        </section>
+        <div className="h-24" aria-hidden="true" />
+
+
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
           <div className="border-b border-white/10 px-6 py-5">
             <p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">
