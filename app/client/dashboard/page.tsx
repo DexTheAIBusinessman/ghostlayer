@@ -313,8 +313,8 @@ export default async function ClientDashboardPage() {
         </section>
 
 
-        <div className="mb-8 grid gap-4 md:grid-cols-3">
-          <div className="mt-14 rounded-[1.5rem] border border-cyan-300/25 bg-cyan-300/10 p-5 backdrop-blur-xl min-h-[110px]">
+        <div className="mb-8 mt-12 grid gap-4 md:grid-cols-3">
+          <div className="rounded-[1.5rem] border border-cyan-300/25 bg-cyan-300/10 p-5 backdrop-blur-xl min-h-[110px]">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
               Total Reports
             </p>
@@ -332,7 +332,7 @@ export default async function ClientDashboardPage() {
             </p>
           </div>
 
-          <div className="rounded-[1.5rem] border border-purple-300/25 bg-purple-300/10 p-5 backdrop-blur-xl">
+          <div className="rounded-[1.5rem] border border-purple-300/25 bg-purple-300/10 p-5 backdrop-blur-xl min-h-[110px]">
             <p className="text-xs font-bold uppercase tracking-[0.22em] text-purple-200">
               Monitoring
             </p>
