@@ -117,7 +117,83 @@ export default function ThankYouPage() {
             </p>
           </div>
 
-          <div className="mt-8 flex flex-wrap gap-3">
+          
+          <div className="mt-8 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/10 p-6">
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
+              Client portal next steps
+            </p>
+
+            <h2 className="mt-3 text-2xl font-black text-white">
+              What you should do now
+            </h2>
+
+            <p className="mt-3 text-sm leading-7 text-gray-300">
+              Use your client portal to check report access, upload helpful files, send follow-up details,
+              and review updates connected to your Ghostlayer request.
+            </p>
+
+            <div className="mt-5 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Step 1</p>
+                <h3 className="mt-2 text-lg font-black text-white">Check your email</h3>
+                <p className="mt-2 text-sm leading-6 text-gray-300">
+                  Watch for confirmation, report access, billing, or follow-up messages from Ghostlayer.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Step 2</p>
+                <h3 className="mt-2 text-lg font-black text-white">Open your dashboard</h3>
+                <p className="mt-2 text-sm leading-6 text-gray-300">
+                  Log in with the email connected to your request to view reports, messages, uploads, monitoring, and billing.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Step 3</p>
+                <h3 className="mt-2 text-lg font-black text-white">Upload useful files</h3>
+                <p className="mt-2 text-sm leading-6 text-gray-300">
+                  Add screenshots, SOPs, process notes, reports, or examples that help explain your workflow.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Step 4</p>
+                <h3 className="mt-2 text-lg font-black text-white">Send follow-up details</h3>
+                <p className="mt-2 text-sm leading-6 text-gray-300">
+                  Use messages if something changed, a file needs explanation, or you want Ghostlayer to review new context.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Step 5</p>
+                <h3 className="mt-2 text-lg font-black text-white">Review reports</h3>
+                <p className="mt-2 text-sm leading-6 text-gray-300">
+                  When your report is ready, review the recommendations, bottlenecks, risks, and next-step notes.
+                </p>
+              </div>
+
+              <div className="rounded-2xl border border-white/10 bg-black/20 p-4">
+                <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">Help</p>
+                <h3 className="mt-2 text-lg font-black text-white">Contact support</h3>
+                <p className="mt-2 text-sm leading-6 text-gray-300">
+                  Contact support for billing, access, refund, upload, report, privacy, or account questions.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-5 rounded-2xl border border-red-300/20 bg-red-300/10 p-5">
+              <h3 className="text-lg font-black text-white">
+                Safety note
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-gray-300">
+                Do not upload or send passwords, API keys, private tokens, full card numbers,
+                bank account numbers, or unnecessary sensitive personal information.
+              </p>
+            </div>
+          </div>
+
+<div className="mt-8 flex flex-wrap gap-3">
             <Link
               href="/"
               className="rounded-2xl bg-white px-6 py-3 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:opacity-90"
@@ -131,6 +207,13 @@ export default function ThankYouPage() {
             >
               My Reports
             </Link>
+
+          <Link
+            href="/contact"
+            className="rounded-2xl border border-white/10 bg-black/20 px-7 py-3.5 text-sm font-semibold text-white transition hover:bg-white/[0.08]"
+          >
+            Contact Support
+          </Link>
           </div>
 
           <p className="mt-8 text-sm leading-7 text-gray-400">
