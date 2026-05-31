@@ -152,6 +152,18 @@ export const metadata = {
 
 const agents = [
   {
+    name: "Operations & Automation Agent",
+    href: "/admin/agents/operations",
+    status: "Live",
+    mode: "Read-only",
+    description:
+      "Prioritizes recent messages, uploads, reports, monitoring updates, leads, scans, feedback, and admin activity.",
+    allowed:
+      "Summarize, prioritize, and recommend admin next actions.",
+    approval:
+      "No client-facing action, billing change, report sending, or data modification without admin approval.",
+  },
+  {
     name: "Daily Admin Summary Agent",
     href: "/admin/agents/daily-summary",
     status: "Ready to build first",

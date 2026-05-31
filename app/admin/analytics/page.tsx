@@ -546,6 +546,22 @@ export default async function AdminAnalyticsPage() {
               </p>
             </Link>
 
+
+            <Link
+              href="/admin/agents/operations"
+              className="rounded-[1.5rem] border border-cyan-300/20 bg-cyan-300/10 p-5 backdrop-blur-xl transition hover:scale-[1.01] hover:bg-cyan-300/15"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-cyan-200">
+                Operations Agent
+              </p>
+              <h3 className="mt-3 text-xl font-black text-white">
+                Operations & Automation
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Prioritize messages, uploads, reports, monitoring, leads, scans, feedback, and admin activity.
+              </p>
+            </Link>
+
             <Link
               href="/admin/messages"
               className="min-h-[10.5rem] rounded-[2rem] border border-blue-300/20 bg-blue-300/10 p-6 text-blue-100 shadow-[0_24px_100px_rgba(0,0,0,0.25)] transition hover:scale-[1.01] hover:bg-blue-300/15"
