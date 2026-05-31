@@ -152,6 +152,18 @@ export const metadata = {
 
 const agents = [
   {
+    name: "Lead Generation Agent",
+    href: "/admin/agents/lead-generation",
+    status: "Live",
+    mode: "Read-only",
+    description:
+      "Reviews recent leads, workflow scans, CTA clicks, feedback, and client messages for follow-up opportunities.",
+    allowed:
+      "Score lead signals, summarize demand, and recommend admin follow-up.",
+    approval:
+      "No automatic outreach, emails, client-facing messages, or sales claims without admin approval.",
+  },
+  {
     name: "Operations & Automation Agent",
     href: "/admin/agents/operations",
     status: "Live",

@@ -547,6 +547,22 @@ export default async function AdminAnalyticsPage() {
             </Link>
 
 
+
+            <Link
+              href="/admin/agents/lead-generation"
+              className="rounded-[1.5rem] border border-emerald-300/20 bg-emerald-300/10 p-5 backdrop-blur-xl transition hover:scale-[1.01] hover:bg-emerald-300/15"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-emerald-200">
+                Lead Agent
+              </p>
+              <h3 className="mt-3 text-xl font-black text-white">
+                Lead Generation
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Reviews leads, scans, CTA clicks, feedback, and messages for follow-up opportunities.
+              </p>
+            </Link>
+
             <Link
               href="/admin/agents/operations"
               className="rounded-[1.5rem] border border-cyan-300/20 bg-cyan-300/10 p-5 backdrop-blur-xl transition hover:scale-[1.01] hover:bg-cyan-300/15"
