@@ -432,6 +432,130 @@ export default async function AgentsPage() {
           </Link>
         </div>
 
+        <section className="mt-8 rounded-[2rem] border border-purple-300/20 bg-purple-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
+          <div className="flex flex-wrap items-start justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-purple-200">
+                Growth Agent System
+              </p>
+              <h2 className="mt-3 text-2xl font-black text-white">
+                Business growth agents
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-7 text-gray-300">
+                These six agents help Ghostlayer review operations, leads, sales signals, content ideas,
+                product validation, and marketing opportunities. They are admin-facing, read-only, and review-first.
+              </p>
+            </div>
+
+            <span className="rounded-full border border-emerald-300/25 bg-emerald-300/10 px-4 py-2 text-xs font-black uppercase tracking-[0.16em] text-emerald-100">
+              Review First
+            </span>
+          </div>
+
+          <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            <Link
+              href="/admin/agents/operations"
+              className="rounded-2xl border border-white/10 bg-black/20 p-5 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-cyan-200">
+                Foundation
+              </p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                Operations & Automation
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Prioritizes messages, uploads, reports, monitoring, leads, scans, feedback, and admin activity.
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/agents/lead-generation"
+              className="rounded-2xl border border-white/10 bg-black/20 p-5 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-emerald-200">
+                Demand
+              </p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                Lead Generation
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Reviews leads, scans, CTA clicks, feedback, and messages for follow-up opportunities.
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/agents/sales-conversion"
+              className="rounded-2xl border border-white/10 bg-black/20 p-5 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-purple-200">
+                Revenue
+              </p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                Sales & Conversion
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Identifies conversion signals, follow-up opportunities, and sales-review priorities.
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/agents/content-creation"
+              className="rounded-2xl border border-white/10 bg-black/20 p-5 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-blue-200">
+                Authority
+              </p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                Content Creation
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Turns scan themes, report insights, support questions, and feedback into content ideas.
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/agents/product-validation"
+              className="rounded-2xl border border-white/10 bg-black/20 p-5 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-amber-200">
+                Improvement
+              </p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                Product Validation
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Finds repeated pain points, offer gaps, service opportunities, and package validation signals.
+              </p>
+            </Link>
+
+            <Link
+              href="/admin/agents/personalized-marketing"
+              className="rounded-2xl border border-white/10 bg-black/20 p-5 transition hover:bg-white/[0.06]"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-pink-200">
+                Campaigns
+              </p>
+              <h3 className="mt-2 text-xl font-black text-white">
+                Personalized Marketing
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Reviews safe audience segments, follow-up themes, and admin-approved campaign ideas.
+              </p>
+            </Link>
+          </div>
+
+          <div className="mt-5 rounded-2xl border border-yellow-300/20 bg-yellow-300/10 p-5">
+            <p className="text-xs font-bold uppercase tracking-[0.18em] text-yellow-200">
+              Guardrails
+            </p>
+            <p className="mt-3 text-sm leading-7 text-gray-300">
+              Growth agents may summarize, prioritize, and recommend. They should not automatically email leads,
+              contact clients, publish content, change pricing, make guarantees, create campaigns, or modify business systems
+              without explicit admin approval.
+            </p>
+          </div>
+        </section>
+
         <section className="mt-8 rounded-[2rem] border border-amber-300/20 bg-amber-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
           <div className="flex flex-wrap items-start justify-between gap-4">
             <div>
