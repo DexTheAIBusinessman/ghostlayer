@@ -550,6 +550,22 @@ export default async function AdminAnalyticsPage() {
 
 
 
+
+            <Link
+              href="/admin/agents/product-validation"
+              className="rounded-[1.5rem] border border-amber-300/20 bg-amber-300/10 p-5 backdrop-blur-xl transition hover:scale-[1.01] hover:bg-amber-300/15"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-amber-200">
+                Product Agent
+              </p>
+              <h3 className="mt-3 text-xl font-black text-white">
+                Product Validation
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Reviews scans, reports, feedback, CTA clicks, and messages for offer gaps and service opportunities.
+              </p>
+            </Link>
+
             <Link
               href="/admin/agents/content-creation"
               className="rounded-[1.5rem] border border-blue-300/20 bg-blue-300/10 p-5 backdrop-blur-xl transition hover:scale-[1.01] hover:bg-blue-300/15"

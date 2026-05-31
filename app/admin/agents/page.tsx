@@ -152,6 +152,18 @@ export const metadata = {
 
 const agents = [
   {
+    name: "Product Development & Validation Agent",
+    href: "/admin/agents/product-validation",
+    status: "Live",
+    mode: "Read-only",
+    description:
+      "Reviews scans, reports, feedback, CTA clicks, and messages for repeated pain points, offer gaps, and service opportunities.",
+    allowed:
+      "Summarize validation signals, identify repeated customer problems, and recommend admin-reviewed service improvements.",
+    approval:
+      "No automatic roadmap decisions, pricing changes, package changes, claims, guarantees, or client-facing content without admin approval.",
+  },
+  {
     name: "Content Creation Agent",
     href: "/admin/agents/content-creation",
     status: "Live",
