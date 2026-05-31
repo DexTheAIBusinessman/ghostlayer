@@ -307,37 +307,43 @@ function priorityLevel(total: number) {
   return { label: "Normal Lead Activity", className: "border-cyan-300/30 bg-cyan-300/10 text-cyan-100" };
 }
 
+
+
+
+
 function AgentNightSkyBackground() {
+  const stars = [
+    { left: "5%", top: "9%", size: 2, delay: "0s", duration: "4.8s" },
+    { left: "9%", top: "24%", size: 2, delay: "0.7s", duration: "5.2s" },
+    { left: "12%", top: "42%", size: 2, delay: "1.1s", duration: "5.4s" },
+    { left: "18%", top: "16%", size: 2, delay: "1.4s", duration: "5.7s" },
+    { left: "23%", top: "62%", size: 3, delay: "1.9s", duration: "5.1s" },
+    { left: "28%", top: "31%", size: 2, delay: "2.2s", duration: "5.8s" },
+    { left: "33%", top: "84%", size: 2, delay: "2.7s", duration: "5.3s" },
+    { left: "38%", top: "19%", size: 3, delay: "0.9s", duration: "5.5s" },
+    { left: "43%", top: "48%", size: 2, delay: "1.6s", duration: "4.9s" },
+    { left: "49%", top: "72%", size: 2, delay: "2.4s", duration: "5.6s" },
+    { left: "54%", top: "12%", size: 2, delay: "0.4s", duration: "5.7s" },
+    { left: "59%", top: "38%", size: 3, delay: "1.3s", duration: "5.2s" },
+    { left: "64%", top: "81%", size: 2, delay: "2.1s", duration: "5.4s" },
+    { left: "69%", top: "22%", size: 2, delay: "2.9s", duration: "5.3s" },
+    { left: "74%", top: "55%", size: 3, delay: "1.8s", duration: "4.7s" },
+    { left: "79%", top: "34%", size: 2, delay: "0.8s", duration: "5.6s" },
+    { left: "84%", top: "15%", size: 2, delay: "0.4s", duration: "5.7s" },
+    { left: "88%", top: "76%", size: 2, delay: "2.5s", duration: "5.2s" },
+    { left: "93%", top: "66%", size: 2, delay: "2.2s", duration: "5.1s" },
+    { left: "96%", top: "39%", size: 2, delay: "0.6s", duration: "4.9s" },
+  ];
+
   return (
-    <div className="agentSky" aria-hidden="true">
-      <div className="agentMoon" />
+    <div className="agentNightSky" aria-hidden="true">
+      <div className="agentSun" />
       <div className="agentFog agentFogA" />
       <div className="agentFog agentFogB" />
       <div className="agentOrb agentOrbA" />
       <div className="agentOrb agentOrbB" />
 
-      {[
-        { left: "5%", top: "9%", size: 2, delay: "0s", duration: "4.8s" },
-        { left: "9%", top: "24%", size: 2, delay: "0.7s", duration: "5.2s" },
-        { left: "12%", top: "42%", size: 2, delay: "1.1s", duration: "5.4s" },
-        { left: "18%", top: "16%", size: 2, delay: "1.4s", duration: "5.7s" },
-        { left: "23%", top: "62%", size: 3, delay: "1.9s", duration: "5.1s" },
-        { left: "28%", top: "31%", size: 2, delay: "2.2s", duration: "5.8s" },
-        { left: "33%", top: "84%", size: 2, delay: "2.7s", duration: "5.3s" },
-        { left: "38%", top: "19%", size: 3, delay: "0.9s", duration: "5.5s" },
-        { left: "43%", top: "48%", size: 2, delay: "1.6s", duration: "4.9s" },
-        { left: "49%", top: "72%", size: 2, delay: "2.4s", duration: "5.6s" },
-        { left: "54%", top: "12%", size: 2, delay: "0.4s", duration: "5.7s" },
-        { left: "59%", top: "38%", size: 3, delay: "1.3s", duration: "5.2s" },
-        { left: "64%", top: "81%", size: 2, delay: "2.1s", duration: "5.4s" },
-        { left: "69%", top: "22%", size: 2, delay: "2.9s", duration: "5.3s" },
-        { left: "73%", top: "57%", size: 2, delay: "1.8s", duration: "5.9s" },
-        { left: "78%", top: "11%", size: 2, delay: "0.2s", duration: "5.1s" },
-        { left: "84%", top: "41%", size: 3, delay: "1.5s", duration: "5.6s" },
-        { left: "88%", top: "76%", size: 2, delay: "2.6s", duration: "5.2s" },
-        { left: "94%", top: "17%", size: 2, delay: "0.8s", duration: "5.5s" },
-        { left: "97%", top: "61%", size: 2, delay: "2.3s", duration: "5.4s" },
-      ].map((star, index) => (
+      {stars.map((star, index) => (
         <span
           key={index}
           className="agentStar"
@@ -358,34 +364,20 @@ function AgentNightSkyBackground() {
 function AgentCopiedStyles() {
   return (
     <style>{`
-      .agentSky {
-        pointer-events: none;
-        position: fixed;
-        inset: 0;
-        z-index: 0;
-        overflow: hidden;
-        background:
-          radial-gradient(circle at 18% 12%, rgba(59, 130, 246, 0.08), transparent 28%),
-          radial-gradient(circle at 80% 20%, rgba(6, 182, 212, 0.055), transparent 28%),
-          radial-gradient(circle at 50% 100%, rgba(14, 165, 233, 0.045), transparent 35%),
-          #05070b;
-      }
+        .agentNightSky {
+          pointer-events: none;
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 20% 12%, rgba(59, 130, 246, 0.11), transparent 28%),
+            radial-gradient(circle at 82% 18%, rgba(147, 51, 234, 0.08), transparent 26%),
+            radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.045), transparent 34%),
+            #05070b;
+        }
 
-      .agentStar {
-        position: absolute;
-        display: block;
-        border-radius: 9999px;
-        background: #ffffff;
-        box-shadow:
-          0 0 8px rgba(255, 255, 255, 0.95),
-          0 0 18px rgba(147, 197, 253, 0.62),
-          0 0 30px rgba(59, 130, 246, 0.35);
-        animation-name: agentTwinkle;
-        animation-timing-function: ease-in-out;
-        animation-iteration-count: infinite;
-      }
-
-      .agentMoon {
+        .agentSun {
         position: fixed;
         top: 5%;
         right: 3%;
@@ -393,102 +385,98 @@ function AgentCopiedStyles() {
         width: 28rem;
         border-radius: 9999px;
         background:
-          radial-gradient(circle at 42% 38%, rgba(255, 255, 255, 0.20), transparent 0 3px),
-          radial-gradient(circle at 52% 58%, rgba(255, 255, 255, 0.10), transparent 0 2px),
-          radial-gradient(circle at 35% 62%, rgba(255, 255, 255, 0.08), transparent 0 2px),
-          radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.26), rgba(148, 163, 184, 0.12) 45%, rgba(30, 41, 59, 0.10) 70%, transparent 72%);
+          radial-gradient(circle at 36% 32%, rgba(255, 255, 255, 0.92), transparent 0 2px),
+          radial-gradient(circle at 50% 50%, rgba(255, 244, 179, 0.96) 0%, rgba(251, 191, 36, 0.62) 34%, rgba(249, 115, 22, 0.26) 58%, rgba(15, 23, 42, 0.02) 72%, transparent 76%);
         box-shadow:
-          0 0 90px rgba(147, 197, 253, 0.10),
-          inset -60px -40px 90px rgba(15, 23, 42, 0.30),
-          inset 35px 30px 80px rgba(255, 255, 255, 0.07);
+          0 0 70px rgba(251, 191, 36, 0.20),
+          0 0 140px rgba(249, 115, 22, 0.14),
+          0 0 220px rgba(250, 204, 21, 0.08),
+          inset -44px -38px 80px rgba(180, 83, 9, 0.20),
+          inset 38px 34px 80px rgba(255, 255, 255, 0.16);
         filter: blur(0.2px);
-        opacity: 0.78;
-        animation: agentMoonGlow 4.8s ease-in-out infinite;
+        opacity: 0.74;
+        animation: agentSunGlow 4.8s ease-in-out infinite;
       }
 
-      .agentFog {
-        position: fixed;
-        left: -10%;
-        right: -10%;
-        height: 150px;
-        border-radius: 9999px;
-        filter: blur(90px);
-        opacity: 0.06;
-        mix-blend-mode: screen;
-      }
-
-      .agentFogA {
-        top: 22%;
-        background: linear-gradient(
-          90deg,
-          rgba(59, 130, 246, 0),
-          rgba(59, 130, 246, 0.28),
-          rgba(6, 182, 212, 0.18),
-          rgba(59, 130, 246, 0)
-        );
-        animation: agentFogDriftOne 42s ease-in-out infinite;
-      }
-
-      .agentFogB {
-        top: 66%;
-        background: linear-gradient(
-          90deg,
-          rgba(16, 185, 129, 0),
-          rgba(6, 182, 212, 0.24),
-          rgba(96, 165, 250, 0.16),
-          rgba(16, 185, 129, 0)
-        );
-        animation: agentFogDriftTwo 48s ease-in-out infinite;
-      }
-
-      .agentOrb {
-        position: fixed;
-        border-radius: 9999px;
-        filter: blur(44px);
-        opacity: 0.16;
-      }
-
-      .agentOrbA {
-        left: -12%;
-        top: 12%;
-        height: 22rem;
-        width: 22rem;
-        background: rgba(59, 130, 246, 0.16);
-        animation: agentFloatSlow 28s ease-in-out infinite;
-      }
-
-      .agentOrbB {
-        right: -12%;
-        bottom: 8%;
-        height: 26rem;
-        width: 26rem;
-        background: rgba(6, 182, 212, 0.11);
-        animation: agentFloatSlow 34s ease-in-out infinite reverse;
-      }
-
-      .agentLogoGlow {
-        text-shadow:
-          0 0 8px rgba(255, 255, 255, 0.70),
-          0 0 18px rgba(96, 165, 250, 0.24),
-          0 0 34px rgba(6, 182, 212, 0.18);
-        animation: agentLogoPulse 3.4s ease-in-out infinite;
-      }
-
-      @keyframes agentTwinkle {
-        0%, 100% {
-          transform: translateZ(0) scale(0.85);
-          opacity: 0.42;
+        .agentStar {
+          position: absolute;
+          display: block;
+          border-radius: 9999px;
+          background: #ffffff;
+          box-shadow:
+            0 0 8px rgba(255,255,255,0.95),
+            0 0 18px rgba(147,197,253,0.62),
+            0 0 30px rgba(59,130,246,0.35);
+          animation-name: agentTwinkle;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
         }
-        50% {
-          transform: translateZ(0) scale(1.35);
-          opacity: 1;
-        }
-      }
 
-      @keyframes agentMoonGlow {
+        .agentFog {
+          position: absolute;
+          left: -10%;
+          right: -10%;
+          height: 170px;
+          border-radius: 9999px;
+          filter: blur(92px);
+          opacity: 0.075;
+          mix-blend-mode: screen;
+        }
+
+        .agentFogA {
+          top: 18%;
+          background: linear-gradient(90deg, rgba(59,130,246,0), rgba(59,130,246,0.36), rgba(147,51,234,0.18), rgba(59,130,246,0));
+          animation: agentFogDriftOne 42s ease-in-out infinite;
+        }
+
+        .agentFogB {
+          top: 58%;
+          background: linear-gradient(90deg, rgba(16,185,129,0), rgba(6,182,212,0.32), rgba(96,165,250,0.2), rgba(16,185,129,0));
+          animation: agentFogDriftTwo 46s ease-in-out infinite;
+        }
+
+        .agentOrb {
+          position: absolute;
+          border-radius: 9999px;
+          filter: blur(38px);
+          opacity: 0.22;
+        }
+
+        .agentOrbA {
+          left: -10%;
+          top: 18%;
+          height: 22rem;
+          width: 22rem;
+          background: rgba(59,130,246,0.16);
+          animation: agentFloatSlow 28s ease-in-out infinite;
+        }
+
+        .agentOrbB {
+          right: -10%;
+          top: 30%;
+          height: 26rem;
+          width: 26rem;
+          background: rgba(6,182,212,0.12);
+          animation: agentFloatSlow 34s ease-in-out infinite reverse;
+        }
+
+        .agentLogoGlow {
+          text-shadow:
+            0 0 8px rgba(255,255,255,0.70),
+            0 0 18px rgba(96,165,250,0.24),
+            0 0 34px rgba(6,182,212,0.18);
+          animation: agentLogoPulse 3.4s ease-in-out infinite;
+        }
+
+        @keyframes agentTwinkle {
+          0%, 100% { transform: translateZ(0) scale(0.85); opacity: 0.42; }
+          50% { transform: translateZ(0) scale(1.35); opacity: 1; }
+        }
+
+        @keyframes agentSunGlow {
         0%, 100% {
           transform: translateZ(0) scale(1);
-          opacity: 0.74;
+          opacity: 0.70;
         }
         50% {
           transform: translateZ(0) scale(1.018);
@@ -496,48 +484,38 @@ function AgentCopiedStyles() {
         }
       }
 
-      @keyframes agentLogoPulse {
-        0%, 100% {
-          text-shadow:
-            0 0 8px rgba(255, 255, 255, 0.70),
-            0 0 18px rgba(96, 165, 250, 0.24),
-            0 0 34px rgba(6, 182, 212, 0.18);
+        @keyframes agentLogoPulse {
+          0%, 100% {
+            opacity: 0.78;
+            text-shadow:
+              0 0 8px rgba(255,255,255,0.62),
+              0 0 18px rgba(96,165,250,0.22),
+              0 0 34px rgba(6,182,212,0.14);
+          }
+          50% {
+            opacity: 1;
+            text-shadow:
+              0 0 10px rgba(255,255,255,0.92),
+              0 0 26px rgba(147,197,253,0.42),
+              0 0 48px rgba(6,182,212,0.28);
+          }
         }
-        50% {
-          text-shadow:
-            0 0 12px rgba(255, 255, 255, 0.95),
-            0 0 24px rgba(96, 165, 250, 0.42),
-            0 0 48px rgba(6, 182, 212, 0.35);
-        }
-      }
 
-      @keyframes agentFogDriftOne {
-        0%, 100% {
-          transform: translateX(0) translateY(0);
+        @keyframes agentFogDriftOne {
+          0%, 100% { transform: translateX(-2%) translateY(0px) scaleX(1); }
+          50% { transform: translateX(4%) translateY(-4px) scaleX(1.04); }
         }
-        50% {
-          transform: translateX(4%) translateY(12px);
-        }
-      }
 
-      @keyframes agentFogDriftTwo {
-        0%, 100% {
-          transform: translateX(0) translateY(0);
+        @keyframes agentFogDriftTwo {
+          0%, 100% { transform: translateX(3%) translateY(0px) scaleX(1.06); }
+          50% { transform: translateX(-4%) translateY(5px) scaleX(1); }
         }
-        50% {
-          transform: translateX(-4%) translateY(-10px);
-        }
-      }
 
-      @keyframes agentFloatSlow {
-        0%, 100% {
-          transform: translate3d(0, 0, 0) scale(1);
+        @keyframes agentFloatSlow {
+          0%, 100% { transform: translate3d(0, 0, 0); }
+          50% { transform: translate3d(0, 18px, 0); }
         }
-        50% {
-          transform: translate3d(4%, -3%, 0) scale(1.08);
-        }
-      }
-    `}</style>
+      `}</style>
   );
 }
 
