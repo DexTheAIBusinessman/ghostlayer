@@ -152,6 +152,18 @@ export const metadata = {
 
 const agents = [
   {
+    name: "Content Creation Agent",
+    href: "/admin/agents/content-creation",
+    status: "Live",
+    mode: "Read-only",
+    description:
+      "Reviews scans, reports, feedback, CTA clicks, and client messages for useful content topics.",
+    allowed:
+      "Summarize content themes, suggest topics, and recommend admin-reviewed draft angles.",
+    approval:
+      "No automatic publishing, client-identifying details, invented case studies, claims, or client-facing content without admin approval.",
+  },
+  {
     name: "Sales & Conversion Agent",
     href: "/admin/agents/sales-conversion",
     status: "Live",
