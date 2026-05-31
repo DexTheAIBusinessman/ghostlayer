@@ -551,6 +551,22 @@ export default async function AdminAnalyticsPage() {
 
 
 
+
+            <Link
+              href="/admin/agents/personalized-marketing"
+              className="rounded-[1.5rem] border border-pink-300/20 bg-pink-300/10 p-5 backdrop-blur-xl transition hover:scale-[1.01] hover:bg-pink-300/15"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.22em] text-pink-200">
+                Marketing Agent
+              </p>
+              <h3 className="mt-3 text-xl font-black text-white">
+                Personalized Marketing
+              </h3>
+              <p className="mt-3 text-sm leading-6 text-gray-300">
+                Reviews leads, scans, feedback, CTA clicks, reports, and messages for safe campaign ideas.
+              </p>
+            </Link>
+
             <Link
               href="/admin/agents/product-validation"
               className="rounded-[1.5rem] border border-amber-300/20 bg-amber-300/10 p-5 backdrop-blur-xl transition hover:scale-[1.01] hover:bg-amber-300/15"

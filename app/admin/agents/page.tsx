@@ -152,6 +152,18 @@ export const metadata = {
 
 const agents = [
   {
+    name: "Personalized Marketing at Scale Agent",
+    href: "/admin/agents/personalized-marketing",
+    status: "Live",
+    mode: "Read-only",
+    description:
+      "Reviews leads, scans, reports, feedback, CTA clicks, and messages for safe marketing segments and campaign ideas.",
+    allowed:
+      "Summarize marketing themes, identify safe audience segments, and recommend admin-reviewed campaign ideas.",
+    approval:
+      "No automatic emails, outreach, campaigns, sensitive personalization, claims, guarantees, or client-facing marketing without admin approval.",
+  },
+  {
     name: "Product Development & Validation Agent",
     href: "/admin/agents/product-validation",
     status: "Live",
