@@ -152,6 +152,18 @@ export const metadata = {
 
 const agents = [
   {
+    name: "Sales & Conversion Agent",
+    href: "/admin/agents/sales-conversion",
+    status: "Live",
+    mode: "Read-only",
+    description:
+      "Reviews leads, workflow scans, messages, reports, CTA clicks, and feedback for conversion opportunities.",
+    allowed:
+      "Summarize sales signals, identify follow-up opportunities, and recommend admin next actions.",
+    approval:
+      "No automatic outreach, discounts, claims, guarantees, billing changes, or client-facing messages without admin approval.",
+  },
+  {
     name: "Lead Generation Agent",
     href: "/admin/agents/lead-generation",
     status: "Live",
