@@ -282,8 +282,8 @@ function priorityLevel(total: number) {
 function NightSkyBackground() {
   return (
     <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#05070b]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(34,211,238,0.10),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(168,85,247,0.10),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.06),transparent_38%)]" />
-      <div className="absolute right-[-4%] top-[4%] h-[30rem] w-[30rem] rounded-full bg-white/15 blur-[2px] animate-[operationsMoon_5s_ease-in-out_infinite]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(34,211,238,0.07),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(168,85,247,0.06),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.06),transparent_38%)]" />
+      <div className="absolute right-[-10%] top-[5%] h-[38rem] w-[38rem] rounded-full bg-white/10 blur-[1px] animate-[operationsMoon_18s_ease-in-out_infinite]" />
       <div className="absolute left-[-18%] top-[22%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-cyan-200/10 to-transparent blur-[105px] animate-[operationsFogOne_42s_ease-in-out_infinite]" />
       <div className="absolute left-[-18%] top-[52%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-blue-300/10 to-transparent blur-[110px] animate-[operationsFogTwo_48s_ease-in-out_infinite]" />
       {[
@@ -329,8 +329,8 @@ function OperationsStyles() {
       }
 
       @keyframes operationsMoon {
-        0%, 100% { opacity: 0.16; transform: scale(1); }
-        50% { opacity: 0.28; transform: scale(1.03); }
+        0%, 100% { opacity: 0.10; transform: scale(1); }
+        50% { opacity: 0.16; transform: scale(1.015); }
       }
 
       .operationsLogoGlow {
@@ -405,7 +405,7 @@ export default async function OperationsAgentPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/admin" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
+          <Link href="/admin/agents" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
             Admin Home
           </Link>
           <Link href="/admin/agents" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold text-cyan-100 transition hover:bg-cyan-300/15">
