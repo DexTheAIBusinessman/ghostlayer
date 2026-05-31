@@ -279,85 +279,223 @@ function priorityLevel(total: number) {
   return { label: "Normal", className: "border-emerald-300/30 bg-emerald-300/10 text-emerald-100" };
 }
 
-function NightSkyBackground() {
+
+
+
+
+function AgentNightSkyBackground() {
+  const stars = [
+    { left: "5%", top: "9%", size: 2, delay: "0s", duration: "4.8s" },
+    { left: "9%", top: "24%", size: 2, delay: "0.7s", duration: "5.2s" },
+    { left: "12%", top: "42%", size: 2, delay: "1.1s", duration: "5.4s" },
+    { left: "18%", top: "16%", size: 2, delay: "1.4s", duration: "5.7s" },
+    { left: "23%", top: "62%", size: 3, delay: "1.9s", duration: "5.1s" },
+    { left: "28%", top: "31%", size: 2, delay: "2.2s", duration: "5.8s" },
+    { left: "33%", top: "84%", size: 2, delay: "2.7s", duration: "5.3s" },
+    { left: "38%", top: "19%", size: 3, delay: "0.9s", duration: "5.5s" },
+    { left: "43%", top: "48%", size: 2, delay: "1.6s", duration: "4.9s" },
+    { left: "49%", top: "72%", size: 2, delay: "2.4s", duration: "5.6s" },
+    { left: "54%", top: "12%", size: 2, delay: "0.4s", duration: "5.7s" },
+    { left: "59%", top: "38%", size: 3, delay: "1.3s", duration: "5.2s" },
+    { left: "64%", top: "81%", size: 2, delay: "2.1s", duration: "5.4s" },
+    { left: "69%", top: "22%", size: 2, delay: "2.9s", duration: "5.3s" },
+    { left: "74%", top: "55%", size: 3, delay: "1.8s", duration: "4.7s" },
+    { left: "79%", top: "34%", size: 2, delay: "0.8s", duration: "5.6s" },
+    { left: "84%", top: "15%", size: 2, delay: "0.4s", duration: "5.7s" },
+    { left: "88%", top: "76%", size: 2, delay: "2.5s", duration: "5.2s" },
+    { left: "93%", top: "66%", size: 2, delay: "2.2s", duration: "5.1s" },
+    { left: "96%", top: "39%", size: 2, delay: "0.6s", duration: "4.9s" },
+  ];
+
   return (
-    <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-[#05070b]">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_18%_12%,rgba(34,211,238,0.07),transparent_30%),radial-gradient(circle_at_82%_18%,rgba(168,85,247,0.06),transparent_30%),radial-gradient(circle_at_50%_100%,rgba(16,185,129,0.06),transparent_38%)]" />
-      <div className="absolute right-[-10%] top-[5%] h-[38rem] w-[38rem] rounded-full bg-white/10 blur-[1px] animate-[operationsMoon_18s_ease-in-out_infinite]" />
-      <div className="absolute left-[-18%] top-[22%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-cyan-200/10 to-transparent blur-[105px] animate-[operationsFogOne_42s_ease-in-out_infinite]" />
-      <div className="absolute left-[-18%] top-[52%] h-[260px] w-[140%] rounded-full bg-gradient-to-r from-transparent via-blue-300/10 to-transparent blur-[110px] animate-[operationsFogTwo_48s_ease-in-out_infinite]" />
-      {[
-        ["6%", "10%", "2px", "0s"],
-        ["12%", "32%", "2px", "1.1s"],
-        ["25%", "18%", "3px", "1.6s"],
-        ["42%", "12%", "2px", "2.5s"],
-        ["51%", "38%", "2px", "1.3s"],
-        ["68%", "20%", "2px", "2.9s"],
-        ["77%", "50%", "3px", "1.8s"],
-        ["86%", "16%", "2px", "0.4s"],
-        ["94%", "70%", "2px", "2.2s"],
-        ["30%", "88%", "2px", "2.4s"],
-      ].map(([left, top, size, delay], index) => (
+    <div className="agentNightSky" aria-hidden="true">
+      <div className="agentMoon" />
+      <div className="agentFog agentFogA" />
+      <div className="agentFog agentFogB" />
+      <div className="agentOrb agentOrbA" />
+      <div className="agentOrb agentOrbB" />
+
+      {stars.map((star, index) => (
         <span
           key={index}
-          className="absolute block rounded-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.95),0_0_18px_rgba(147,197,253,0.62),0_0_34px_rgba(34,211,238,0.25)] animate-[operationsTwinkle_5.5s_ease-in-out_infinite]"
-          style={{ left, top, width: size, height: size, animationDelay: delay }}
+          className="agentStar"
+          style={{
+            left: star.left,
+            top: star.top,
+            width: `${star.size}px`,
+            height: `${star.size}px`,
+            animationDelay: star.delay,
+            animationDuration: star.duration,
+          }}
         />
       ))}
     </div>
   );
 }
 
-function OperationsStyles() {
+function AgentCopiedStyles() {
   return (
     <style>{`
-      @keyframes operationsTwinkle {
-        0%, 100% { transform: translateY(0px) scale(0.75); opacity: 0.2; }
-        25% { transform: translateY(-4px) scale(1.2); opacity: 1; }
-        50% { transform: translateY(0px) scale(0.95); opacity: 0.45; }
-        75% { transform: translateY(3px) scale(1.08); opacity: 0.75; }
-      }
-
-      @keyframes operationsFogOne {
-        0%, 100% { transform: translateX(-3%) translateY(0px) scaleX(1); opacity: 0.62; }
-        50% { transform: translateX(4%) translateY(-10px) scaleX(1.08); opacity: 0.9; }
-      }
-
-      @keyframes operationsFogTwo {
-        0%, 100% { transform: translateX(4%) translateY(0px) scaleX(1.02); opacity: 0.52; }
-        50% { transform: translateX(-3%) translateY(9px) scaleX(1.1); opacity: 0.88; }
-      }
-
-      @keyframes operationsMoon {
-        0%, 100% { opacity: 0.10; transform: scale(1); }
-        50% { opacity: 0.16; transform: scale(1.015); }
-      }
-
-      .operationsLogoGlow {
-        text-shadow:
-          0 0 8px rgba(255, 255, 255, 0.70),
-          0 0 18px rgba(96, 165, 250, 0.30),
-          0 0 34px rgba(34, 211, 238, 0.20);
-        animation: operationsLogoGlow 3s ease-in-out infinite;
-      }
-
-      @keyframes operationsLogoGlow {
-        0%, 100% {
-          opacity: 0.82;
-          text-shadow:
-            0 0 7px rgba(255, 255, 255, 0.48),
-            0 0 16px rgba(96, 165, 250, 0.24),
-            0 0 34px rgba(34, 211, 238, 0.16);
+        .agentNightSky {
+          pointer-events: none;
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 20% 12%, rgba(59, 130, 246, 0.11), transparent 28%),
+            radial-gradient(circle at 82% 18%, rgba(147, 51, 234, 0.08), transparent 26%),
+            radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.045), transparent 34%),
+            #05070b;
         }
-        50% {
-          opacity: 1;
-          text-shadow:
-            0 0 12px rgba(255, 255, 255, 0.95),
-            0 0 28px rgba(255, 255, 255, 0.55),
-            0 0 52px rgba(34, 211, 238, 0.35);
+
+        .agentMoon {
+          position: absolute;
+          right: 3%;
+          top: 5%;
+          width: min(34vw, 30rem);
+          height: min(34vw, 30rem);
+          border-radius: 9999px;
+          background:
+            radial-gradient(circle at 32% 28%, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.92) 12%, rgba(226,232,240,0.76) 30%, rgba(148,163,184,0.42) 54%, rgba(30,41,59,0.18) 78%, rgba(15,23,42,0.04) 100%);
+          box-shadow:
+            0 0 44px rgba(255,255,255,0.42),
+            0 0 95px rgba(191,219,254,0.36),
+            0 0 165px rgba(96,165,250,0.26),
+            inset -42px -34px 70px rgba(15,23,42,0.42),
+            inset 18px 14px 44px rgba(255,255,255,0.32);
+          opacity: 0.24;
+          animation: agentMoonGlow 4.8s ease-in-out infinite;
         }
-      }
-    `}</style>
+
+        .agentStar {
+          position: absolute;
+          display: block;
+          border-radius: 9999px;
+          background: #ffffff;
+          box-shadow:
+            0 0 8px rgba(255,255,255,0.95),
+            0 0 18px rgba(147,197,253,0.62),
+            0 0 30px rgba(59,130,246,0.35);
+          animation-name: agentTwinkle;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
+        }
+
+        .agentFog {
+          position: absolute;
+          left: -10%;
+          right: -10%;
+          height: 170px;
+          border-radius: 9999px;
+          filter: blur(92px);
+          opacity: 0.075;
+          mix-blend-mode: screen;
+        }
+
+        .agentFogA {
+          top: 18%;
+          background: linear-gradient(90deg, rgba(59,130,246,0), rgba(59,130,246,0.36), rgba(147,51,234,0.18), rgba(59,130,246,0));
+          animation: agentFogDriftOne 42s ease-in-out infinite;
+        }
+
+        .agentFogB {
+          top: 58%;
+          background: linear-gradient(90deg, rgba(16,185,129,0), rgba(6,182,212,0.32), rgba(96,165,250,0.2), rgba(16,185,129,0));
+          animation: agentFogDriftTwo 46s ease-in-out infinite;
+        }
+
+        .agentOrb {
+          position: absolute;
+          border-radius: 9999px;
+          filter: blur(38px);
+          opacity: 0.22;
+        }
+
+        .agentOrbA {
+          left: -10%;
+          top: 18%;
+          height: 22rem;
+          width: 22rem;
+          background: rgba(59,130,246,0.16);
+          animation: agentFloatSlow 28s ease-in-out infinite;
+        }
+
+        .agentOrbB {
+          right: -10%;
+          top: 30%;
+          height: 26rem;
+          width: 26rem;
+          background: rgba(6,182,212,0.12);
+          animation: agentFloatSlow 34s ease-in-out infinite reverse;
+        }
+
+        .agentLogoGlow {
+          text-shadow:
+            0 0 8px rgba(255,255,255,0.70),
+            0 0 18px rgba(96,165,250,0.24),
+            0 0 34px rgba(6,182,212,0.18);
+          animation: agentLogoPulse 3.4s ease-in-out infinite;
+        }
+
+        @keyframes agentTwinkle {
+          0%, 100% { transform: translateZ(0) scale(0.85); opacity: 0.42; }
+          50% { transform: translateZ(0) scale(1.35); opacity: 1; }
+        }
+
+        @keyframes agentMoonGlow {
+          0%, 100% {
+            opacity: 0.22;
+            box-shadow:
+              0 0 44px rgba(255,255,255,0.34),
+              0 0 95px rgba(191,219,254,0.28),
+              0 0 165px rgba(96,165,250,0.20),
+              inset -42px -34px 70px rgba(15,23,42,0.42),
+              inset 18px 14px 44px rgba(255,255,255,0.28);
+          }
+          50% {
+            opacity: 0.34;
+            box-shadow:
+              0 0 58px rgba(255,255,255,0.48),
+              0 0 120px rgba(191,219,254,0.42),
+              0 0 190px rgba(96,165,250,0.30),
+              inset -42px -34px 70px rgba(15,23,42,0.38),
+              inset 18px 14px 44px rgba(255,255,255,0.36);
+          }
+        }
+
+        @keyframes agentLogoPulse {
+          0%, 100% {
+            opacity: 0.78;
+            text-shadow:
+              0 0 8px rgba(255,255,255,0.62),
+              0 0 18px rgba(96,165,250,0.22),
+              0 0 34px rgba(6,182,212,0.14);
+          }
+          50% {
+            opacity: 1;
+            text-shadow:
+              0 0 10px rgba(255,255,255,0.92),
+              0 0 26px rgba(147,197,253,0.42),
+              0 0 48px rgba(6,182,212,0.28);
+          }
+        }
+
+        @keyframes agentFogDriftOne {
+          0%, 100% { transform: translateX(-2%) translateY(0px) scaleX(1); }
+          50% { transform: translateX(4%) translateY(-4px) scaleX(1.04); }
+        }
+
+        @keyframes agentFogDriftTwo {
+          0%, 100% { transform: translateX(3%) translateY(0px) scaleX(1.06); }
+          50% { transform: translateX(-4%) translateY(5px) scaleX(1); }
+        }
+
+        @keyframes agentFloatSlow {
+          0%, 100% { transform: translate3d(0, 0, 0); }
+          50% { transform: translate3d(0, 18px, 0); }
+        }
+      `}</style>
   );
 }
 
@@ -375,12 +513,12 @@ export default async function OperationsAgentPage() {
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white sm:px-8 lg:px-10">
-      <NightSkyBackground />
+      <AgentNightSkyBackground />
 
       <section className="relative z-10 mx-auto max-w-7xl">
         <Link
           href="/admin/agents"
-          className="operationsLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
+          className="agentLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
         >
           GHOSTLAYER
         </Link>
@@ -573,7 +711,7 @@ export default async function OperationsAgentPage() {
         </section>
       </section>
 
-      <OperationsStyles />
+      <AgentCopiedStyles />
     </main>
   );
 }
