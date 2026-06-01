@@ -162,12 +162,14 @@ export default async function ClientUploadsPage({
 
   const errorMessage =
     resolvedSearchParams.error === "missing-file"
-      ? "Choose a file before uploading."
+      ? "Choose a file before uploading. If the file picker is not working, refresh the page and try again."
       : resolvedSearchParams.error === "empty-file"
-      ? "The selected file is empty."
-      : resolvedSearchParams.error === "file-too-large"
-      ? "File is too large. Maximum size is 10 MB."
-      : "";
+        ? "The selected file is empty. Please choose a valid screenshot, document, spreadsheet, SOP, or workflow file."
+        : resolvedSearchParams.error === "file-too-large"
+          ? "File is too large. Maximum size is 10 MB. Try a smaller file, compress it, or contact support and include the file name and size."
+          : resolvedSearchParams.error
+            ? "Upload failed. Please try again once. If it still fails, contact support with your client email, report name, file name, and file size."
+            : "";
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] text-white">
@@ -210,8 +212,19 @@ export default async function ClientUploadsPage({
         ) : null}
 
         {errorMessage ? (
-          <div className="mb-6 rounded-2xl border border-red-300/25 bg-red-300/10 p-5 text-red-100">
-            {errorMessage}
+          <div className="mb-6 rounded-2xl border border-red-300/25 bg-red-300/10 p-5 text-sm leading-6 text-red-100">
+            <p className="font-bold text-white">Upload did not go through</p>
+            <p className="mt-2">{errorMessage}</p>
+            <p className="mt-2 text-red-100/90">
+              Try again once. If it still fails, contact support and include your client email,
+              report name, file name, and file size.
+            </p>
+            <Link
+              href="/contact"
+              className="mt-3 inline-flex rounded-full border border-red-200/25 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+            >
+              Contact Support
+            </Link>
           </div>
         ) : null}
 

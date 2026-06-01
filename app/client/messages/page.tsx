@@ -293,6 +293,17 @@ export default async function ClientMessagesPage({
   const messages = await getMessages(clientEmail);
   const reportOptions = await getReportOptions(clientEmail);
 
+  const messageError =
+    resolvedSearchParams.error === "missing-message"
+      ? "Please enter a message before sending. Include what changed, what you need reviewed, and any report name or file name if relevant."
+      : resolvedSearchParams.error === "message-too-long"
+        ? "Your message is too long. Shorten it to the key details, or contact support if you need to send a longer explanation."
+        : resolvedSearchParams.error === "send-failed"
+          ? "Message failed. Please try again once. If it still fails, contact support with your client email, report name, and a short summary of what you tried to send."
+          : resolvedSearchParams.error
+            ? "Message failed. Please try again once. If it still fails, contact support with your client email, report name, and a short summary of what you tried to send."
+            : "";
+
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] text-white">
       <PortalBackground />
@@ -325,6 +336,23 @@ export default async function ClientMessagesPage({
           <NavLinks />
         </div>
       <ClientMessageFlash />
+
+      {messageError ? (
+        <div className="mb-6 rounded-2xl border border-red-300/25 bg-red-300/10 p-5 text-sm leading-6 text-red-100">
+          <p className="font-bold text-white">Message was not sent</p>
+          <p className="mt-2">{messageError}</p>
+          <p className="mt-2 text-red-100/90">
+            Try again once. If it still fails, contact support and include your client email,
+            report name, and a short summary of what you tried to send.
+          </p>
+          <Link
+            href="/contact"
+            className="mt-3 inline-flex rounded-full border border-red-200/25 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]"
+          >
+            Contact Support
+          </Link>
+        </div>
+      ) : null}
 
         <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
           <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl">
