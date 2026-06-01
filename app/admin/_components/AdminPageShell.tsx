@@ -36,7 +36,7 @@ export default function AdminPageShell({
               {eyebrow}
             </p>
 
-            <h1 className="mt-5 max-w-4xl text-5xl font-black tracking-tight sm:text-6xl">
+            <h1 className="mt-5 max-w-4xl sm: sm: text-4xl font-black tracking-tight sm:text-5xl">
               {title}
             </h1>
 
