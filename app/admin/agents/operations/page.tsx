@@ -528,7 +528,7 @@ export default async function OperationsAgentPage() {
             <p className="text-xs font-bold uppercase tracking-[0.4em] text-cyan-300">
               Internal Admin Agent
             </p>
-            <h1 className="mt-5 max-w-4xl text-3xl font-black tracking-tight sm:text-4xl">
+            <h1 className="mt-5 max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
               Operations & Automation Agent
             </h1>
             <p className="mt-5 max-w-3xl text-sm leading-7 text-gray-300 sm:text-base">

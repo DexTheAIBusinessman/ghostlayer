@@ -567,7 +567,7 @@ export default async function PersonalizedMarketingAgentPage() {
               Internal Admin Agent
             </p>
 
-            <h1 className="mt-5 max-w-4xl text-3xl font-black tracking-tight sm:text-4xl">
+            <h1 className="mt-5 max-w-4xl text-4xl font-black tracking-tight sm:text-5xl">
               Personalized Marketing at Scale Agent
             </h1>
 
