@@ -29,7 +29,8 @@ async function getReports(): Promise<Report[]> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase environment variables.");
+    console.error("Missing Supabase environment variables.");
+    return [];
   }
 
   const response = await fetch(
@@ -44,7 +45,8 @@ async function getReports(): Promise<Report[]> {
   );
 
   if (!response.ok) {
-    throw new Error("Could not load reports.");
+    console.error("Could not load reports.");
+    return [];
   }
 
   return response.json();
