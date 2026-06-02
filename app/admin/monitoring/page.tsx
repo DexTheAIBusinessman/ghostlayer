@@ -43,7 +43,8 @@ async function getDueReports(): Promise<ClientReport[]> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase environment variables.");
+    console.error("Missing Supabase environment variables.");
+    return [];
   }
 
   const today = new Date().toISOString().slice(0, 10);
@@ -61,7 +62,8 @@ async function getDueReports(): Promise<ClientReport[]> {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Could not load due monitoring clients: ${errorText}`);
+    console.error("Could not load due monitoring clients:", errorText);
+    return [];
   }
 
   return response.json();
@@ -72,7 +74,8 @@ async function getMonitoringHistory(): Promise<MonitoringHistory[]> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase environment variables.");
+    console.error("Missing Supabase environment variables.");
+    return [];
   }
 
   const response = await fetch(
@@ -88,7 +91,8 @@ async function getMonitoringHistory(): Promise<MonitoringHistory[]> {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Could not load monitoring history: ${errorText}`);
+    console.error("Could not load monitoring history:", errorText);
+    return [];
   }
 
   return response.json();

@@ -21,7 +21,8 @@ async function getMessages(): Promise<ClientMessage[]> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase environment variables.");
+    console.error("Missing Supabase environment variables.");
+    return [];
   }
 
   const response = await fetch(
@@ -37,7 +38,8 @@ async function getMessages(): Promise<ClientMessage[]> {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Could not load messages: ${errorText}`);
+    console.error("Could not load messages:", errorText);
+    return [];
   }
 
   return response.json();

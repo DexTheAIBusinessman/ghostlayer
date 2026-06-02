@@ -17,7 +17,8 @@ async function getUploads(): Promise<UploadRecord[]> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase environment variables.");
+    console.error("Missing Supabase environment variables.");
+    return [];
   }
 
   const response = await fetch(
@@ -33,7 +34,8 @@ async function getUploads(): Promise<UploadRecord[]> {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Could not load uploads: ${errorText}`);
+    console.error("Could not load uploads:", errorText);
+    return [];
   }
 
   return response.json();
