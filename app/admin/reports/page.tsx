@@ -637,7 +637,7 @@ export default async function AdminReportsPage({
             </Link>
 
             <Link
-              href="/dashboard"
+              href="/admin/analytics"
               className="rounded-2xl border border-white/15 bg-white/[0.04] px-5 py-3 text-sm font-semibold text-white transition hover:scale-[1.02] hover:bg-white/[0.08]"
             >
               Sample Dashboard
