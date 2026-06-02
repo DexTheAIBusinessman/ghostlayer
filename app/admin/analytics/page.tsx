@@ -26,7 +26,8 @@ async function getReports(): Promise<ClientReport[]> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase environment variables.");
+    console.error("Missing Supabase environment variables.");
+    return [];
   }
 
   const response = await fetch(
@@ -42,7 +43,8 @@ async function getReports(): Promise<ClientReport[]> {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Could not load analytics reports: ${errorText}`);
+    console.error("Could not load analytics reports:", errorText);
+    return [];
   }
 
   return response.json();
@@ -206,7 +208,15 @@ async function getPortalCounts(): Promise<PortalCounts> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase environment variables.");
+    console.error("Missing Supabase environment variables.");
+    return {
+      totalMessages: 0,
+      openMessages: 0,
+      reportMessages: 0,
+      totalUploads: 0,
+      reportUploads: 0,
+      uploadBytes: 0,
+    };
   }
 
   const [messagesResponse, uploadsResponse] = await Promise.all([
@@ -234,12 +244,28 @@ async function getPortalCounts(): Promise<PortalCounts> {
 
   if (!messagesResponse.ok) {
     const errorText = await messagesResponse.text();
-    throw new Error(`Could not load client messages: ${errorText}`);
+    console.error("Could not load client messages:", errorText);
+    return {
+      totalMessages: 0,
+      openMessages: 0,
+      reportMessages: 0,
+      totalUploads: 0,
+      reportUploads: 0,
+      uploadBytes: 0,
+    };
   }
 
   if (!uploadsResponse.ok) {
     const errorText = await uploadsResponse.text();
-    throw new Error(`Could not load client uploads: ${errorText}`);
+    console.error("Could not load client uploads:", errorText);
+    return {
+      totalMessages: 0,
+      openMessages: 0,
+      reportMessages: 0,
+      totalUploads: 0,
+      reportUploads: 0,
+      uploadBytes: 0,
+    };
   }
 
   const messages = await messagesResponse.json();
@@ -279,7 +305,13 @@ async function getMonitoringCounts(): Promise<MonitoringCounts> {
   const serviceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
   if (!supabaseUrl || !serviceRoleKey) {
-    throw new Error("Missing Supabase environment variables.");
+    console.error("Missing Supabase environment variables.");
+    return {
+      dueClients: 0,
+      draftUpdates: 0,
+      sentUpdates: 0,
+      needsReviewReports: 0,
+    };
   }
 
   const today = new Date().toISOString().slice(0, 10);
@@ -319,17 +351,35 @@ async function getMonitoringCounts(): Promise<MonitoringCounts> {
 
   if (!dueResponse.ok) {
     const errorText = await dueResponse.text();
-    throw new Error(`Could not load due monitoring clients: ${errorText}`);
+    console.error("Could not load due monitoring clients:", errorText);
+    return {
+      dueClients: 0,
+      draftUpdates: 0,
+      sentUpdates: 0,
+      needsReviewReports: 0,
+    };
   }
 
   if (!historyResponse.ok) {
     const errorText = await historyResponse.text();
-    throw new Error(`Could not load monitoring history: ${errorText}`);
+    console.error("Could not load monitoring history:", errorText);
+    return {
+      dueClients: 0,
+      draftUpdates: 0,
+      sentUpdates: 0,
+      needsReviewReports: 0,
+    };
   }
 
   if (!reportsResponse.ok) {
     const errorText = await reportsResponse.text();
-    throw new Error(`Could not load monitoring reports: ${errorText}`);
+    console.error("Could not load monitoring reports:", errorText);
+    return {
+      dueClients: 0,
+      draftUpdates: 0,
+      sentUpdates: 0,
+      needsReviewReports: 0,
+    };
   }
 
   const dueClients = await dueResponse.json();
