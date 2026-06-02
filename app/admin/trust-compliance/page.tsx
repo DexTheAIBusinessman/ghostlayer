@@ -235,7 +235,7 @@ export default function TrustCompliancePage() {
       <section className="relative z-10 mx-auto max-w-6xl">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <a
-            href="/admin"
+            href="/admin/agents"
             className="trustLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
           >
             GHOSTLAYER
