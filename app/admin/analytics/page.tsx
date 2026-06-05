@@ -1,4 +1,5 @@
 import Link from "next/link";
+import AdminLogoutButton from "../_components/AdminLogoutButton";
 
 type ClientReport = {
   id: string;
@@ -498,6 +499,8 @@ export default async function AdminAnalyticsPage() {
             >
               Sample Dashboard
             </Link>
+
+            <AdminLogoutButton />
           </div>
         </div>
 
