@@ -354,11 +354,21 @@ function AdminLoginStyles() {
       @keyframes adminLoginMoonGlow {
         0%, 100% {
           opacity: 0.22;
-          transform: scale(1);
+          box-shadow:
+            0 0 44px rgba(255,255,255,0.26),
+            0 0 95px rgba(191,219,254,0.20),
+            0 0 165px rgba(96,165,250,0.14),
+            inset -42px -34px 70px rgba(15,23,42,0.42),
+            inset 18px 14px 44px rgba(255,255,255,0.24);
         }
         50% {
           opacity: 0.38;
-          transform: scale(1.015);
+          box-shadow:
+            0 0 54px rgba(255,255,255,0.46),
+            0 0 120px rgba(191,219,254,0.36),
+            0 0 190px rgba(96,165,250,0.28),
+            inset -42px -34px 70px rgba(15,23,42,0.42),
+            inset 18px 14px 44px rgba(255,255,255,0.34);
         }
       }
 
