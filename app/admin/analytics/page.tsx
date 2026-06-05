@@ -505,7 +505,7 @@ export default async function AdminAnalyticsPage() {
         </div>
 
   
-      <div className="rounded-[2rem] border border-cyan-300/20 bg-cyan-300/[0.06] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.28)] backdrop-blur">
+      <div className="mb-10 rounded-[2rem] border border-cyan-300/20 bg-cyan-300/[0.06] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.28)] backdrop-blur">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.32em] text-cyan-200">
