@@ -1,4 +1,4 @@
-import Link from "next/link";
+import AdminPageShell from "../_components/AdminPageShell";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -26,15 +26,11 @@ async function loginAdmin(formData: FormData) {
   const adminSessionSecret = process.env.ADMIN_SESSION_SECRET?.trim();
 
   if (!adminUser || !adminPassword || !adminSessionSecret) {
-    redirect(
-      `/admin/login?error=config&next=${encodeURIComponent(nextPath)}`
-    );
+    redirect(`/admin/login?error=config&next=${encodeURIComponent(nextPath)}`);
   }
 
   if (username !== adminUser || password !== adminPassword) {
-    redirect(
-      `/admin/login?error=invalid&next=${encodeURIComponent(nextPath)}`
-    );
+    redirect(`/admin/login?error=invalid&next=${encodeURIComponent(nextPath)}`);
   }
 
   const cookieStore = await cookies();
@@ -56,6 +52,7 @@ export default async function AdminLoginPage({
   searchParams?: Promise<{ error?: string; next?: string }>;
 }) {
   const resolvedSearchParams = searchParams ? await searchParams : {};
+
   const nextPath =
     resolvedSearchParams.next &&
     resolvedSearchParams.next.startsWith("/admin") &&
@@ -75,35 +72,21 @@ export default async function AdminLoginPage({
       : "";
 
   return (
-    <main className="min-h-screen bg-[#05070b] px-6 py-16 text-white">
-      <section className="mx-auto flex min-h-[70vh] max-w-xl flex-col justify-center">
-        <Link
-          href="/"
-          className="mb-10 inline-block text-lg font-bold tracking-[0.35em] text-white"
-        >
-          GHOSTLAYER
-        </Link>
-
-        <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-10">
-          <p className="text-xs font-bold uppercase tracking-[0.32em] text-cyan-300">
-            Admin Login
-          </p>
-
-          <h1 className="mt-5 text-4xl font-bold tracking-tight text-white sm:text-5xl">
-            Access admin workspace.
-          </h1>
-
-          <p className="mt-5 text-sm leading-7 text-gray-300">
-            Admin access is restricted to authorized Ghostlayer operators.
-          </p>
-
+    <AdminPageShell
+      eyebrow="Admin Login"
+      title="Access admin workspace."
+      description="Admin access is restricted to authorized Ghostlayer operators."
+      actions={null}
+    >
+      <div className="mx-auto mt-2 max-w-xl">
+        <div className="rounded-[2rem] border border-white/10 bg-white/[0.045] p-6 shadow-[0_24px_100px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8">
           {errorMessage ? (
-            <div className="mt-6 rounded-2xl border border-red-300/25 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100">
+            <div className="mb-6 rounded-2xl border border-red-300/25 bg-red-500/10 px-4 py-3 text-sm font-semibold text-red-100">
               {errorMessage}
             </div>
           ) : null}
 
-          <form action={loginAdmin} className="mt-8 space-y-4">
+          <form action={loginAdmin} className="space-y-5">
             <input type="hidden" name="next" value={nextPath} />
 
             <label className="block">
@@ -115,7 +98,7 @@ export default async function AdminLoginPage({
                 type="text"
                 required
                 autoComplete="username"
-                className="mt-2 w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none transition focus:border-cyan-300/70"
+                className="mt-2 w-full rounded-2xl border border-white/10 bg-white/[0.08] px-4 py-3 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-300/70 focus:bg-white/[0.11]"
               />
             </label>
 
@@ -128,7 +111,7 @@ export default async function AdminLoginPage({
                 type="password"
                 required
                 autoComplete="current-password"
-                className="mt-2 w-full rounded-2xl border border-white/10 bg-black/30 px-4 py-3 text-white outline-none transition focus:border-cyan-300/70"
+                className="mt-2 w-full rounded-2xl border border-white/10 bg-white/[0.08] px-4 py-3 text-white outline-none transition placeholder:text-gray-500 focus:border-cyan-300/70 focus:bg-white/[0.11]"
               />
             </label>
 
@@ -140,7 +123,7 @@ export default async function AdminLoginPage({
             </button>
           </form>
         </div>
-      </section>
-    </main>
+      </div>
+    </AdminPageShell>
   );
 }
