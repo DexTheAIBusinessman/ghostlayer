@@ -504,7 +504,58 @@ export default async function AdminAnalyticsPage() {
           </div>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+  
+      <div className="rounded-[2rem] border border-cyan-300/20 bg-cyan-300/[0.06] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.28)] backdrop-blur">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.32em] text-cyan-200">
+              Operator SOP
+            </p>
+
+            <h2 className="mt-3 text-2xl font-black tracking-tight text-white">
+              Workflow Scan to Report Delivery
+            </h2>
+
+            <p className="mt-3 max-w-2xl text-sm leading-7 text-gray-300">
+              Use this checklist to process each customer scan from intake review through report delivery.
+              Ghostlayer stays review-first, human-approved, and non-destructive.
+            </p>
+          </div>
+
+          <Link
+            href="/admin/reports"
+            className="rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:opacity-90"
+          >
+            Start Review
+          </Link>
+        </div>
+
+        <div className="mt-6 grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {[
+            "Review new scan, lead, and payment status",
+            "Check intake details, uploads, and client messages",
+            "Identify bottlenecks, follow-up risk, drag, and process gaps",
+            "Draft, review, send, and confirm client report access",
+          ].map((item, index) => (
+            <div
+              key={item}
+              className="rounded-2xl border border-white/10 bg-black/20 p-4"
+            >
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-cyan-200">
+                Step {index + 1}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-gray-200">{item}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-5 rounded-2xl border border-white/10 bg-white/[0.035] p-4 text-sm leading-7 text-gray-300">
+          Never change customer accounts, billing, passwords, systems, or publish/send reports without admin approval.
+        </div>
+      </div>
+
+
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
           <MetricCard
             label="Total Reports"
             value={totalReports}
