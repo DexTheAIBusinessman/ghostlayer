@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -76,12 +75,9 @@ export default async function AdminLoginPage({
       <AdminLoginBackground />
 
       <section className="relative z-10 mx-auto flex min-h-[calc(100vh-5rem)] max-w-xl flex-col justify-center">
-        <Link
-          href="/"
-          className="ghostlayerLogoGlow mb-8 block text-center text-lg font-bold tracking-[0.38em] text-white"
-        >
+        <div className="ghostlayerLogoGlow mb-8 block text-center text-lg font-bold tracking-[0.38em] text-white">
           GHOSTLAYER ADMIN
-        </Link>
+        </div>
 
         <div className="rounded-[2rem] border border-white/10 bg-white/[0.035] p-6 shadow-[0_20px_80px_rgba(0,0,0,0.35)] backdrop-blur sm:p-10">
           <p className="text-xs font-bold uppercase tracking-[0.34em] text-cyan-300">
