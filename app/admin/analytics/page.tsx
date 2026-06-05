@@ -1009,7 +1009,7 @@ export default async function AdminAnalyticsPage() {
           </div>
 
 
-<p className="text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">
+<p className="mt-14 border-t border-white/10 pt-8 sm:mt-16 lg:mt-20 text-xs font-bold uppercase tracking-[0.28em] text-cyan-300">
                 Recent Reports
               </p>
               <h2 className="mt-2 text-2xl font-bold">Latest Client Records</h2>
