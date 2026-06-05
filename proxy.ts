@@ -16,6 +16,7 @@ const PROTECTED_ADMIN_API_PATHS = new Set([
 
 function isProtectedAdminPath(pathname: string) {
   if (pathname === "/admin/login") return false;
+  if (pathname === "/api/admin/logout") return false;
   if (pathname.startsWith("/admin/")) return true;
   if (pathname === "/admin") return true;
   if (pathname.startsWith("/api/admin/")) return true;
