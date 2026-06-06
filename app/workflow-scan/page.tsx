@@ -3,8 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
-const WEBHOOK_URL =
-  "https://mdwvqkdwlfczkdrwikfm.supabase.co/functions/v1/calendly-webhook";
+const WEBHOOK_URL = "/api/workflow-scan-intake";
 
 type FormState = {
   name: string;
