@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import AdminPageShell from "../_components/AdminPageShell";
 
 type Scan = {
@@ -24,16 +23,23 @@ export default function ScansPage() {
 
   useEffect(() => {
     async function loadScans() {
-      const { data, error } = await supabase
-        .from("scans")
-        .select("*")
-        .order("created_at", { ascending: false });
+      try {
+        const response = await fetch("/api/admin/scans", {
+          cache: "no-store",
+        });
 
-      if (!error && data) {
-        setScans(data);
+        const data = await response.json();
+
+        if (response.ok && data.ok && Array.isArray(data.scans)) {
+          setScans(data.scans);
+        } else {
+          console.error("Could not load admin scans:", data);
+        }
+      } catch (error) {
+        console.error("Could not load admin scans:", error);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
     loadScans();

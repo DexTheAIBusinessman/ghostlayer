@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
 import AdminPageShell from "../_components/AdminPageShell";
 
 type Lead = {
@@ -21,16 +20,23 @@ export default function LeadsPage() {
 
   useEffect(() => {
     async function loadLeads() {
-      const { data, error } = await supabase
-        .from("leads")
-        .select("*")
-        .order("created_at", { ascending: false });
+      try {
+        const response = await fetch("/api/admin/leads", {
+          cache: "no-store",
+        });
 
-      if (!error && data) {
-        setLeads(data);
+        const data = await response.json();
+
+        if (response.ok && data.ok && Array.isArray(data.leads)) {
+          setLeads(data.leads);
+        } else {
+          console.error("Could not load admin leads:", data);
+        }
+      } catch (error) {
+        console.error("Could not load admin leads:", error);
+      } finally {
+        setLoading(false);
       }
-
-      setLoading(false);
     }
 
     loadLeads();
