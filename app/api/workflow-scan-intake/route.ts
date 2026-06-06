@@ -51,12 +51,16 @@ async function insertRow(table: string, payload: Record<string, unknown>) {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
+    const input =
+      body && typeof body === "object" && body.payload && typeof body.payload === "object"
+        ? body.payload
+        : body;
 
-    const name = String(body.name || "").trim();
-    const email = String(body.email || "").trim().toLowerCase();
-    const company = String(body.company || "").trim();
-    const phone = String(body.phone || "").trim();
-    const message = String(body.message || "").trim();
+    const name = String(input.name || "").trim();
+    const email = String(input.email || "").trim().toLowerCase();
+    const company = String(input.company || "").trim();
+    const phone = String(input.phone || "").trim();
+    const message = String(input.message || "").trim();
 
     if (!name || !email || !message) {
       return NextResponse.json(
