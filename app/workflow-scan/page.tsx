@@ -136,7 +136,7 @@ export default function WorkflowScanPage() {
       }
 
       setStatus("success");
-      router.push("/start-workflow-scan");
+      router.push("/thank-you");
       setForm({
         name: "",
         email: "",
