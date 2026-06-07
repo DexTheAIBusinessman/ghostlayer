@@ -2138,45 +2138,54 @@ If current friction is reduced, workflow health should move toward ${Math.min(
 
         .ghostlayerSidebarLogo,
         .ghostlayerFooterLogo {
-          display: inline-block !important;
-          background: transparent !important;
-          border: 0 !important;
-          box-shadow: none !important;
-          outline: none !important;
-          text-decoration: none !important;
-          filter: none !important;
-          color: #ffffff !important;
-          font-weight: 700 !important;
-          letter-spacing: 0.1em !important;
-          line-height: 1 !important;
-          animation: dashboardLogoPulse 2.8s ease-in-out infinite !important;
-          text-shadow:
-            0 0 5px rgba(255, 255, 255, 0.72),
-            0 0 12px rgba(255, 255, 255, 0.48),
-            0 0 24px rgba(96, 165, 250, 0.32),
-            0 0 40px rgba(59, 130, 246, 0.18) !important;
-        }
+  display: inline-block;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: #ffffff;
+  animation: dashboardLogoPulse 2.8s ease-in-out infinite !important;
+  text-shadow:
+    0 0 8px rgba(255,255,255,0.70),
+    0 0 18px rgba(255,255,255,0.45),
+    0 0 34px rgba(96,165,250,0.36),
+    0 0 52px rgba(59,130,246,0.24);
+}
 
         .ghostlayerSidebarLogo {
-          width: 100%;
-          text-align: left;
-          font-size: 1.2rem !important;
-        }
+  display: inline-block;
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: 0.35em;
+  color: #ffffff;
+  animation: dashboardLogoPulse 2.8s ease-in-out infinite !important;
+  text-shadow:
+    0 0 8px rgba(255,255,255,0.70),
+    0 0 18px rgba(255,255,255,0.45),
+    0 0 34px rgba(96,165,250,0.36),
+    0 0 52px rgba(59,130,246,0.24);
+}
 
         .ghostlayerFooterLogo {
           font-size: 1.08rem !important;
         }
 
         @keyframes dashboardLogoPulse {
-          0%,
-          100% {
-            opacity: 0.86;
-            text-shadow:
-              0 0 4px rgba(255, 255, 255, 0.5),
-              0 0 10px rgba(255, 255, 255, 0.34),
-              0 0 22px rgba(96, 165, 250, 0.2),
-              0 0 34px rgba(59, 130, 246, 0.1);
-          }
+  0%, 100% {
+    opacity: 0.82;
+    text-shadow:
+      0 0 7px rgba(255,255,255,0.46),
+      0 0 16px rgba(96,165,250,0.24),
+      0 0 34px rgba(59,130,246,0.16);
+  }
+  50% {
+    opacity: 1;
+    text-shadow:
+      0 0 12px rgba(255,255,255,0.95),
+      0 0 26px rgba(255,255,255,0.58),
+      0 0 48px rgba(147,197,253,0.42),
+      0 0 76px rgba(59,130,246,0.30);
+  }
+}
           50% {
             opacity: 1;
             text-shadow:
