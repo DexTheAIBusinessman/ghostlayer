@@ -397,7 +397,7 @@ export default async function AgentsPage() {
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white sm:px-8 lg:px-10">\n      <AgentNightSkyBackground />
       <section className="relative z-10 mx-auto max-w-7xl">
         <Link
-          href="/admin/agents"
+          href="/admin/analytics"
           className="agentLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white transition hover:text-white"
         >
           GHOSTLAYER
