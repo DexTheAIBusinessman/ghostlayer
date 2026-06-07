@@ -142,24 +142,6 @@ export default async function AdminUploadsPage() {
             Admin Home
           </Link>
           <Link
-            href="/admin/reports"
-            className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100 transition hover:bg-emerald-300/15"
-          >
-            Reports
-          </Link>
-          <Link
-            href="/admin/messages"
-            className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100 transition hover:bg-blue-300/15"
-          >
-            Messages
-          </Link>
-          <Link
-            href="/admin/activity"
-            className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100 transition hover:bg-purple-300/15"
-          >
-            Activity
-          </Link>
-          <Link
             href="/admin/trust-compliance"
             className="rounded-full border border-lime-300/20 bg-lime-300/10 px-4 py-2 text-lime-100 transition hover:bg-lime-300/15"
           >
