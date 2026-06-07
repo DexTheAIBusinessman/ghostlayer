@@ -392,13 +392,28 @@ export default function WorkflowScanPage() {
 
       <style jsx global>{`
         .ghostlayerLogoPulse {
-          animation: ghostlayerLogoPulseGlow 2.8s ease-in-out infinite;
+          display: inline-block;
           color: #ffffff;
-          text-shadow:
-            0 0 8px rgba(255,255,255,0.70),
-            0 0 18px rgba(255,255,255,0.45),
-            0 0 34px rgba(96,165,250,0.36),
-            0 0 52px rgba(59,130,246,0.24);
+          animation: workflowLogoBrightDim 2.4s ease-in-out infinite;
+          will-change: opacity, text-shadow;
+        }
+
+        @keyframes workflowLogoBrightDim {
+          0%, 100% {
+            opacity: 0.45;
+            text-shadow:
+              0 0 3px rgba(255,255,255,0.25),
+              0 0 8px rgba(96,165,250,0.16),
+              0 0 14px rgba(59,130,246,0.10);
+          }
+          50% {
+            opacity: 1;
+            text-shadow:
+              0 0 10px rgba(255,255,255,0.95),
+              0 0 22px rgba(255,255,255,0.72),
+              0 0 42px rgba(147,197,253,0.58),
+              0 0 72px rgba(59,130,246,0.38);
+          }
         }
 
         .hero-glow {
