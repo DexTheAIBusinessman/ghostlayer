@@ -179,7 +179,7 @@ export default function WorkflowScanPage() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-4 sm:px-6 md:px-8 lg:px-10">
           <a
             href="/"
-            className="homepageLogoGlow inline-block text-lg font-bold tracking-[0.35em] text-white"
+            className="ghostlayerLogoPulse inline-block text-lg font-bold tracking-[0.35em] text-white"
           >
             GHOSTLAYER
           </a>
@@ -392,13 +392,13 @@ export default function WorkflowScanPage() {
 
       <style jsx global>{`
         .ghostlayerLogoPulse {
-          animation: logoPulseGlow 3.2s ease-in-out infinite;
+          animation: ghostlayerLogoPulseGlow 2.8s ease-in-out infinite;
           color: #ffffff;
           text-shadow:
-            0 0 8px rgba(255, 255, 255, 0.95),
-            0 0 18px rgba(255, 255, 255, 0.82),
-            0 0 34px rgba(96, 165, 250, 0.62),
-            0 0 50px rgba(59, 130, 246, 0.48);
+            0 0 8px rgba(255,255,255,0.70),
+            0 0 18px rgba(255,255,255,0.45),
+            0 0 34px rgba(96,165,250,0.36),
+            0 0 52px rgba(59,130,246,0.24);
         }
 
         .hero-glow {
@@ -705,36 +705,7 @@ export default function WorkflowScanPage() {
             transform: translateY(-4px);
           }
         }
-      `}
-.homepageLogoGlow {
-  animation: homepageLogoPulseGlow 2.8s ease-in-out infinite;
-  color: #ffffff;
-  text-shadow:
-    0 0 8px rgba(255,255,255,0.70),
-    0 0 18px rgba(255,255,255,0.45),
-    0 0 34px rgba(96,165,250,0.36),
-    0 0 52px rgba(59,130,246,0.24);
-}
-
-@keyframes homepageLogoPulseGlow {
-  0%, 100% {
-    opacity: 0.82;
-    text-shadow:
-      0 0 7px rgba(255,255,255,0.46),
-      0 0 16px rgba(96,165,250,0.24),
-      0 0 34px rgba(59,130,246,0.16);
-  }
-  50% {
-    opacity: 1;
-    text-shadow:
-      0 0 12px rgba(255,255,255,0.95),
-      0 0 26px rgba(255,255,255,0.58),
-      0 0 48px rgba(147,197,253,0.42),
-      0 0 76px rgba(59,130,246,0.30);
-  }
-}
-
-</style>
+      `}</style>
     </main>
   );
 }
