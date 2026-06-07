@@ -420,9 +420,6 @@ export default async function UploadReviewAgentPage() {
         </p>
 
         <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold">
-          <Link href="/admin/analytics" className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white">
-            Admin Home
-          </Link>
           <Link href="/admin/agents" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100">
             Agents
           </Link>

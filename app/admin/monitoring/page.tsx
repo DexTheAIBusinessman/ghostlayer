@@ -274,12 +274,6 @@ export default async function AdminMonitoringPage({
         </div>
 
         <div className="flex flex-wrap gap-3">
-            <Link
-              href="/admin/analytics"
-              className="rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:opacity-90"
-            >
-              Admin Home
-            </Link>
 
             <Link
               href="/admin/reports"

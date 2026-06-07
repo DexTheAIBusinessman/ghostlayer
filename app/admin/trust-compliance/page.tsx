@@ -262,12 +262,6 @@ export default function TrustCompliancePage() {
           </p>
 
           <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold">
-          <Link
-            href="/admin/analytics"
-            className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white transition hover:bg-white/[0.08]"
-          >
-            Admin Home
-          </Link>
 
           <Link
             href="/admin/reports"
