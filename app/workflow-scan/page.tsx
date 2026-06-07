@@ -400,11 +400,11 @@ export default function WorkflowScanPage() {
 
         @keyframes workflowLogoBrightDim {
           0%, 100% {
-            opacity: 0.45;
+            opacity: 0.72;
             text-shadow:
-              0 0 3px rgba(255,255,255,0.25),
-              0 0 8px rgba(96,165,250,0.16),
-              0 0 14px rgba(59,130,246,0.10);
+              0 0 5px rgba(255,255,255,0.42),
+              0 0 12px rgba(96,165,250,0.24),
+              0 0 24px rgba(59,130,246,0.16);
           }
           50% {
             opacity: 1;
