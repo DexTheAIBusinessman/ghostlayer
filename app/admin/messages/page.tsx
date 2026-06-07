@@ -204,18 +204,6 @@ export default async function AdminMessagesPage({
             Admin Home
           </Link>
           <Link
-            href="/admin/uploads"
-            className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100 transition hover:bg-cyan-300/15"
-          >
-            Uploads
-          </Link>
-          <Link
-            href="/admin/activity"
-            className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100 transition hover:bg-purple-300/15"
-          >
-            Activity
-          </Link>
-          <Link
             href="/admin/trust-compliance"
             className="rounded-full border border-lime-300/20 bg-lime-300/10 px-4 py-2 text-lime-100 transition hover:bg-lime-300/15"
           >
