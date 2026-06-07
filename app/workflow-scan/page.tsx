@@ -179,7 +179,7 @@ export default function WorkflowScanPage() {
         <div className="mx-auto flex max-w-7xl items-center justify-between gap-5 px-4 py-4 sm:px-6 md:px-8 lg:px-10">
           <a
             href="/"
-            className="ghostlayerLogoPulse inline-block text-[1.05rem] font-bold tracking-[0.16em] text-white sm:text-[1.16rem]"
+            className="ghostlayerLogoPulse inline-block text-lg font-bold tracking-[0.35em] text-white"
           >
             GHOSTLAYER
           </a>
@@ -206,7 +206,7 @@ export default function WorkflowScanPage() {
 
       <section className="relative z-10 px-4 pb-12 pt-14 sm:px-6 md:px-8 lg:px-10 xl:px-12">
         <div className="mx-auto max-w-7xl">
-          <div className="grid items-center gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(420px,520px)] lg:gap-12">
+          <div className="grid items-start gap-8 lg:grid-cols-[minmax(0,1.02fr)_minmax(420px,520px)] lg:gap-12">
             <div className="max-w-4xl">
               <p className="text-[11px] uppercase tracking-[0.34em] text-cyan-300 sm:text-xs">
                 Workflow Scan Intake
