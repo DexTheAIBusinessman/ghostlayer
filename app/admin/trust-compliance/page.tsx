@@ -245,7 +245,7 @@ export default function TrustCompliancePage() {
             href="/admin/analytics"
             className="rounded-2xl border border-cyan-300/25 bg-cyan-300/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
           >
-            Back to Analytics
+            Admin Home
           </a>
         </div>
 

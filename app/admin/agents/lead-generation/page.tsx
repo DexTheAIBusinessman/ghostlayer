@@ -593,8 +593,8 @@ export default async function LeadGenerationAgentPage() {
           <Link href="/admin/agents/operations" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
             Operations
           </Link>
-          <Link href="/admin/analytics" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
-            Analytics
+          <Link href="/admin/agents" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
+            Agent Home
           </Link>
         </div>
 

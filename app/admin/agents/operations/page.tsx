@@ -552,8 +552,8 @@ export default async function OperationsAgentPage() {
           <Link href="/admin/agents/daily-summary" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
             Daily Summary
           </Link>
-          <Link href="/admin/analytics" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
-            Analytics
+          <Link href="/admin/agents" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
+            Agent Home
           </Link>
         </div>
 

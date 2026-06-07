@@ -52,7 +52,7 @@ export default function AdminPageShell({
                   href="/admin/analytics"
                   className="rounded-2xl border border-white/15 bg-white px-5 py-3 text-sm font-bold text-black shadow-[0_0_35px_rgba(255,255,255,0.16)] transition hover:scale-[1.02]"
                 >
-                  Analytics
+                  Admin Home
                 </Link>
 
                 <Link

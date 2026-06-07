@@ -90,7 +90,7 @@ export default async function MergeClientPage({
               href="/admin/analytics"
               className="rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:opacity-90"
             >
-              Analytics
+              Admin Home
             </Link>
 
             <Link

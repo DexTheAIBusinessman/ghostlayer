@@ -619,7 +619,7 @@ export default async function AdminReportsPage({
               href="/admin/analytics"
               className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-5 py-3 text-sm font-semibold text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
             >
-              Analytics
+              Admin Home
             </Link>
 
             <Link
