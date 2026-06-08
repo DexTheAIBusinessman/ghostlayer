@@ -88,49 +88,49 @@ export default async function MergeClientPage({
           <div className="flex flex-wrap gap-3">
             <Link
               href="/admin/analytics"
-              className="rounded-2xl bg-white px-5 py-3 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:opacity-90"
+              className="rounded-2xl bg-white px-4 py-2 text-sm font-bold text-black shadow-[0_0_30px_rgba(255,255,255,0.18)] transition hover:scale-[1.02] hover:opacity-90"
             >
               Admin Home
             </Link>
 
             <Link
               href="/admin/reports"
-              className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-5 py-3 text-sm font-semibold text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
+              className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm font-semibold text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
             >
               Reports
             </Link>
 
             <Link
               href="/admin/messages"
-              className="rounded-2xl border border-blue-300/20 bg-blue-300/10 px-5 py-3 text-sm font-semibold text-blue-100 transition hover:scale-[1.02] hover:bg-blue-300/15"
+              className="rounded-2xl border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-sm font-semibold text-blue-100 transition hover:scale-[1.02] hover:bg-blue-300/15"
             >
               Messages
             </Link>
 
             <Link
               href="/admin/uploads"
-              className="rounded-2xl border border-purple-300/20 bg-purple-300/10 px-5 py-3 text-sm font-semibold text-purple-100 transition hover:scale-[1.02] hover:bg-purple-300/15"
+              className="rounded-2xl border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:scale-[1.02] hover:bg-purple-300/15"
             >
               Uploads
             </Link>
 
           <Link
             href="/admin/activity"
-            className="rounded-2xl border border-purple-300/20 bg-purple-300/10 px-5 py-3 text-sm font-semibold text-purple-100 transition hover:scale-[1.02] hover:bg-purple-300/15"
+            className="rounded-2xl border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-sm font-semibold text-purple-100 transition hover:scale-[1.02] hover:bg-purple-300/15"
           >
             Activity
           </Link>
 
           <Link
             href="/admin/trust-compliance"
-            className="rounded-2xl border border-lime-300/20 bg-lime-300/10 px-5 py-3 text-sm font-semibold text-lime-100 transition hover:scale-[1.02] hover:bg-lime-300/15"
+            className="rounded-2xl border border-lime-300/20 bg-lime-300/10 px-4 py-2 text-sm font-semibold text-lime-100 transition hover:scale-[1.02] hover:bg-lime-300/15"
           >
             Trust & Compliance
           </Link>
 
           <Link
             href="/admin/bookkeeping"
-            className="rounded-2xl border border-amber-300/20 bg-amber-300/10 px-5 py-3 text-sm font-semibold text-amber-100 transition hover:scale-[1.02] hover:bg-amber-300/15"
+            className="rounded-2xl border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-sm font-semibold text-amber-100 transition hover:scale-[1.02] hover:bg-amber-300/15"
           >
             Bookkeeping
           </Link>
