@@ -274,27 +274,6 @@ export default async function AdminMonitoringPage({
         </div>
 
         <div className="flex flex-wrap gap-3">
-
-            <Link
-              href="/admin/reports"
-              className="rounded-2xl border border-cyan-300/20 bg-cyan-300/10 px-5 py-3 text-sm font-semibold text-cyan-100 transition hover:scale-[1.02] hover:bg-cyan-300/15"
-            >
-              Reports
-            </Link>
-
-            <Link
-              href="/admin/messages"
-              className="rounded-2xl border border-blue-300/20 bg-blue-300/10 px-5 py-3 text-sm font-semibold text-blue-100 transition hover:scale-[1.02] hover:bg-blue-300/15"
-            >
-              Messages
-            </Link>
-
-            <Link
-              href="/admin/uploads"
-              className="rounded-2xl border border-purple-300/20 bg-purple-300/10 px-5 py-3 text-sm font-semibold text-purple-100 transition hover:scale-[1.02] hover:bg-purple-300/15"
-            >
-              Uploads
-            </Link>
           </div>
         </div>
 
