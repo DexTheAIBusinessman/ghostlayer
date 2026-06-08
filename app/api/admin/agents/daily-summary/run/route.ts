@@ -63,9 +63,10 @@ function isAuthorized(request: Request) {
   }
 
   const authHeader = request.headers.get("authorization");
+  const internalHeader = request.headers.get("x-ghostlayer-internal-cron");
   const expected = `Bearer ${cronSecret}`;
 
-  if (authHeader !== expected) {
+  if (authHeader !== expected && internalHeader !== cronSecret) {
     return {
       ok: false,
       error: "Unauthorized cron request.",

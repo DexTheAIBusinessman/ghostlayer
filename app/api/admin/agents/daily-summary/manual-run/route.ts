@@ -27,6 +27,7 @@ const cronSecret = process.env.CRON_SECRET;
         method: "POST",
         headers: {
           Authorization: `Bearer ${cronSecret}`,
+        "x-ghostlayer-internal-cron": cronSecret,
         },
         cache: "no-store",
       }
