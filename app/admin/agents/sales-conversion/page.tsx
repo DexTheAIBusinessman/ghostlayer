@@ -593,9 +593,6 @@ export default async function SalesConversionAgentPage() {
             <Link href="/admin/agents/lead-generation" className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100">
               Lead Generation
             </Link>
-            <Link href="/admin/agents/sales-conversion" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
-              Sales & Conversion
-            </Link>
             <Link href="/admin/agents/content-creation" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100">
               Content Creation
             </Link>

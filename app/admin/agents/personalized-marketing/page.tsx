@@ -602,9 +602,6 @@ export default async function PersonalizedMarketingAgentPage() {
             <Link href="/admin/agents/product-validation" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-amber-100">
               Product Validation
             </Link>
-            <Link href="/admin/agents/personalized-marketing" className="rounded-full border border-pink-300/20 bg-pink-300/10 px-4 py-2 text-pink-100">
-              Personalized Marketing
-            </Link>
           </div>
 </div>
 

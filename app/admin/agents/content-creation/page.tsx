@@ -596,9 +596,6 @@ export default async function ContentCreationAgentPage() {
             <Link href="/admin/agents/sales-conversion" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
               Sales & Conversion
             </Link>
-            <Link href="/admin/agents/content-creation" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100">
-              Content Creation
-            </Link>
             <Link href="/admin/agents/product-validation" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-amber-100">
               Product Validation
             </Link>

@@ -592,9 +592,6 @@ export default async function LeadGenerationAgentPage() {
             <Link href="/admin/agents/operations" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100">
               Operations & Automation
             </Link>
-            <Link href="/admin/agents/lead-generation" className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100">
-              Lead Generation
-            </Link>
             <Link href="/admin/agents/sales-conversion" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
               Sales & Conversion
             </Link>
