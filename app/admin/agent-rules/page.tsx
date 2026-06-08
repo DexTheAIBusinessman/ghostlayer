@@ -142,9 +142,6 @@ export default function AgentRulesPage() {
           <Link href="/admin/agents" className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white">
             Agent Home
           </Link>
-          <Link href="/admin/agents" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100">
-            Agents
-          </Link>
           <Link href="/admin/agents/daily-summary" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
             Daily Summary
           </Link>
