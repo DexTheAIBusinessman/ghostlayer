@@ -480,9 +480,6 @@ export default async function IncidentResponseAgentPage() {
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3 text-xs font-bold">
-          <Link href="/admin/agents/daily-summary" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
-            Daily Summary
-          </Link>
           <Link href="/admin/agents/message-triage" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100">
             Message Triage
           </Link>
@@ -500,9 +497,6 @@ export default async function IncidentResponseAgentPage() {
           </Link>
           <Link href="/admin/agents/trust-compliance" className="rounded-full border border-lime-300/20 bg-lime-300/10 px-4 py-2 text-lime-100">
             Trust
-          </Link>
-          <Link href="/admin/agents/data-request" className="rounded-full border border-sky-300/20 bg-sky-300/10 px-4 py-2 text-sky-100">
-            Data Request
           </Link>
         </div>
 
