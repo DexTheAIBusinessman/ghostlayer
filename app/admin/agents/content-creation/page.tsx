@@ -582,15 +582,6 @@ export default async function ContentCreationAgentPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/admin/agents" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-xs font-bold text-cyan-100 transition hover:bg-cyan-300/15">
-            Agents
-          </Link>
-          <Link href="/admin/agents/operations" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
-            Operations
-          </Link>
-          <Link href="/admin/agents" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
-            Agent Home
-          </Link>
         </div>
 
         <section className="mt-10 rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
