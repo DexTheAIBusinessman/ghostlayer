@@ -1,17 +1,14 @@
 import { NextResponse } from "next/server";
+import { GET as runDailySummary } from "../run/route";
 
 export const dynamic = "force-dynamic";
-
-function getBaseUrl(request: Request) {
-  const url = new URL(request.url);
-  return `${url.protocol}//${url.host}`;
-}
 
 export async function POST(request: Request) {
   if (request.headers.get("x-debug-manual-run") === "1") {
     return NextResponse.json({ ok: true, marker: "manual-run-current-code" });
   }
-const cronSecret = process.env.CRON_SECRET;
+
+  const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
     return NextResponse.json(
@@ -24,18 +21,15 @@ const cronSecret = process.env.CRON_SECRET;
   }
 
   try {
-    const response = await fetch(
-      `${getBaseUrl(request)}/api/admin/agents/daily-summary/run`,
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${cronSecret}`,
+    const runRequest = new Request(request.url.replace("/manual-run", "/run"), {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${cronSecret}`,
         "x-ghostlayer-internal-cron": cronSecret,
-        },
-        cache: "no-store",
-      }
-    );
+      },
+    });
 
+    const response = await runDailySummary(runRequest);
     const data = await response.json().catch(() => null);
 
     if (!response.ok) {
