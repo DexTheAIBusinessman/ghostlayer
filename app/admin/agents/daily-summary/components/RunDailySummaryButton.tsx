@@ -13,7 +13,7 @@ export default function RunDailySummaryButton() {
 
     startTransition(async () => {
       try {
-        const response = await fetch("/api/admin/agents/daily-summary/manual-trigger", {
+        const response = await fetch("/api/daily-summary-manual-trigger", {
           method: "POST",
           cache: "no-store",
         });
