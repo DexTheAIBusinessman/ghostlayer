@@ -543,9 +543,6 @@ export default async function OperationsAgentPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/admin/agents/daily-summary" className="rounded-full border border-white/10 bg-black/20 px-4 py-2 text-xs font-bold text-white transition hover:bg-white/[0.08]">
-            Daily Summary
-          </Link>
         
           <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold">
             <Link href="/admin/agents" className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white transition hover:bg-white/[0.08]">
