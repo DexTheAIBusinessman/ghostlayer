@@ -186,7 +186,7 @@ export default function BillingBookkeepingAgentPage() {
 
         <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold">
           <Link href="/admin/agents" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100">
-            Agents
+            Agent Home
           </Link>
           <Link href="/admin/agents/daily-summary" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
             Daily Summary
@@ -203,9 +203,6 @@ export default function BillingBookkeepingAgentPage() {
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3 text-xs font-bold">
-          <Link href="/admin/agents/daily-summary" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
-            Daily Summary
-          </Link>
           <Link href="/admin/agents/message-triage" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100">
             Message Triage
           </Link>
@@ -217,9 +214,6 @@ export default function BillingBookkeepingAgentPage() {
           </Link>
           <Link href="/admin/agents/monitoring" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
             Monitoring
-          </Link>
-          <Link href="/admin/agents/billing-bookkeeping" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-amber-100">
-            Billing
           </Link>
           <Link href="/admin/agents/trust-compliance" className="rounded-full border border-lime-300/20 bg-lime-300/10 px-4 py-2 text-lime-100">
             Trust
