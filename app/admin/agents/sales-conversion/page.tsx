@@ -553,30 +553,6 @@ export default async function SalesConversionAgentPage() {
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white sm:px-8 lg:px-10">
       <AgentNightSkyBackground />
 
-      <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold">
-        <Link href="/admin/agents" className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white transition hover:bg-white/[0.08]">
-          Agent Home
-        </Link>
-        <Link href="/admin/agents/operations" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100">
-          Operations & Automation
-        </Link>
-        <Link href="/admin/agents/lead-generation" className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100">
-          Lead Generation
-        </Link>
-        <Link href="/admin/agents/sales-conversion" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
-          Sales & Conversion
-        </Link>
-        <Link href="/admin/agents/content-creation" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100">
-          Content Creation
-        </Link>
-        <Link href="/admin/agents/product-validation" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-amber-100">
-          Product Validation
-        </Link>
-        <Link href="/admin/agents/personalized-marketing" className="rounded-full border border-pink-300/20 bg-pink-300/10 px-4 py-2 text-pink-100">
-          Personalized Marketing
-        </Link>
-      </div>
-
       <section className="relative z-10 mx-auto max-w-7xl">
         <Link
           href="/admin/agents"
@@ -606,7 +582,31 @@ export default async function SalesConversionAgentPage() {
         </div>
 
         <div className="mt-8 flex flex-wrap gap-3">
-        </div>
+        
+          <div className="mt-6 flex flex-wrap gap-3 text-xs font-bold">
+            <Link href="/admin/agents" className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white transition hover:bg-white/[0.08]">
+              Agent Home
+            </Link>
+            <Link href="/admin/agents/operations" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100">
+              Operations & Automation
+            </Link>
+            <Link href="/admin/agents/lead-generation" className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100">
+              Lead Generation
+            </Link>
+            <Link href="/admin/agents/sales-conversion" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
+              Sales & Conversion
+            </Link>
+            <Link href="/admin/agents/content-creation" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100">
+              Content Creation
+            </Link>
+            <Link href="/admin/agents/product-validation" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-amber-100">
+              Product Validation
+            </Link>
+            <Link href="/admin/agents/personalized-marketing" className="rounded-full border border-pink-300/20 bg-pink-300/10 px-4 py-2 text-pink-100">
+              Personalized Marketing
+            </Link>
+          </div>
+</div>
 
         <section className="mt-10 rounded-[2rem] border border-emerald-300/20 bg-emerald-300/10 p-6 shadow-[0_24px_100px_rgba(0,0,0,0.25)] backdrop-blur-xl">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
