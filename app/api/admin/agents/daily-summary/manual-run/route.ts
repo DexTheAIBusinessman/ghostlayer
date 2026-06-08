@@ -24,7 +24,7 @@ const cronSecret = process.env.CRON_SECRET;
     const response = await fetch(
       `${getBaseUrl(request)}/api/admin/agents/daily-summary/run`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           Authorization: `Bearer ${cronSecret}`,
         },
