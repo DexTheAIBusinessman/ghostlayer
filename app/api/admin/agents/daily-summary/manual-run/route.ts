@@ -8,6 +8,9 @@ function getBaseUrl(request: Request) {
 }
 
 export async function POST(request: Request) {
+  if (request.headers.get("x-debug-manual-run") === "1") {
+    return NextResponse.json({ ok: true, marker: "manual-run-current-code" });
+  }
 const cronSecret = process.env.CRON_SECRET;
 
   if (!cronSecret) {
