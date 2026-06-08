@@ -357,52 +357,52 @@ export default async function MonitoringAgentPage() {
           and flags stale or unresolved items. It does not send follow-ups or change client status automatically.
         </p>
         <div className="mt-8 flex flex-wrap gap-3">
-          <Link href="/admin/agents" className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-white transition hover:bg-white/[0.08]">
+          <Link href="/admin/agents" className="rounded-full border border-white/15 bg-white/[0.04] px-4 py-2 text-sm text-white transition hover:bg-white/[0.08]">
             Agent Home
           </Link>
-          <Link href="/admin/agents/operations" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100">
+          <Link href="/admin/agents/operations" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm text-cyan-100">
             Operations & Automation
           </Link>
-          <Link href="/admin/agents/lead-generation" className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100">
+          <Link href="/admin/agents/lead-generation" className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-sm text-emerald-100">
             Lead Generation
           </Link>
-          <Link href="/admin/agents/sales-conversion" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
+          <Link href="/admin/agents/sales-conversion" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-sm text-purple-100">
             Sales & Conversion
           </Link>
-          <Link href="/admin/agents/content-creation" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100">
+          <Link href="/admin/agents/content-creation" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-sm text-blue-100">
             Content Creation
           </Link>
-          <Link href="/admin/agents/product-validation" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-amber-100">
+          <Link href="/admin/agents/product-validation" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-sm text-amber-100">
             Product Validation
           </Link>
-          <Link href="/admin/agents/personalized-marketing" className="rounded-full border border-pink-300/20 bg-pink-300/10 px-4 py-2 text-pink-100">
+          <Link href="/admin/agents/personalized-marketing" className="rounded-full border border-pink-300/20 bg-pink-300/10 px-4 py-2 text-sm text-pink-100">
             Personalized Marketing
           </Link>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-3 text-xs font-bold">
-          <Link href="/admin/agents/daily-summary" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-purple-100">
+          <Link href="/admin/agents/daily-summary" className="rounded-full border border-purple-300/20 bg-purple-300/10 px-4 py-2 text-sm text-purple-100">
             Daily Summary
           </Link>
-          <Link href="/admin/agents/message-triage" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-blue-100">
+          <Link href="/admin/agents/message-triage" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-sm text-blue-100">
             Message Triage
           </Link>
-          <Link href="/admin/agents/upload-review" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-cyan-100">
+          <Link href="/admin/agents/upload-review" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm text-cyan-100">
             Upload Review
           </Link>
-          <Link href="/admin/agents/report-prep" className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-emerald-100">
+          <Link href="/admin/agents/report-prep" className="rounded-full border border-emerald-300/20 bg-emerald-300/10 px-4 py-2 text-sm text-emerald-100">
             Report Prep
           </Link>
-          <Link href="/admin/agents/billing-bookkeeping" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-amber-100">
+          <Link href="/admin/agents/billing-bookkeeping" className="rounded-full border border-amber-300/20 bg-amber-300/10 px-4 py-2 text-sm text-amber-100">
             Billing
           </Link>
-          <Link href="/admin/agents/trust-compliance" className="rounded-full border border-lime-300/20 bg-lime-300/10 px-4 py-2 text-lime-100">
+          <Link href="/admin/agents/trust-compliance" className="rounded-full border border-lime-300/20 bg-lime-300/10 px-4 py-2 text-sm text-lime-100">
             Trust
           </Link>
-          <Link href="/admin/agents/data-request" className="rounded-full border border-sky-300/20 bg-sky-300/10 px-4 py-2 text-sky-100">
+          <Link href="/admin/agents/data-request" className="rounded-full border border-sky-300/20 bg-sky-300/10 px-4 py-2 text-sm text-sky-100">
             Data Request
           </Link>
-          <Link href="/admin/agents/incident-response" className="rounded-full border border-red-300/20 bg-red-300/10 px-4 py-2 text-red-100">
+          <Link href="/admin/agents/incident-response" className="rounded-full border border-red-300/20 bg-red-300/10 px-4 py-2 text-sm text-red-100">
             Incident
           </Link>
         </div>
