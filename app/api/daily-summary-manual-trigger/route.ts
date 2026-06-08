@@ -4,9 +4,6 @@ import { GET as runDailySummary } from "../admin/agents/daily-summary/run/route"
 export const dynamic = "force-dynamic";
 
 export async function POST(request: Request) {
-  if (request.headers.get("x-debug-manual-run") === "1") {
-    return NextResponse.json({ ok: true, marker: "daily-summary-manual-trigger-current-code" });
-  }
 
   const cronSecret = process.env.CRON_SECRET;
 
