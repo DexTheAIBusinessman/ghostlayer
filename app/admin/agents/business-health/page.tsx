@@ -11,6 +11,12 @@ type BusinessHealthTotals = {
   readErrors?: string[];
 };
 
+type CountItem = {
+  table?: string;
+  label?: string;
+  count?: number;
+};
+
 type AgentRun = {
   id?: string;
   mode?: string;
@@ -18,11 +24,7 @@ type AgentRun = {
   finished_at?: string;
   created_at?: string;
   totals?: BusinessHealthTotals;
-  counts?: {
-    table?: string;
-    label?: string;
-    count?: number;
-  }[];
+  counts?: CountItem[];
   recommended_actions?: string[];
 };
 
@@ -103,7 +105,7 @@ export default async function BusinessHealthAgentPage() {
   const latest = runs[0];
 
   const totals = latest?.totals || {};
-  const counts = Array.isArray(latest?.counts) ? latest.counts : [];
+  const counts: CountItem[] = Array.isArray(latest?.counts) ? latest.counts : [];
   const healthScore = totals.healthScore ?? "—";
   const risk = totals.risk || "unknown";
   const riskLabel = totals.riskLabel || "Unknown";
@@ -116,17 +118,26 @@ export default async function BusinessHealthAgentPage() {
   return (
     <main className="relative min-h-screen overflow-hidden bg-[#020617] px-6 py-10 text-white">
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute right-[-12rem] top-[-10rem] h-[34rem] w-[34rem] rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="absolute left-[-10rem] top-[22rem] h-[30rem] w-[30rem] rounded-full bg-blue-500/10 blur-3xl" />
-        <div className="absolute bottom-[-14rem] right-[12rem] h-[34rem] w-[34rem] rounded-full bg-purple-500/10 blur-3xl" />
-        <div className="absolute right-20 top-16 h-72 w-72 rounded-full border border-white/10 bg-white/[0.03] shadow-2xl shadow-white/5" />
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(15,23,42,0.45),rgba(2,6,23,0.98)_55%,#020617_100%)]" />
+
+        <div className="moonGlow absolute right-[8%] top-[6%] h-[27rem] w-[27rem] rounded-full bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.72),rgba(148,163,184,0.20)_42%,rgba(30,41,59,0.18)_68%,rgba(15,23,42,0.08)_100%)] shadow-[0_0_90px_rgba(255,255,255,0.18)]" />
+
+        <div className="absolute left-[6%] top-[14%] h-1 w-1 rounded-full bg-white/70 starTwinkle" />
+        <div className="absolute left-[14%] top-[32%] h-1.5 w-1.5 rounded-full bg-white/70 starTwinkleSlow" />
+        <div className="absolute left-[18%] bottom-[18%] h-1 w-1 rounded-full bg-cyan-100/70 starTwinkle" />
+        <div className="absolute right-[13%] top-[33%] h-1 w-1 rounded-full bg-white/70 starTwinkleSlow" />
+        <div className="absolute right-[7%] bottom-[22%] h-1.5 w-1.5 rounded-full bg-white/60 starTwinkle" />
+        <div className="absolute left-[42%] top-[18%] h-1 w-1 rounded-full bg-cyan-100/70 starTwinkleSlow" />
+
+        <div className="absolute left-[-10rem] top-[24rem] h-[34rem] w-[34rem] rounded-full bg-cyan-500/10 blur-3xl" />
+        <div className="absolute bottom-[-14rem] right-[16rem] h-[34rem] w-[34rem] rounded-full bg-blue-500/10 blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-6xl">
         <div className="mb-10 flex items-center justify-between gap-4">
           <Link
             href="/admin/analytics"
-            className="tracking-[0.45em] text-sm font-semibold text-white/80 drop-shadow-[0_0_14px_rgba(255,255,255,0.45)] transition hover:text-white"
+            className="ghostlayerLogoPulse text-sm font-semibold tracking-[0.48em] text-white/85 transition hover:text-white"
           >
             GHOSTLAYER
           </Link>
@@ -148,10 +159,10 @@ export default async function BusinessHealthAgentPage() {
               <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
                 Business Health Agent
               </h1>
-              <p className="mt-5 max-w-3xl text-sm leading-7 text-slate-300 md:text-base">
-                The Business Health Agent is the daily command-center check for Ghostlayer.
-                It reviews core records, stores a read-only business health run, and gives
-                the next actions needed to keep operations moving.
+              <p className="mt-5 max-w-3xl text-sm leading-7 text-slate-300">
+                Daily command-center check for Ghostlayer operations. It reviews core records,
+                stores a read-only business health run, and gives the next actions needed to
+                keep the business moving.
               </p>
             </div>
 
@@ -160,7 +171,7 @@ export default async function BusinessHealthAgentPage() {
                 Current Risk
               </p>
               <p className="mt-3 text-3xl font-bold">{riskLabel}</p>
-              <p className="mt-2 max-w-xs text-sm opacity-90">{riskCopy(risk)}</p>
+              <p className="mt-2 max-w-xs text-sm leading-6 opacity-90">{riskCopy(risk)}</p>
             </div>
           </div>
 
@@ -190,32 +201,32 @@ export default async function BusinessHealthAgentPage() {
         </header>
 
         <section className="mt-8 grid gap-4 md:grid-cols-4">
-          <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/[0.06] p-6">
+          <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/[0.06] p-6 backdrop-blur">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-200">
               Health Score
             </p>
             <p className="mt-4 text-5xl font-bold">{healthScore}</p>
           </div>
 
-          <div className={`rounded-3xl border p-6 ${riskClasses(risk)}`}>
+          <div className={`rounded-3xl border p-6 backdrop-blur ${riskClasses(risk)}`}>
             <p className="text-xs font-semibold uppercase tracking-[0.35em]">
               Risk Level
             </p>
             <p className="mt-4 text-5xl font-bold">{riskLabel}</p>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-300">
               Records Checked
             </p>
             <p className="mt-4 text-5xl font-bold">{totals.totalRecords ?? "—"}</p>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
             <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-300">
               Latest Run
             </p>
-            <p className="mt-4 text-lg font-semibold">
+            <p className="mt-4 text-sm font-semibold leading-6">
               {formatDate(latest?.finished_at || latest?.created_at)}
             </p>
           </div>
@@ -226,7 +237,7 @@ export default async function BusinessHealthAgentPage() {
         </section>
 
         {error ? (
-          <section className="mt-8 rounded-3xl border border-red-300/20 bg-red-300/10 p-6 text-red-100">
+          <section className="mt-8 rounded-3xl border border-red-300/20 bg-red-300/10 p-6 text-sm leading-6 text-red-100 backdrop-blur">
             {error}
           </section>
         ) : null}
@@ -238,7 +249,7 @@ export default async function BusinessHealthAgentPage() {
             </p>
             <h2 className="mt-3 text-2xl font-semibold">Recommended Actions</h2>
             <p className="mt-2 text-sm leading-6 text-slate-300">
-              These are the items Ghostlayer should review first before spending time on lower-priority admin work.
+              Review these before spending time on lower-priority admin work.
             </p>
 
             {recommendedActions.length ? (
@@ -254,7 +265,7 @@ export default async function BusinessHealthAgentPage() {
                 ))}
               </ol>
             ) : (
-              <p className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm text-slate-300">
+              <p className="mt-5 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-slate-300">
                 No run has been recorded yet. Run the agent to generate actions.
               </p>
             )}
@@ -275,7 +286,8 @@ export default async function BusinessHealthAgentPage() {
             </div>
 
             <div className="mt-6 rounded-2xl border border-amber-300/20 bg-amber-300/10 p-4 text-sm leading-6 text-amber-100">
-              This agent is read-only. It should recommend action, not automatically change customer accounts, billing, reports, or messages.
+              This agent is read-only. It should recommend action, not automatically change
+              customer accounts, billing, reports, or messages.
             </div>
           </div>
         </section>
@@ -288,7 +300,7 @@ export default async function BusinessHealthAgentPage() {
 
           <div className="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {counts.length ? (
-              counts.map((item: { table?: string; label?: string; count?: number }, index: number) => (
+              counts.map((item: CountItem, index: number) => (
                 <div key={item.table || item.label || index} className="rounded-2xl border border-white/10 bg-black/20 p-5">
                   <p className="text-xs uppercase tracking-[0.25em] text-slate-400">
                     {item.label || item.table || "Unknown"}
@@ -302,8 +314,9 @@ export default async function BusinessHealthAgentPage() {
           </div>
 
           {readErrorCount > 0 ? (
-            <div className="mt-6 rounded-2xl border border-yellow-300/20 bg-yellow-300/10 p-4 text-sm text-yellow-100">
-              {readErrorCount} table read issue{readErrorCount === 1 ? "" : "s"} found. Check Supabase table access or table names.
+            <div className="mt-6 rounded-2xl border border-yellow-300/20 bg-yellow-300/10 p-4 text-sm leading-6 text-yellow-100">
+              {readErrorCount} table read issue{readErrorCount === 1 ? "" : "s"} found.
+              Check Supabase table access or table names.
             </div>
           ) : null}
         </section>
@@ -326,7 +339,7 @@ export default async function BusinessHealthAgentPage() {
                   <div key={run.id || run.created_at} className="rounded-2xl border border-white/10 bg-black/20 p-5">
                     <div className="flex flex-wrap items-center justify-between gap-3">
                       <div>
-                        <p className="font-semibold">
+                        <p className="text-sm font-semibold">
                           {formatDate(run.finished_at || run.created_at)}
                         </p>
                         <p className="mt-1 text-sm text-slate-400">
@@ -340,7 +353,7 @@ export default async function BusinessHealthAgentPage() {
                     </div>
 
                     {actions.length ? (
-                      <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-slate-300">
+                      <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-6 text-slate-300">
                         {actions.slice(0, 4).map((action: string, index: number) => (
                           <li key={`${run.id}-${index}`}>{action}</li>
                         ))}
@@ -355,6 +368,69 @@ export default async function BusinessHealthAgentPage() {
           </div>
         </section>
       </div>
+
+      <style>{`
+        .ghostlayerLogoPulse {
+          display: inline-block;
+          color: rgba(255, 255, 255, 0.88);
+          animation: ghostlayerLogoPulseGlow 2.4s ease-in-out infinite;
+          will-change: opacity, text-shadow;
+        }
+
+        @keyframes ghostlayerLogoPulseGlow {
+          0%, 100% {
+            opacity: 0.72;
+            text-shadow:
+              0 0 5px rgba(255,255,255,0.40),
+              0 0 12px rgba(96,165,250,0.18),
+              0 0 22px rgba(59,130,246,0.12);
+          }
+          50% {
+            opacity: 1;
+            text-shadow:
+              0 0 10px rgba(255,255,255,0.95),
+              0 0 22px rgba(255,255,255,0.72),
+              0 0 42px rgba(147,197,253,0.58),
+              0 0 72px rgba(59,130,246,0.38);
+          }
+        }
+
+        .moonGlow {
+          animation: moonGlowPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes moonGlowPulse {
+          0%, 100% {
+            opacity: 0.42;
+            filter: blur(0px);
+            transform: scale(0.98);
+          }
+          50% {
+            opacity: 0.76;
+            filter: blur(0.5px);
+            transform: scale(1.02);
+          }
+        }
+
+        .starTwinkle {
+          animation: starTwinkle 2.8s ease-in-out infinite;
+        }
+
+        .starTwinkleSlow {
+          animation: starTwinkle 4.2s ease-in-out infinite;
+        }
+
+        @keyframes starTwinkle {
+          0%, 100% {
+            opacity: 0.18;
+            box-shadow: 0 0 0 rgba(255,255,255,0);
+          }
+          50% {
+            opacity: 0.95;
+            box-shadow: 0 0 12px rgba(255,255,255,0.65);
+          }
+        }
+      `}</style>
     </main>
   );
 }
