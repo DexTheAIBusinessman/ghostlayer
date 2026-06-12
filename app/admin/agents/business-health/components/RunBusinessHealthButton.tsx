@@ -34,17 +34,18 @@ export default function RunBusinessHealthButton() {
   }
 
   return (
-    <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/[0.06] p-5">
-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+    <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/[0.06] p-6 shadow-2xl shadow-cyan-950/20 backdrop-blur">
+      <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-200">
             Manual Run
           </p>
-          <h2 className="mt-2 text-xl font-semibold text-white">
+          <h2 className="mt-3 text-2xl font-semibold text-white">
             Run Business Health Now
           </h2>
-          <p className="mt-2 text-sm text-slate-300">
-            Checks core Ghostlayer records and stores a business health run.
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-slate-300">
+            Runs the read-only business health check and stores the latest score, risk level,
+            counts, and recommended actions.
           </p>
         </div>
 
