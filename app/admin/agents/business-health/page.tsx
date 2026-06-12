@@ -116,28 +116,27 @@ export default async function BusinessHealthAgentPage() {
     : [];
 
   return (
-    <main className="relative min-h-screen overflow-hidden bg-[#020617] px-6 py-10 text-white">
-      <div className="pointer-events-none absolute inset-0">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(15,23,42,0.45),rgba(2,6,23,0.98)_55%,#020617_100%)]" />
+    <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white">
+      <div className="agentNightSky" />
+      <div className="agentMoon" />
 
-        <div className="moonGlow absolute right-[8%] top-[6%] h-[27rem] w-[27rem] rounded-full bg-[radial-gradient(circle_at_35%_30%,rgba(255,255,255,0.72),rgba(148,163,184,0.20)_42%,rgba(30,41,59,0.18)_68%,rgba(15,23,42,0.08)_100%)] shadow-[0_0_90px_rgba(255,255,255,0.18)]" />
+      <span className="agentStar" style={{ left: "6%", top: "16%", animationDelay: "0s" }} />
+      <span className="agentStar" style={{ left: "13%", top: "33%", animationDelay: "1.2s" }} />
+      <span className="agentStar" style={{ left: "18%", top: "72%", animationDelay: "2.1s" }} />
+      <span className="agentStar" style={{ left: "42%", top: "18%", animationDelay: "0.7s" }} />
+      <span className="agentStar" style={{ right: "13%", top: "34%", animationDelay: "1.8s" }} />
+      <span className="agentStar" style={{ right: "7%", bottom: "24%", animationDelay: "2.8s" }} />
 
-        <div className="absolute left-[6%] top-[14%] h-1 w-1 rounded-full bg-white/70 starTwinkle" />
-        <div className="absolute left-[14%] top-[32%] h-1.5 w-1.5 rounded-full bg-white/70 starTwinkleSlow" />
-        <div className="absolute left-[18%] bottom-[18%] h-1 w-1 rounded-full bg-cyan-100/70 starTwinkle" />
-        <div className="absolute right-[13%] top-[33%] h-1 w-1 rounded-full bg-white/70 starTwinkleSlow" />
-        <div className="absolute right-[7%] bottom-[22%] h-1.5 w-1.5 rounded-full bg-white/60 starTwinkle" />
-        <div className="absolute left-[42%] top-[18%] h-1 w-1 rounded-full bg-cyan-100/70 starTwinkleSlow" />
+      <div className="agentFog agentFogA" />
+      <div className="agentFog agentFogB" />
+      <div className="agentOrb agentOrbA" />
+      <div className="agentOrb agentOrbB" />
 
-        <div className="absolute left-[-10rem] top-[24rem] h-[34rem] w-[34rem] rounded-full bg-cyan-500/10 blur-3xl" />
-        <div className="absolute bottom-[-14rem] right-[16rem] h-[34rem] w-[34rem] rounded-full bg-blue-500/10 blur-3xl" />
-      </div>
-
-      <div className="relative mx-auto max-w-6xl">
+      <div className="relative z-10 mx-auto max-w-6xl">
         <div className="mb-10 flex items-center justify-between gap-4">
           <Link
             href="/admin/analytics"
-            className="ghostlayerLogoPulse text-sm font-semibold tracking-[0.48em] text-white/85 transition hover:text-white"
+            className="agentLogoGlow text-sm font-semibold tracking-[0.48em] text-white/85 transition hover:text-white"
           >
             GHOSTLAYER
           </Link>
@@ -370,66 +369,167 @@ export default async function BusinessHealthAgentPage() {
       </div>
 
       <style>{`
-        .ghostlayerLogoPulse {
-          display: inline-block;
-          color: rgba(255, 255, 255, 0.88);
-          animation: ghostlayerLogoPulseGlow 2.4s ease-in-out infinite;
-          will-change: opacity, text-shadow;
+
+        .agentNightSky {
+          pointer-events: none;
+          position: fixed;
+          inset: 0;
+          z-index: 0;
+          overflow: hidden;
+          background:
+            radial-gradient(circle at 20% 12%, rgba(59, 130, 246, 0.11), transparent 28%),
+            radial-gradient(circle at 82% 18%, rgba(147, 51, 234, 0.08), transparent 26%),
+            radial-gradient(circle at 50% 100%, rgba(6, 182, 212, 0.045), transparent 34%),
+            #05070b;
         }
 
-        @keyframes ghostlayerLogoPulseGlow {
+        .agentMoon {
+          position: absolute;
+          right: 3%;
+          top: 5%;
+          width: min(34vw, 30rem);
+          height: min(34vw, 30rem);
+          border-radius: 9999px;
+          background:
+            radial-gradient(circle at 32% 28%, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.92) 12%, rgba(226,232,240,0.76) 30%, rgba(148,163,184,0.42) 54%, rgba(30,41,59,0.18) 78%, rgba(15,23,42,0.04) 100%);
+          box-shadow:
+            0 0 44px rgba(255,255,255,0.42),
+            0 0 95px rgba(191,219,254,0.36),
+            0 0 165px rgba(96,165,250,0.26),
+            inset -42px -34px 70px rgba(15,23,42,0.42),
+            inset 18px 14px 44px rgba(255,255,255,0.32);
+          opacity: 0.24;
+          animation: agentMoonGlow 4.8s ease-in-out infinite;
+        }
+
+        .agentStar {
+          position: absolute;
+          display: block;
+          border-radius: 9999px;
+          background: #ffffff;
+          box-shadow:
+            0 0 8px rgba(255,255,255,0.95),
+            0 0 18px rgba(147,197,253,0.62),
+            0 0 30px rgba(59,130,246,0.35);
+          animation-name: agentTwinkle;
+          animation-timing-function: ease-in-out;
+          animation-iteration-count: infinite;
+        }
+
+        .agentFog {
+          position: absolute;
+          left: -10%;
+          right: -10%;
+          height: 170px;
+          border-radius: 9999px;
+          filter: blur(92px);
+          opacity: 0.075;
+          mix-blend-mode: screen;
+        }
+
+        .agentFogA {
+          top: 18%;
+          background: linear-gradient(90deg, rgba(59,130,246,0), rgba(59,130,246,0.36), rgba(147,51,234,0.18), rgba(59,130,246,0));
+          animation: agentFogDriftOne 42s ease-in-out infinite;
+        }
+
+        .agentFogB {
+          top: 58%;
+          background: linear-gradient(90deg, rgba(16,185,129,0), rgba(6,182,212,0.32), rgba(96,165,250,0.2), rgba(16,185,129,0));
+          animation: agentFogDriftTwo 46s ease-in-out infinite;
+        }
+
+        .agentOrb {
+          position: absolute;
+          border-radius: 9999px;
+          filter: blur(38px);
+          opacity: 0.22;
+        }
+
+        .agentOrbA {
+          left: -10%;
+          top: 18%;
+          height: 22rem;
+          width: 22rem;
+          background: rgba(59,130,246,0.16);
+          animation: agentFloatSlow 28s ease-in-out infinite;
+        }
+
+        .agentOrbB {
+          right: -10%;
+          top: 30%;
+          height: 26rem;
+          width: 26rem;
+          background: rgba(6,182,212,0.12);
+          animation: agentFloatSlow 34s ease-in-out infinite reverse;
+        }
+
+        .agentLogoGlow {
+          text-shadow:
+            0 0 8px rgba(255,255,255,0.70),
+            0 0 18px rgba(96,165,250,0.24),
+            0 0 34px rgba(6,182,212,0.18);
+          animation: agentLogoPulse 3.4s ease-in-out infinite;
+        }
+
+        @keyframes agentTwinkle {
+          0%, 100% { transform: translateZ(0) scale(0.85); opacity: 0.42; }
+          50% { transform: translateZ(0) scale(1.35); opacity: 1; }
+        }
+
+        @keyframes agentMoonGlow {
           0%, 100% {
-            opacity: 0.72;
+            opacity: 0.22;
+            box-shadow:
+              0 0 44px rgba(255,255,255,0.34),
+              0 0 95px rgba(191,219,254,0.28),
+              0 0 165px rgba(96,165,250,0.20),
+              inset -42px -34px 70px rgba(15,23,42,0.42),
+              inset 18px 14px 44px rgba(255,255,255,0.28);
+          }
+          50% {
+            opacity: 0.34;
+            box-shadow:
+              0 0 58px rgba(255,255,255,0.48),
+              0 0 120px rgba(191,219,254,0.42),
+              0 0 190px rgba(96,165,250,0.30),
+              inset -42px -34px 70px rgba(15,23,42,0.38),
+              inset 18px 14px 44px rgba(255,255,255,0.36);
+          }
+        }
+
+        @keyframes agentLogoPulse {
+          0%, 100% {
+            opacity: 0.78;
             text-shadow:
-              0 0 5px rgba(255,255,255,0.40),
-              0 0 12px rgba(96,165,250,0.18),
-              0 0 22px rgba(59,130,246,0.12);
+              0 0 8px rgba(255,255,255,0.62),
+              0 0 18px rgba(96,165,250,0.22),
+              0 0 34px rgba(6,182,212,0.14);
           }
           50% {
             opacity: 1;
             text-shadow:
-              0 0 10px rgba(255,255,255,0.95),
-              0 0 22px rgba(255,255,255,0.72),
-              0 0 42px rgba(147,197,253,0.58),
-              0 0 72px rgba(59,130,246,0.38);
+              0 0 10px rgba(255,255,255,0.92),
+              0 0 26px rgba(147,197,253,0.42),
+              0 0 48px rgba(6,182,212,0.28);
           }
         }
 
-        .moonGlow {
-          animation: moonGlowPulse 6s ease-in-out infinite;
+        @keyframes agentFogDriftOne {
+          0%, 100% { transform: translateX(-2%) translateY(0px) scaleX(1); }
+          50% { transform: translateX(4%) translateY(-4px) scaleX(1.04); }
         }
 
-        @keyframes moonGlowPulse {
-          0%, 100% {
-            opacity: 0.42;
-            filter: blur(0px);
-            transform: scale(0.98);
-          }
-          50% {
-            opacity: 0.76;
-            filter: blur(0.5px);
-            transform: scale(1.02);
-          }
+        @keyframes agentFogDriftTwo {
+          0%, 100% { transform: translateX(3%) translateY(0px) scaleX(1.06); }
+          50% { transform: translateX(-4%) translateY(5px) scaleX(1); }
         }
 
-        .starTwinkle {
-          animation: starTwinkle 2.8s ease-in-out infinite;
+        @keyframes agentFloatSlow {
+          0%, 100% { transform: translate3d(0, 0, 0); }
+          50% { transform: translate3d(0, 18px, 0); }
         }
-
-        .starTwinkleSlow {
-          animation: starTwinkle 4.2s ease-in-out infinite;
-        }
-
-        @keyframes starTwinkle {
-          0%, 100% {
-            opacity: 0.18;
-            box-shadow: 0 0 0 rgba(255,255,255,0);
-          }
-          50% {
-            opacity: 0.95;
-            box-shadow: 0 0 12px rgba(255,255,255,0.65);
-          }
-        }
+      
       `}</style>
     </main>
   );
