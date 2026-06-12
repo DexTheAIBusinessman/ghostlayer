@@ -121,11 +121,17 @@ export default async function BusinessHealthAgentPage() {
       <div className="agentMoon" />
 
       <span className="agentStar" style={{ left: "6%", top: "16%", animationDelay: "0s" }} />
-      <span className="agentStar" style={{ left: "13%", top: "33%", animationDelay: "1.2s" }} />
+      <span className="agentStar" style={{ left: "12%", top: "32%", animationDelay: "1.2s" }} />
       <span className="agentStar" style={{ left: "18%", top: "72%", animationDelay: "2.1s" }} />
-      <span className="agentStar" style={{ left: "42%", top: "18%", animationDelay: "0.7s" }} />
+      <span className="agentStar" style={{ left: "27%", top: "21%", animationDelay: "0.8s" }} />
+      <span className="agentStar" style={{ left: "37%", top: "58%", animationDelay: "2.7s" }} />
+      <span className="agentStar" style={{ left: "44%", top: "18%", animationDelay: "0.7s" }} />
+      <span className="agentStar" style={{ left: "52%", top: "39%", animationDelay: "1.9s" }} />
+      <span className="agentStar" style={{ right: "25%", top: "16%", animationDelay: "3.1s" }} />
       <span className="agentStar" style={{ right: "13%", top: "34%", animationDelay: "1.8s" }} />
+      <span className="agentStar" style={{ right: "9%", top: "68%", animationDelay: "2.4s" }} />
       <span className="agentStar" style={{ right: "7%", bottom: "24%", animationDelay: "2.8s" }} />
+      <span className="agentStar" style={{ right: "31%", bottom: "18%", animationDelay: "1.4s" }} />
 
       <div className="agentFog agentFogA" />
       <div className="agentFog agentFogB" />
@@ -136,7 +142,7 @@ export default async function BusinessHealthAgentPage() {
         <div className="mb-10 flex items-center justify-between gap-4">
           <Link
             href="/admin/analytics"
-            className="agentLogoGlow text-sm font-semibold tracking-[0.48em] text-white/85 transition hover:text-white"
+            className="agentLogoGlow text-lg font-semibold tracking-[0.48em] text-white/85 transition hover:text-white"
           >
             GHOSTLAYER
           </Link>
