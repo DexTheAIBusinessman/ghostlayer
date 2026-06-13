@@ -453,6 +453,24 @@ export default async function AgentsPage() {
           </div>
 
           <div className="mt-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+
+          <Link
+            href="/admin/agents/business-health"
+            className="rounded-3xl border border-cyan-300/20 bg-cyan-300/[0.06] p-6 shadow-2xl shadow-cyan-950/20 transition hover:-translate-y-1 hover:border-cyan-200/40 hover:bg-cyan-300/[0.10]"
+          >
+            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
+              Business Health
+            </p>
+            <h2 className="mt-4 text-2xl font-semibold text-white">
+              Business Health Agent
+            </h2>
+            <p className="mt-3 text-sm leading-6 text-slate-300">
+              Daily command-center check for leads, scans, uploads, messages, reports, monitoring, activity, and business risk signals.
+            </p>
+            <div className="mt-5 rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-center text-sm font-semibold text-cyan-100">
+              Open Agent
+            </div>
+          </Link>
             <Link
               href="/admin/agents/operations"
               className="rounded-2xl border border-white/10 bg-black/20 p-5 transition hover:bg-white/[0.06]"

@@ -160,7 +160,7 @@ export default async function BusinessHealthAgentPage() {
       <div className="relative z-10 mx-auto max-w-6xl">
         <div className="mb-10 flex items-center justify-between gap-4">
           <Link
-            href="/admin/analytics"
+            href="/admin"
             className="agentLogoGlow text-lg font-semibold tracking-[0.48em] text-white/85 transition hover:text-white"
           >
             GHOSTLAYER
@@ -200,8 +200,8 @@ export default async function BusinessHealthAgentPage() {
           </div>
 
           <div className="mt-8 flex flex-wrap gap-3">
-            <Link href="/admin/analytics" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm text-cyan-100">
-              Admin Analytics
+            <Link href="/admin" className="rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-2 text-sm text-cyan-100">
+              Admin Home
             </Link>
             <Link href="/admin/messages" className="rounded-full border border-blue-300/20 bg-blue-300/10 px-4 py-2 text-sm text-blue-100">
               Messages
