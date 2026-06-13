@@ -119,6 +119,19 @@ export default async function BusinessHealthAgentPage() {
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white">
       <div className="agentNightSky" />
       <div className="agentMoon" />
+
+      <span className="businessHealthStar agentStar" style={{ left: "5%", top: "11%", animationDelay: "0.1s" }} />
+      <span className="businessHealthStar agentStar" style={{ left: "8%", top: "45%", animationDelay: "1.4s" }} />
+      <span className="businessHealthStar agentStar" style={{ left: "15%", top: "63%", animationDelay: "2.6s" }} />
+      <span className="businessHealthStar agentStar" style={{ left: "25%", top: "13%", animationDelay: "1.1s" }} />
+      <span className="businessHealthStar agentStar" style={{ left: "31%", top: "79%", animationDelay: "3.2s" }} />
+      <span className="businessHealthStar agentStar" style={{ left: "48%", top: "27%", animationDelay: "0.6s" }} />
+      <span className="businessHealthStar agentStar" style={{ left: "58%", top: "68%", animationDelay: "2.1s" }} />
+      <span className="businessHealthStar agentStar" style={{ right: "32%", top: "12%", animationDelay: "3.4s" }} />
+      <span className="businessHealthStar agentStar" style={{ right: "22%", top: "42%", animationDelay: "0.8s" }} />
+      <span className="businessHealthStar agentStar" style={{ right: "18%", bottom: "34%", animationDelay: "1.9s" }} />
+      <span className="businessHealthStar agentStar" style={{ right: "11%", top: "74%", animationDelay: "2.7s" }} />
+      <span className="businessHealthStar agentStar" style={{ right: "4%", top: "18%", animationDelay: "1.5s" }} />
  
       <span className="businessHealthStar agentStar" style={{ left: "9%", top: "20%", animationDelay: "0.4s" }} />
       <span className="businessHealthStar agentStar" style={{ left: "22%", top: "48%", animationDelay: "1.6s" }} />
@@ -155,7 +168,7 @@ export default async function BusinessHealthAgentPage() {
 
           <Link
             href="/admin/agents"
-            className="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-4 py-2 text-sm font-semibold uppercase tracking-[0.25em] text-cyan-100 transition hover:bg-cyan-300/20"
+            className="rounded-full border border-cyan-300/30 bg-cyan-300/10 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.22em] text-cyan-100 transition hover:bg-cyan-300/20"
           >
             Agent Home
           </Link>
@@ -178,7 +191,7 @@ export default async function BusinessHealthAgentPage() {
             </div>
 
             <div className={`rounded-3xl border p-5 ${riskClasses(risk)}`}>
-              <p className="text-xs font-semibold uppercase tracking-[0.35em]">
+              <p className="text-[10px] font-semibold uppercase tracking-[0.28em]">
                 Current Risk
               </p>
               <p className="mt-3 text-3xl font-bold">{riskLabel}</p>
@@ -212,32 +225,32 @@ export default async function BusinessHealthAgentPage() {
         </header>
 
         <section className="mt-8 grid gap-4 md:grid-cols-4">
-          <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/[0.06] p-6 backdrop-blur">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-200">
+          <div className="rounded-3xl border border-cyan-300/20 bg-cyan-300/[0.06] p-5 backdrop-blur">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-cyan-200">
               Health Score
             </p>
-            <p className="mt-4 text-5xl font-bold">{healthScore}</p>
+            <p className="mt-3 text-3xl font-bold">{healthScore}</p>
           </div>
 
-          <div className={`rounded-3xl border p-6 backdrop-blur ${riskClasses(risk)}`}>
-            <p className="text-xs font-semibold uppercase tracking-[0.35em]">
+          <div className={`rounded-3xl border p-5 backdrop-blur ${riskClasses(risk)}`}>
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em]">
               Risk Level
             </p>
-            <p className="mt-4 text-5xl font-bold">{riskLabel}</p>
+            <p className="mt-3 text-3xl font-bold">{riskLabel}</p>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-300">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-300">
               Records Checked
             </p>
-            <p className="mt-4 text-5xl font-bold">{totals.totalRecords ?? "—"}</p>
+            <p className="mt-3 text-3xl font-bold">{totals.totalRecords ?? "—"}</p>
           </div>
 
-          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 backdrop-blur">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-slate-300">
+          <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-5 backdrop-blur">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-slate-300">
               Latest Run
             </p>
-            <p className="mt-4 text-sm font-semibold leading-6">
+            <p className="mt-3 text-xs font-semibold leading-5">
               {formatDate(latest?.finished_at || latest?.created_at)}
             </p>
           </div>
@@ -255,7 +268,7 @@ export default async function BusinessHealthAgentPage() {
 
         <section className="mt-8 grid gap-6 lg:grid-cols-[1.25fr_0.75fr]">
           <div className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-2xl shadow-black/20 backdrop-blur">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
               Today&apos;s Priorities
             </p>
             <h2 className="mt-3 text-2xl font-semibold">Recommended Actions</h2>
@@ -283,7 +296,7 @@ export default async function BusinessHealthAgentPage() {
           </div>
 
           <div className="rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-2xl shadow-black/20 backdrop-blur">
-            <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
               Agent Rules
             </p>
             <h2 className="mt-3 text-2xl font-semibold">What It Checks</h2>
@@ -304,7 +317,7 @@ export default async function BusinessHealthAgentPage() {
         </section>
 
         <section className="mt-8 rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-2xl shadow-black/20 backdrop-blur">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
             Business Signals
           </p>
           <h2 className="mt-3 text-2xl font-semibold">Latest Counts</h2>
@@ -333,7 +346,7 @@ export default async function BusinessHealthAgentPage() {
         </section>
 
         <section className="mt-8 rounded-3xl border border-white/10 bg-white/[0.045] p-6 shadow-2xl shadow-black/20 backdrop-blur">
-          <p className="text-xs font-semibold uppercase tracking-[0.35em] text-cyan-300">
+          <p className="text-[10px] font-semibold uppercase tracking-[0.28em] text-cyan-300">
             Run History
           </p>
           <h2 className="mt-3 text-2xl font-semibold">Recent Business Health Runs</h2>
@@ -558,6 +571,35 @@ export default async function BusinessHealthAgentPage() {
         .businessHealthStar:nth-of-type(odd) {
           width: 2px !important;
           height: 2px !important;
+        }
+
+
+        .businessHealthStar {
+          z-index: 2 !important;
+          width: 2px !important;
+          height: 2px !important;
+          opacity: 0.9 !important;
+          background: #ffffff !important;
+          box-shadow:
+            0 0 7px rgba(255,255,255,0.95),
+            0 0 14px rgba(147,197,253,0.70),
+            0 0 24px rgba(59,130,246,0.42) !important;
+        }
+
+        .businessHealthStar:nth-of-type(3n) {
+          width: 1.5px !important;
+          height: 1.5px !important;
+          animation-duration: 3.8s !important;
+        }
+
+        .businessHealthStar:nth-of-type(4n) {
+          width: 3px !important;
+          height: 3px !important;
+          animation-duration: 5.2s !important;
+        }
+
+        .businessHealthStarExtraTwinkle {
+          animation: agentTwinkle 2.6s ease-in-out infinite;
         }
 
       `}</style>
