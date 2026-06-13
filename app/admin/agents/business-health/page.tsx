@@ -119,19 +119,25 @@ export default async function BusinessHealthAgentPage() {
     <main className="relative min-h-screen overflow-hidden bg-[#05070b] px-6 py-10 text-white">
       <div className="agentNightSky" />
       <div className="agentMoon" />
+ 
+      <span className="businessHealthStar agentStar" style={{ left: "9%", top: "20%", animationDelay: "0.4s" }} />
+      <span className="businessHealthStar agentStar" style={{ left: "22%", top: "48%", animationDelay: "1.6s" }} />
+      <span className="businessHealthStar agentStar" style={{ left: "71%", top: "23%", animationDelay: "2.2s" }} />
+      <span className="businessHealthStar agentStar" style={{ right: "16%", top: "52%", animationDelay: "0.9s" }} />
+      <span className="businessHealthStar agentStar" style={{ right: "8%", bottom: "18%", animationDelay: "2.9s" }} />
 
-      <span className="agentStar" style={{ left: "6%", top: "16%", animationDelay: "0s" }} />
-      <span className="agentStar" style={{ left: "12%", top: "32%", animationDelay: "1.2s" }} />
-      <span className="agentStar" style={{ left: "18%", top: "72%", animationDelay: "2.1s" }} />
-      <span className="agentStar" style={{ left: "27%", top: "21%", animationDelay: "0.8s" }} />
-      <span className="agentStar" style={{ left: "37%", top: "58%", animationDelay: "2.7s" }} />
-      <span className="agentStar" style={{ left: "44%", top: "18%", animationDelay: "0.7s" }} />
-      <span className="agentStar" style={{ left: "52%", top: "39%", animationDelay: "1.9s" }} />
-      <span className="agentStar" style={{ right: "25%", top: "16%", animationDelay: "3.1s" }} />
-      <span className="agentStar" style={{ right: "13%", top: "34%", animationDelay: "1.8s" }} />
-      <span className="agentStar" style={{ right: "9%", top: "68%", animationDelay: "2.4s" }} />
-      <span className="agentStar" style={{ right: "7%", bottom: "24%", animationDelay: "2.8s" }} />
-      <span className="agentStar" style={{ right: "31%", bottom: "18%", animationDelay: "1.4s" }} />
+      <span className="agentStar businessHealthStar" style={{ left: "6%", top: "16%", animationDelay: "0s" }} />
+      <span className="agentStar businessHealthStar" style={{ left: "12%", top: "32%", animationDelay: "1.2s" }} />
+      <span className="agentStar businessHealthStar" style={{ left: "18%", top: "72%", animationDelay: "2.1s" }} />
+      <span className="agentStar businessHealthStar" style={{ left: "27%", top: "21%", animationDelay: "0.8s" }} />
+      <span className="agentStar businessHealthStar" style={{ left: "37%", top: "58%", animationDelay: "2.7s" }} />
+      <span className="agentStar businessHealthStar" style={{ left: "44%", top: "18%", animationDelay: "0.7s" }} />
+      <span className="agentStar businessHealthStar" style={{ left: "52%", top: "39%", animationDelay: "1.9s" }} />
+      <span className="agentStar businessHealthStar" style={{ right: "25%", top: "16%", animationDelay: "3.1s" }} />
+      <span className="agentStar businessHealthStar" style={{ right: "13%", top: "34%", animationDelay: "1.8s" }} />
+      <span className="agentStar businessHealthStar" style={{ right: "9%", top: "68%", animationDelay: "2.4s" }} />
+      <span className="agentStar businessHealthStar" style={{ right: "7%", bottom: "24%", animationDelay: "2.8s" }} />
+      <span className="agentStar businessHealthStar" style={{ right: "31%", bottom: "18%", animationDelay: "1.4s" }} />
 
       <div className="agentFog agentFogA" />
       <div className="agentFog agentFogB" />
@@ -536,6 +542,24 @@ export default async function BusinessHealthAgentPage() {
           50% { transform: translate3d(0, 18px, 0); }
         }
       
+
+        .businessHealthStar {
+          z-index: 2 !important;
+          width: 3px !important;
+          height: 3px !important;
+          opacity: 0.95 !important;
+          background: #ffffff !important;
+          box-shadow:
+            0 0 8px rgba(255,255,255,0.95),
+            0 0 18px rgba(147,197,253,0.72),
+            0 0 30px rgba(59,130,246,0.48) !important;
+        }
+
+        .businessHealthStar:nth-of-type(odd) {
+          width: 2px !important;
+          height: 2px !important;
+        }
+
       `}</style>
     </main>
   );
