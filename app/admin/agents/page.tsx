@@ -203,6 +203,7 @@ const agents = [
   {
     name: "Business Health Agent",
     href: "/admin/agents/business-health",
+    status: "Live",
     description:
       "Reviews leads, scans, uploads, messages, reports, monitoring, activity, and business risk signals for daily operating priorities.",
     allowed:
